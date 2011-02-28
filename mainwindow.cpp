@@ -459,6 +459,7 @@ void MainWindow::rebuildWindowMenu()
     menuWindow->addAction(errorsDock->toggleViewAction());
     menuWindow->addAction(infoDock->toggleViewAction());
     menuWindow->addAction(charTableDock->toggleViewAction());
+    menuWindow->addAction(searchResultsDock->toggleViewAction());
 }
 void MainWindow::rebuildMRUMenu()
 {
