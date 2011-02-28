@@ -1,5 +1,8 @@
 #include "eserialport.h"
 #include <QTime>
+
+using namespace PZST;
+
 void ESerialPort::close()
 {
     if (fd != ESP_INVALID_HANDLE) {
