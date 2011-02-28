@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/Files">
+        <file>appicon.ico</file>
+        <file>logo.png</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file alias="copy.png">icons/editcopy.png</file>
+        <file alias="cut.png">icons/editcut.png</file>
+        <file alias="paste.png">icons/editpaste.png</file>
+        <file alias="redo.png">icons/redo.png</file>
+        <file alias="undo.png">icons/undo.png</file>
+        <file alias="close.png">icons/fileclose.png</file>
+        <file alias="new.png">icons/filenew.png</file>
+        <file alias="open.png">icons/fileopen.png</file>
+        <file alias="save.png">icons/filesave.png</file>
+        <file alias="saveas.png">icons/filesaveas.png</file>
+        <file alias="exit.png">icons/exit.png</file>
+        <file alias="configure.png">icons/configure.png</file>
+        <file alias="pri.png">icons/pri.png</file>
+        <file alias="pub.png">icons/pub.png</file>
+        <file alias="find.png">icons/find.png</file>
+        <file alias="search_next.gif">icons/search_next.gif</file>
+        <file alias="search.gif">icons/search.gif</file>
+        <file alias="replace.gif">icons/replace.gif</file>
+    </qresource>
+</RCC>
