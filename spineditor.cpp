@@ -43,7 +43,7 @@ SpinEditor *SpinEditor::loadFile(QString fName, QWidget *parent)
 {
     fName = QDir::toNativeSeparators(fName);
     QFile file(fName);
-    if (!file.open(QFile::ReadOnly)) {
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(parent, tr("Application"),
                              tr("Cannot read file %1:\n%2.")
                              .arg(fName)
@@ -106,7 +106,7 @@ bool SpinEditor::save(QString fName)
     }
     fName = QDir::toNativeSeparators(fName);
     QFile file(fName);
-    if (!file.open(QFile::WriteOnly)) {
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Application"),
                              tr("Cannot write %1:\n%2.")
                              .arg(fName)

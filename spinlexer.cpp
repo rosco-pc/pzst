@@ -10,11 +10,7 @@ using namespace PZST;
 SpinLexer::SpinLexer()
     : QsciLexerCustom(), fnt("Parallax", 13)
 {
-#ifdef Q_OS_WIN
-    NL = "\r\n";
-#else
     NL = "\n";
-#endif
     reservedWords << "ABS" << "ABSNEG" << "ADD" << "ADDABS" << "ADDS" << "ADDSX"
         << "ADDX" << "AND" << "ANDN" << "BYTEFILL" << "BYTEMOVE"
         << "CALL" << "CHIPVER" << "CLKFREQ" << "_CLKFREQ" << "CLKMODE"
