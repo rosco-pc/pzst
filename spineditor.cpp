@@ -114,7 +114,13 @@ bool SpinEditor::save(QString fName)
         return false;
     }
     QTextStream out(&file);
-    out.setCodec(QTextCodec::codecForName("UTF8"));
+    Preferences pref;
+    if (pref.getUTF16()) {
+        out.setCodec(QTextCodec::codecForName("UTF16"));
+        out.setGenerateByteOrderMark(true);
+    } else {
+        out.setCodec(QTextCodec::codecForName("UTF8"));
+    }
     out << text();
     fileName = fName;
     HasFilename = true;
