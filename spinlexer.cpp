@@ -96,6 +96,9 @@ QString SpinLexer::description(int style) const
     case  String:
         return "String";
         break;
+    case  Prepro:
+        return "Preprocessor";
+        break;
     }
     return "";
 }
@@ -109,6 +112,11 @@ void SpinLexer::styleText(int start, int end)
     QRegExp numRE ("#?\\-?([0-9][0-9_]*|%[01][01_]*|%%[0-3][0-3_]*|\\$[0-9A-F][0-9A-F_]*)\\b");
     numRE.setCaseSensitivity(Qt::CaseInsensitive);
     numRE.setMinimal(false);
+
+    QRegExp preproRE ("(^|\\n)#[a-z]+\\b");
+    preproRE.setCaseSensitivity(Qt::CaseInsensitive);
+    preproRE.setMinimal(false);
+
 
     QVector<SpinStyleRef> styles;
     QByteArray ba = codec->fromUnicode(editor()->text()).mid(start, end - start);
@@ -127,6 +135,7 @@ void SpinLexer::styleText(int start, int end)
         int resStart = eIdx;
         int numStart = eIdx;
         int strStart = eIdx;
+        int preproStart = eIdx;
         int pos;
         if (inComment < 0) {
             commentStart = text.indexOf("'", sIdx);
@@ -141,8 +150,10 @@ void SpinLexer::styleText(int start, int end)
             if (numStart < 0) numStart = eIdx;
             strStart = text.indexOf("\"", sIdx);
             if (strStart < 0) strStart = eIdx;
+            preproStart = text.indexOf(preproRE, sIdx);
+            if (preproStart < 0) preproStart = eIdx;
         }
-        pos = qMin(commentStart,qMin(mlCommentStart2,qMin(mlCommentStart1, qMin(resStart, qMin(numStart, strStart)))));
+        pos = qMin(commentStart,qMin(mlCommentStart2,qMin(mlCommentStart1, qMin(resStart, qMin(numStart, qMin(strStart, preproStart))))));
         if (pos == eIdx && inComment < 0) break;
         int chunkLen;
         if (inComment >= 0) {
@@ -168,6 +179,9 @@ void SpinLexer::styleText(int start, int end)
             } else {
                 chunkLen = processComment(text, "}", pos, styles, MLComment1);
             }
+        } else if (pos == preproStart) {
+            QString match = preproRE.capturedTexts().at(0);
+            chunkLen = processKeyword(match, pos, styles, Prepro);
         } else if (pos == resStart) {
             QString match = idRE.capturedTexts().at(0).toUpper();
             int style = Identifier;
@@ -232,6 +246,9 @@ QColor SpinLexer::defaultColor(int style) const
     case String:
         return QColor(128, 64, 0);
         break;
+    case Prepro:
+        return QColor(128, 0, 128);
+        break;
     }
     return QColor(0, 0, 0, 0);
 }
@@ -246,6 +263,7 @@ QFont SpinLexer::defaultFont() const
 
 QFont SpinLexer::defaultFont(int style) const
 {
+    Q_UNUSED(style);
     Preferences pref;
     QFont f(pref.getFontName(), pref.getFontSize());
     return f;

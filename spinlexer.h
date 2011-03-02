@@ -34,6 +34,7 @@ namespace PZST {
             Number,
             Type,
             String,
+            Prepro,
         };
     public:
         SpinLexer();
