@@ -17,10 +17,10 @@ namespace PZST {
 
     typedef QList<PreprocessedFile> PreprocessedFiles;
 
-    class SpinObjectLocator
+    class SpinPreprocessor
     {
     public:
-        SpinObjectLocator(QString, QString);
+        SpinPreprocessor(QString, QString);
         void setSearchPath(QStringList);
         PreprocessedFiles findFiles();
     private:
@@ -38,7 +38,6 @@ namespace PZST {
         QString topDir;
 
         QByteArray findObjects(QString fileName, QStringList existing, QStringList &newObjects);
-        QString objNameToFileName(QString name);
         QString encodeChars(QString str);
         QString encoding;
 

@@ -18,11 +18,12 @@ SOURCES += mainwindow.cpp \
     termialwindow.cpp \
     terminalwidget.cpp \
     terminaldisplay.cpp \
-    spinobjectlocator.cpp \
     spinparser.cpp \
     finddialog.cpp \
     searchengine.cpp \
-    searchable.cpp
+    searchable.cpp \
+    filenameresolver.cpp \
+    spinpreprocessor.cpp
 HEADERS += mainwindow.h \
     spineditor.h \
     spinlexer.h \
@@ -37,11 +38,12 @@ HEADERS += mainwindow.h \
     termialwindow.h \
     terminalwidget.h \
     terminaldisplay.h \
-    spinobjectlocator.h \
     spinparser.h \
     finddialog.h \
     searchengine.h \
-    searchable.h
+    searchable.h \
+    filenameresolver.h \
+    spinpreprocessor.h
 FORMS += aboutdialog.ui \
     preferencesdialog.ui \
     terminalwidget.ui \

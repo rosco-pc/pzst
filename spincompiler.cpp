@@ -6,8 +6,9 @@
 #include <QTextStream>
 
 #include "spincompiler.h"
-#include "spinobjectlocator.h"
+#include "spinpreprocessor.h"
 #include "pzstpreferences.h"
+#include "filenameresolver.h"
 
 using namespace PZST;
 
@@ -74,9 +75,9 @@ void SpinCompiler::run()
     tmpName = tmpFile.name();
 
     QString topFile;
-    SpinObjectLocator loc(srcFileName, "CP1251");
-    loc.setSearchPath(pref.getSearchPath());
-    PreprocessedFiles files = loc.findFiles();
+    SpinPreprocessor prepro(srcFileName, "CP1251");
+    prepro.setSearchPath(pref.getSearchPath());
+    PreprocessedFiles files = prepro.findFiles();
     for (int i = 0; i < files.size(); i++) {
         QString src = files.at(i).fileName;
         QFileInfo info(src);

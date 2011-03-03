@@ -1,4 +1,5 @@
-#include "spinobjectlocator.h"
+#include "spinpreprocessor.h"
+#include "filenameresolver.h"
 #include <QFile>
 #include <QTextStream>
 #include <QTextCodec>
@@ -10,17 +11,17 @@
 
 using namespace PZST;
 
-SpinObjectLocator::SpinObjectLocator(QString topFile, QString encoding) :
+SpinPreprocessor::SpinPreprocessor(QString topFile, QString encoding) :
     topFile(topFile), encoding(encoding)
 {
     QFileInfo info(topFile);
     topDir = info.absolutePath();
 }
-void SpinObjectLocator::setSearchPath(QStringList path)
+void SpinPreprocessor::setSearchPath(QStringList path)
 {
     searchPath = path;
 }
-PreprocessedFiles SpinObjectLocator::findFiles()
+PreprocessedFiles SpinPreprocessor::findFiles()
 {
     QStringList newObjects, allObjects;
     PreprocessedFiles files;
@@ -36,30 +37,12 @@ PreprocessedFiles SpinObjectLocator::findFiles()
             files.append(p);
         }
         for (int i = 0; i < newObjects.size(); i++) {
-            QString newFile = objNameToFileName(newObjects[i]);
+            QString newFile = FilenameResolver::resolve(newObjects[i], "spin", topDir);
             queue.enqueue(newFile);
         }
         allObjects << newObjects;
     }
     return files;
-}
-QString SpinObjectLocator::objNameToFileName(QString name)
-{
-    QStringList paths;
-    paths << topDir;
-    paths << searchPath;
-    for (int i = 0; i < paths.size(); i++) {
-        QString path = paths[i];
-        QDir dir(path, "*.spin");
-        QStringList entries = dir.entryList();
-        for (int j = 0; j < entries.size(); j++) {
-            QString dirEntry = entries.at(j);
-            if (dirEntry.toLower() == name.toLower() + ".spin") {
-                return path + QDir::separator() + dirEntry;
-            }
-        }
-    }
-    return name + ".spin";;
 }
 #define GET_POS(pattern, var, delta) {\
 if (pos > var) { \
@@ -68,7 +51,7 @@ if (pos > var) { \
         else var = c - source; \
    } \
 }
-QByteArray SpinObjectLocator::findObjects(QString fileName, QStringList existing, QStringList &newObjects)
+QByteArray SpinPreprocessor::findObjects(QString fileName, QStringList existing, QStringList &newObjects)
 {
     QByteArray ret;
     char NL[] = "\n";
@@ -217,7 +200,7 @@ QByteArray SpinObjectLocator::findObjects(QString fileName, QStringList existing
     }
     return ret.right(ret.size()-1);
 }
-QString SpinObjectLocator::encodeChars(QString str)
+QString SpinPreprocessor::encodeChars(QString str)
 {
     QTextCodec *codec = QTextCodec::codecForName(encoding.toAscii().data());
     QString ret;
