@@ -1092,6 +1092,7 @@ void MainWindow::searchStarted(bool allTargets)
 void MainWindow::searchFinished(bool allTargets)
 {
     if (allTargets) {
+        searchResultsDock->show();
         searchResultsDock->raise();
         searchTree->expandAll();
     }
