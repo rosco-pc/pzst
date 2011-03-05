@@ -836,6 +836,7 @@ void MainWindow::doCompilation(int command)
         return;
     } else if (status != SpinCompiler::OK) {
         QString message = tr("Compile error");
+        errorsDock->show();
         errorsDock->raise();
         errorsDock->widget()->setFocus();
         errorsDock->setFocus();
@@ -853,6 +854,7 @@ void MainWindow::doCompilation(int command)
             return;
         }
     } else {
+        infoDock->show();
         infoDock->raise();
         showStatusMessage(tr("Compiled successfully"));
     }
