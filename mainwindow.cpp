@@ -695,6 +695,7 @@ void MainWindow::enableUI(bool v)
     errorsDock->setEnabled(v);
     infoDock->setEnabled(v);
     charTableDock->setEnabled(v);
+    searchResultsDock->setEnabled(v);
 }
 void MainWindow::doProgramming(int command, QByteArray code)
 {
@@ -1144,7 +1145,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
     if (!obj)
         return false;
 
-    if (QApplication::activePopupWidget() || QApplication::activeModalWidget() || QApplication::activeWindow() != this) return false;
+    if (QApplication::activePopupWidget() || QApplication::activeModalWidget() || QApplication::activeWindow() != this)
+        return false;
+
+    if (!mdi->isEnabled()) return false;
 
     if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(ev);
