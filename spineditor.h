@@ -37,6 +37,8 @@ namespace PZST {
         char getChar(int &pos, int delta) const;
     protected:
         virtual void closeEvent ( QCloseEvent * event );
+    private slots:
+        void cursorPositionChanged(int,int);
     public slots:
         void updateModificationStatus(bool m);
         void documentModified();

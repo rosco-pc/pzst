@@ -37,6 +37,7 @@ namespace PZST {
         SETTING_INT         (Editor, Language,  0);
         SETTING_BOOL        (Editor, UTF16,  false);
         SETTING_BOOL        (Editor, LineNumbers,  false);
+        SETTING_BOOL        (Editor, CurLineMarker,  false);
 
         SETTING_STRINGLIST  (Compiler, SearchPath);
         SETTING_BOOL        (Compiler, FoldConstants, true);

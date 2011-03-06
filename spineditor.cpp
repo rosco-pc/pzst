@@ -31,11 +31,13 @@ void SpinEditor::initialize()
     setAutoIndent(true);
     setBackspaceUnindents(true);
     setTabIndents(true);
-    readPreferences();
     connect(this, SIGNAL(modificationChanged(bool)), this, SLOT(updateModificationStatus(bool)));
     connect(this, SIGNAL(textChanged()), this, SLOT(documentModified()));
     updateCaption();
     setContextMenuPolicy(Qt::CustomContextMenu);
+    markerDefine(Background, 0);
+    setMarkerBackgroundColor(QColor(240,240,240), 0);
+    readPreferences();
 }
 
 
@@ -186,6 +188,15 @@ void SpinEditor::readPreferences()
         setMarginWidth(1, "0");
         setMarginLineNumbers(1, false);
     }
+    if (pref.getCurLineMarker()) {
+        connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+        int l, c;
+        getCursorPosition(&l, &c);
+        cursorPositionChanged(l, c);
+    } else {
+        markerDeleteAll(0);
+        disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+    }
 }
 
 
@@ -295,3 +306,8 @@ bool SpinEditor::supportsReplace(QString &target)
     return true;
 }
 
+void SpinEditor::cursorPositionChanged(int l, int)
+{
+    markerDeleteAll(0);
+    markerAdd(l, 0);
+}
