@@ -311,3 +311,16 @@ void SpinEditor::cursorPositionChanged(int l, int)
     markerDeleteAll(0);
     markerAdd(l, 0);
 }
+
+void SpinEditor::keyPressEvent(QKeyEvent *e)
+{
+    if (e->modifiers() == Qt::ShiftModifier && e->key() == Qt::Key_Backtab) {
+        QKeyEvent *e1 = new QKeyEvent(e->type(), Qt::Key_Tab, Qt::ShiftModifier, e->text(), e->isAutoRepeat(), e->count());
+        QsciScintilla::keyPressEvent(e1);
+        if (e1->isAccepted()) {
+            e->accept();
+            return;
+        }
+    }
+    QsciScintilla::keyPressEvent(e);
+}
