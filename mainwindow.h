@@ -111,6 +111,7 @@ namespace PZST {
         void createStatusBar();
         void createToolbars();
         void createDocks();
+        void rebuildWindowSwitcher();
 
         // -1 - compile
         // 0 - to RAM
@@ -190,10 +191,13 @@ namespace PZST {
         SearchEngine *searchEngine;
         QTreeWidget *searchTree;
 
+        QWidget *windowSwitcher;
+        QListWidget *windowsList;
+
     protected:
         void closeEvent(QCloseEvent *event);
         void keyPressEvent(QKeyEvent *e);
-
+        bool eventFilter(QObject *obj, QEvent *ev);
     };
 }
 #endif // MAINWINDOW_H

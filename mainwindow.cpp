@@ -15,6 +15,7 @@
 #include <QScrollArea>
 #include <QPainter>
 #include <QLineEdit>
+#include <QKeyEvent>
 
 #include "mainwindow.h"
 #include "spineditor.h"
@@ -40,6 +41,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
 {
     lastActiveWindow = 0;
     searchEngine = new SearchEngine();
+
+    windowSwitcher = new QWidget(this);
+    QHBoxLayout *layout = new QHBoxLayout(windowSwitcher);
+    layout->setContentsMargins(10, 10, 10, 10);
+    windowSwitcher->setLayout(layout);
+    windowsList = new QListWidget(windowSwitcher);
+    layout->addSpacing(20);
+    layout->addWidget(windowsList);
+    layout->addSpacing(20);
+    windowSwitcher->setWindowModality(Qt::ApplicationModal);
+    windowSwitcher->resize(300, 200);
+    windowSwitcher->hide();
 
     QFont::insertSubstitution("Parallax", "Courier New");
     mapper = new QSignalMapper(this);
@@ -90,6 +103,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     qRegisterMetaType<SearchEngine::Result>("SearchEngine::Result");
     connect(searchEngine, SIGNAL(foundInTarget(QString,SearchEngine::Result,bool)), this, SLOT(foundInTarget(QString,SearchEngine::Result,bool)));
 
+    QApplication::instance()->installEventFilter(this);
 }
 QAction* MainWindow::createAction(QString text, QString seq, QString iconFile, bool inMenu)
 {
@@ -347,6 +361,7 @@ void MainWindow::windowActivated(QMdiSubWindow *w)
 }
 void MainWindow::windowActivated(QWidget *w)
 {
+    windowSwitcher->hide();
     bool hasEditor = false;
     actSave->setEnabled(false);
     actSaveAs->setEnabled(false);
@@ -1119,6 +1134,80 @@ void MainWindow::searchTreeClicked(QModelIndex idx)
             e->lineIndexFromPosition(pos, &sl, &si);
             e->lineIndexFromPosition(pos+len, &el, &ei);
             e->setSelection(sl, si, el, ei);
+        }
+    }
+}
+
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+{
+    if (!obj)
+        return false;
+
+    if (QApplication::activePopupWidget() || QApplication::activeModalWidget() || QApplication::activeWindow() != this) return false;
+
+    if (ev->type() == QEvent::KeyPress || ev->type() == QEvent::KeyRelease) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(ev);
+#ifdef Q_WS_MAC
+        if (!(keyEvent->modifiers() & Qt::MetaModifier) && keyEvent->key() != Qt::Key_Meta)
+#else
+        if (!(keyEvent->modifiers() & Qt::ControlModifier) && keyEvent->key() != Qt::Key_Control)
+#endif
+            return false;
+
+        const bool keyPress = (ev->type() == QEvent::KeyPress) ? true : false;
+        switch (keyEvent->key()) {
+#ifdef Q_WS_MAC
+        case Qt::Key_Meta:
+#else
+        case Qt::Key_Control:
+#endif
+            if (!keyPress) {
+                if (windowSwitcher->isVisible()) {
+                    QList<QMdiSubWindow *> list = mdi->subWindowList(QMdiArea::StackingOrder);
+                    mdi->setActiveSubWindow(list.at(windowsList->count() - 1 - windowsList->currentRow()));
+                    windowSwitcher->hide();
+                    windowSwitcher->releaseMouse();
+                    QApplication::setActiveWindow(this);
+                }
+            }
+            return true;
+            break;
+        case Qt::Key_Tab:
+        case Qt::Key_Backtab:
+            if (keyPress)  {
+                if (mdi->subWindowList().size() > 1) {
+                    if (!windowSwitcher->isVisible()) {
+                        rebuildWindowSwitcher();
+                        windowSwitcher->move(rect().x()+rect().width()/2 - 150, rect().y()+rect().height()/2 - 100);
+                        windowSwitcher->show();
+                        QApplication::setActiveWindow(windowSwitcher);
+                        windowSwitcher->raise();
+                        windowsList->setFocus();
+                        windowSwitcher->grabMouse();
+                    }
+                    int row = windowsList->currentRow();
+                    if (keyEvent->key() == Qt::Key_Tab) row++;
+                    else row--;
+                    if (row >= windowsList->count()) row = 0;
+                    if (row < 0) row =  windowsList->count() - 1;
+                    windowsList->setCurrentRow(row);
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+void MainWindow::rebuildWindowSwitcher()
+{
+    windowsList->clear();
+    QList<QMdiSubWindow *> list = mdi->subWindowList(QMdiArea::StackingOrder);
+    for (int i = list.size()-1; i >= 0; i--) {
+        windowsList->addItem(list.at(i)->windowTitle());
+        if (list.at(i) == mdi->activeSubWindow()) {
+            windowsList->setCurrentRow(i);
         }
     }
 }
