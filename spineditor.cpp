@@ -177,6 +177,15 @@ void SpinEditor::readPreferences()
     setTabIndents(pref.getTabsToSpaces());
     setIndentationsUseTabs(!pref.getTabsToSpaces());
     setIndentationGuides(pref.getTabsVisible());
+    if (pref.getLineNumbers()) {
+        setMarginType(1, QsciScintilla::NumberMargin);
+        setMarginWidth(1, "999999");
+        setMarginLineNumbers(1, true);
+    } else {
+        setMarginWidth(1, 0);
+        setMarginWidth(1, "0");
+        setMarginLineNumbers(1, false);
+    }
 }
 
 

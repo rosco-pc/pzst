@@ -29,6 +29,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->tabsVisible->setChecked(pref.getTabsVisible());
     ui->language->setCurrentIndex(pref.getLanguage());
     ui->UTF16->setChecked(pref.getUTF16());
+    ui->lineNumbers->setChecked(pref.getLineNumbers());
 
     QStringList paths = pref.getSearchPath();
     for (int i = 0; i < paths.size(); i++) {
@@ -129,6 +130,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setTabsVisible(ui->tabsVisible->isChecked());
     pref.setLanguage(ui->language->currentIndex());
     pref.setUTF16(ui->UTF16->isChecked());
+    pref.setLineNumbers(ui->lineNumbers->isChecked());
 
     QStringList paths;
     for (int i = 0; i < ui->searchPaths->count(); i++) {
