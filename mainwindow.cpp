@@ -846,16 +846,18 @@ void MainWindow::doCompilation(int command)
     }
     codeInfoBrowser->clear();
     SpinCompiler::Status status = c.getStatus();
+    if (status == SpinCompiler::CompileError || status == SpinCompiler::StartError) {
+        errorsDock->show();
+        errorsDock->raise();
+    } else {
+        infoDock->raise();
+    }
     if (status == SpinCompiler::StartError) {
         showStatusMessage(tr("Failed to start compiler"), 2);
         enableUI(true);
         return;
     } else if (status != SpinCompiler::OK) {
         QString message = tr("Compile error");
-        errorsDock->show();
-        errorsDock->raise();
-        errorsDock->widget()->setFocus();
-        errorsDock->setFocus();
         int level = 0;
         switch (status) {
         case SpinCompiler::CompileError : level = 2; break;
@@ -870,8 +872,6 @@ void MainWindow::doCompilation(int command)
             return;
         }
     } else {
-        infoDock->show();
-        infoDock->raise();
         showStatusMessage(tr("Compiled successfully"));
     }
     SpinCodeInfo codeInfo = c.parseListFile();
