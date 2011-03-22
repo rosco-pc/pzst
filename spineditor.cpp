@@ -45,7 +45,7 @@ SpinEditor *SpinEditor::loadFile(QString fName, QWidget *parent)
 {
     fName = QDir::toNativeSeparators(fName);
     QFile file(fName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    if (!file.open(QFile::ReadOnly)) {
         QMessageBox::warning(parent, tr("Application"),
                              tr("Cannot read file %1:\n%2.")
                              .arg(fName)
@@ -58,7 +58,7 @@ SpinEditor *SpinEditor::loadFile(QString fName, QWidget *parent)
     QTextCodec *utf8 = QTextCodec::codecForName("UTF8");
     QTextStream in(&file);
     in.setCodec(utf8);
-    e->setText(in.readAll());
+    e->setText(in.readAll().replace("\r\n", "\n").replace("\r", "\n"));
     e->parseMethods();
     e->setFileName(fName);
     e->setModified(false);
