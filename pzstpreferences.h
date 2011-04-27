@@ -48,6 +48,7 @@ namespace PZST {
         SETTING_BOOL        (Compiler, NonParallaxExt, false);
         SETTING_BOOL        (Compiler, Warnings, false);
         SETTING_BOOL        (Compiler, Info, false);
+        SETTING_STRING      (Compiler, Encoding,  "ISO-8859-1");
 
         SETTING_STRING      (Port, PortName,  "");
         SETTING_BOOL        (Port, DoubleSpeed,  true);

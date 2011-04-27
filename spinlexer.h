@@ -7,35 +7,8 @@
 #include <QTextCodec>
 
 namespace PZST {
-    struct SpinStyleRef
-    {
-        SpinStyleRef(int start, int len, int style);
-        SpinStyleRef() {};
-        int start, len, style;
-    };
-
-    struct SpinCommentBlock
-    {
-        SpinCommentBlock(int start, int len, bool dbl);
-        SpinCommentBlock() {};
-        int start, len;
-        bool dbl;
-    };
-
     class SpinLexer : public QsciLexerCustom
     {
-        enum SpinLexerStyle {
-            Comment = 1,
-            MLComment1,
-            MLComment2,
-            Reserved,
-            Condition ,
-            Identifier,
-            Number,
-            Type,
-            String,
-            Prepro,
-        };
     public:
         SpinLexer();
         virtual const char *language() const;
@@ -45,19 +18,8 @@ namespace PZST {
         virtual QFont defaultFont() const;
         virtual QFont defaultFont(int style) const;
         virtual int indentationGuideView() const;
-    private:
-        QFont fnt;
-        QString NL;
-        int processComment(QString const text, QString const end, int pos, QVector<SpinStyleRef> &styles, int style);
-        int processKeyword(QString kw, int pos, QVector<SpinStyleRef> &styles, int style);
-        int processString(QString text, int pos, QVector<SpinStyleRef> &styles);
-        QStringList reservedWords;
-        QStringList conditionals;
-        QStringList types;
-        QVector<SpinCommentBlock> comments;
-        void invalidateComments(int pos);
-        int isComment(int pos);
-        QTextCodec *codec;
+        virtual QStringList autoCompletionWordSeparators() const;
+        virtual bool caseSensitive() const {return false;};
     };
 }
 

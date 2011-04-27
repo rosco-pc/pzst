@@ -20,7 +20,6 @@
 #include "mainwindow.h"
 #include "spineditor.h"
 #include "spinlexer.h"
-#include "spinparser.h"
 #include "eserialport.h"
 #include "propellerloader.h"
 #include "spincompiler.h"
@@ -44,12 +43,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
 
     windowSwitcher = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(windowSwitcher);
-    layout->setContentsMargins(10, 10, 10, 10);
+    layout->setContentsMargins(5, 5, 5, 5);
     windowSwitcher->setLayout(layout);
     windowsList = new QListWidget(windowSwitcher);
-    layout->addSpacing(20);
+    windowsList->setStyleSheet("border-color:#999;border-width:6px; border-style:ridge;");
     layout->addWidget(windowsList);
-    layout->addSpacing(20);
     windowSwitcher->setWindowModality(Qt::ApplicationModal);
     windowSwitcher->resize(300, 200);
     windowSwitcher->hide();
@@ -196,6 +194,22 @@ void MainWindow::createActions()
     actReplace->setEnabled(false);
     connect(actReplace, SIGNAL(triggered()), this, SLOT(replace()));
 
+    actComplete= createAction(tr("Autocomplete"), "Ctrl+Space", "", true);
+    connect(actComplete, SIGNAL(triggered()), this, SLOT(autoComplete()));
+    actComplete->setEnabled(false);
+
+    actCallTip = createAction(tr("Call tip"), "Ctrl+Shift+Space", "", true);
+    connect(actCallTip, SIGNAL(triggered()), this, SLOT(callTip()));
+    actCallTip->setEnabled(false);
+
+    actFold = createAction(tr("Fold"), "Ctrl+<", "", true);
+    connect(actFold, SIGNAL(triggered()), this, SLOT(fold()));
+    actFold->setEnabled(false);
+
+    actUnfold = createAction(tr("Unfold"), "Ctrl+>", "", true);
+    connect(actUnfold, SIGNAL(triggered()), this, SLOT(unfold()));
+    actUnfold->setEnabled(false);
+
 }
 void MainWindow::createMenus()
 {
@@ -230,6 +244,12 @@ void MainWindow::createMenus()
     menuEdit->addAction(actFindNext);
     menuEdit->addAction(actReplace);
     menuEdit->addSeparator();
+    menuEdit->addAction(actComplete);
+    menuEdit->addAction(actCallTip);
+    menuEdit->addSeparator();
+    //menuEdit->addAction(actFold);
+    //menuEdit->addAction(actUnfold);
+    //menuEdit->addSeparator();
     menuEdit->addAction(actPreferences);
 
     menuCompile->addAction(actDetectProp);
@@ -393,6 +413,10 @@ void MainWindow::windowActivated(QWidget *w)
             actLoadEEPROM->setEnabled(true);
             actSaveBIN->setEnabled(true);
             actSaveEEPROM->setEnabled(true);
+            actComplete->setEnabled(true);
+            actFold->setEnabled(true);
+            actUnfold->setEnabled(true);
+            actCallTip->setEnabled(true);
             actClose->setEnabled(true);
             actCloseAll->setEnabled(true);
             actFind->setEnabled(true);
@@ -418,6 +442,10 @@ void MainWindow::windowActivated(QWidget *w)
         actSaveEEPROM->setEnabled(false);
         actClose->setEnabled(false);
         actCloseAll->setEnabled(false);
+        actComplete->setEnabled(false);
+        actCallTip->setEnabled(false);
+        actFold->setEnabled(false);
+        actUnfold->setEnabled(false);
         actFind->setEnabled(false);
         actFindNext->setEnabled(false);
         methodsListCombo->clear();
@@ -438,7 +466,7 @@ void MainWindow::connectEditor(SpinEditor *e)
     connect(e, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(updateCursorPosition(int,int)));
     connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(documentModified(bool)));
     connect(e, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-    connect(e, SIGNAL(methodsListChanged(SpinMethodInfoList)), this, SLOT(methodsListChanged(SpinMethodInfoList)));
+    connect(e, SIGNAL(methodsListChanged(SpinContextList)), this, SLOT(methodsListChanged(SpinContextList)));
     connect(e, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
     searchEngine->setCurrentSearchTarget(e);
 }
@@ -446,9 +474,10 @@ void MainWindow::updateCursorPosition(int r, int c)
 {
     statusPosition->setText(QString("%1:%2").arg(r+1).arg(c+1));
     statusPosition->show();
-    methodsListCombo->setCurrentIndex(cursorPositionToMethodIndex(r+1));
     SpinEditor *e = activeEditor();
     if (e) {
+        int pos = e->positionFromLineIndex(r, 0);
+        methodsListCombo->setCurrentIndex(cursorPositionToMethodIndex(pos));
         wordUnderCursor =  e->getWordAtCursor();
     } else {
         wordUnderCursor = QString();
@@ -531,8 +560,6 @@ void MainWindow::documentModified(bool m)
         actSave->setEnabled(m || !e->hasFilename());
         actUndo->setEnabled(e->isUndoAvailable());
         actRedo->setEnabled(e->isRedoAvailable());
-        SpinParser p;
-        p.parse(e->text());
     }
     updateCaption();
 }
@@ -973,33 +1000,35 @@ void MainWindow::closeWindowAll()
     mdi->closeAllSubWindows();
 }
 
-void MainWindow::methodsListChanged(SpinMethodInfoList l)
+void MainWindow::methodsListChanged(SpinContextList l)
 {
     methodsListCombo->clear();
     qSort(l);
     for (int i = 0; i < l.size(); i++) {
-        SpinMethodInfo info = l.at(i);
-        QIcon icon(info.pri ? ":/Icons/pri.png" : ":/Icons/pub.png");
-        methodsListCombo->addItem(icon, info.name, info.line);
-        methodsListCombo->setItemData(methodsListCombo->count()-1, info.lines, Qt::UserRole + 1);
+        SpinCodeContext info = l.at(i);
+        QIcon icon(info.ctx == SpinCodeContext::Pri ? ":/Icons/pri.png" : ":/Icons/pub.png");
+        methodsListCombo->addItem(icon, info.name, info.start);
+        methodsListCombo->setItemData(methodsListCombo->count()-1, info.end, Qt::UserRole + 1);
     }
 }
 
 void MainWindow::methodChosen(int n)
 {
-    int line = methodsListCombo->itemData(n).toInt();
+    int pos = methodsListCombo->itemData(n).toInt();
     SpinEditor *e = activeEditor();
     if (e) {
-        e->setCursorPosition(line-1, 0);
+        int line, index;
+        e->lineIndexFromPosition(pos, &line, &index);
+        e->setCursorPosition(line, 0);
     }
 }
 
-int MainWindow::cursorPositionToMethodIndex(int line)
+int MainWindow::cursorPositionToMethodIndex(int pos)
 {
     for (int i = 0; i < methodsListCombo->count(); i ++) {
-        int methodLine = methodsListCombo->itemData(i).toInt();
-        int methodSize = methodsListCombo->itemData(i, Qt::UserRole + 1).toInt();
-        if (line >= methodLine && line < methodLine + methodSize) {
+        int methodStart = methodsListCombo->itemData(i).toInt();
+        int methodEnd = methodsListCombo->itemData(i, Qt::UserRole + 1).toInt();
+        if (pos >= methodStart && pos < methodEnd) {
             return i;
         }
     }
@@ -1026,6 +1055,12 @@ void MainWindow::contextMenuRequested(const QPoint &position)
     menu.addAction(actPaste);
     menu.addAction(actUndo);
     menu.addAction(actRedo);
+    menu.addSeparator();
+    menu.addAction(actComplete);
+    menu.addAction(actCallTip);
+    //menu.addSeparator();
+    //menu.addAction(actFold);
+    //menu.addAction(actUnfold);
     menu.exec(QCursor::pos());
 }
 
@@ -1213,5 +1248,49 @@ void MainWindow::rebuildWindowSwitcher()
         if (list.at(i) == mdi->activeSubWindow()) {
             windowsList->setCurrentRow(i);
         }
+    }
+}
+
+void MainWindow::autoComplete()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        e->autoCompleteFromAPIs();
+    }
+}
+
+void MainWindow::callTip()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        e->callTip();
+    }
+}
+
+void MainWindow::fold()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        int line, col, parent;
+        e->getCursorPosition(&line, &col);
+            parent = e->SendScintilla(QsciScintillaBase::SCI_GETFOLDPARENT, (unsigned long)line, (long)0);
+        if (parent >= 0) line = parent;
+        if (e->SendScintilla(QsciScintilla::SCI_GETFOLDEXPANDED, line)) {
+            e->SendScintilla(QsciScintilla::SCI_TOGGLEFOLD, line);
+            e->setCursorPosition(line, 0);
+        }
+    }
+}
+
+void MainWindow::unfold()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        int line, col, parent;
+        e->getCursorPosition(&line, &col);
+        parent = e->SendScintilla(QsciScintillaBase::SCI_GETFOLDPARENT, (unsigned long)line, (long)0);
+        if (parent >= 0) line = parent;
+        if (!e->SendScintilla(QsciScintilla::SCI_GETFOLDEXPANDED, line))
+            e->SendScintilla(QsciScintilla::SCI_TOGGLEFOLD, line);
     }
 }

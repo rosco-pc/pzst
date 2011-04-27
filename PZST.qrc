@@ -22,5 +22,12 @@
         <file alias="search_next.gif">icons/search_next.gif</file>
         <file alias="search.gif">icons/search.gif</file>
         <file alias="replace.gif">icons/replace.gif</file>
+        <file alias="constant.png">icons/constant.png</file>
+        <file alias="local.png">icons/local.png</file>
+        <file alias="label.png">icons/label.png</file>
+        <file alias="byte.png">icons/byte.png</file>
+        <file alias="long.png">icons/long.png</file>
+        <file alias="word.png">icons/word.png</file>
+        <file alias="obj.png">icons/obj.png</file>
     </qresource>
 </RCC>

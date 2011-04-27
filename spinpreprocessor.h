@@ -32,12 +32,13 @@ namespace PZST {
         static const int InString       = 4;
         static const int StateMask      = 511;
         static const int InObj          = 512;
+        static const int InFile         = 1024;
 
         QStringList searchPath;
         QString topFile;
         QString topDir;
 
-        QByteArray findObjects(QString fileName, QStringList existing, QStringList &newObjects);
+        QByteArray findObjects(QString fileName, QStringList existing, QStringList &newObjects, QStringList &dataFiles);
         QString encodeChars(QString str);
         QString encoding;
 

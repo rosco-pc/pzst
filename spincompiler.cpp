@@ -75,7 +75,7 @@ void SpinCompiler::run()
     tmpName = tmpFile.name();
 
     QString topFile;
-    SpinPreprocessor prepro(srcFileName, "CP1251");
+    SpinPreprocessor prepro(srcFileName, pref.getEncoding());
     prepro.setSearchPath(pref.getSearchPath());
     PreprocessedFiles files = prepro.findFiles();
     for (int i = 0; i < files.size(); i++) {

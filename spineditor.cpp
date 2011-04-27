@@ -1,5 +1,6 @@
 #include "spinlexer.h"
 #include "spineditor.h"
+#include "spinsourcefactory.h"
 
 #include <QTextStream>
 #include <QMessageBox>
@@ -12,6 +13,7 @@
 #include <QMenu>
 #include <QAbstractButton>
 #include "pzstpreferences.h"
+#include "spincodeparser.h"
 
 using namespace PZST;
 
@@ -21,12 +23,19 @@ SpinEditor::SpinEditor(QWidget *p)
     initialize();
 }
 
+SpinEditor::~SpinEditor()
+{
+    SpinSourceFactory::instance()->removeSource(fileName);
+    delete completion;
+}
 
 void SpinEditor::initialize()
 {
     static int c = 1;
     fileName = QString("Untitled%1.spin").arg(c++);
     setLexer(new SpinLexer());
+    completion = new SpinCompletionSource(lexer(), this);
+    lexer()->setAPIs(completion);
     setUtf8(true);
     setAutoIndent(true);
     setBackspaceUnindents(true);
@@ -38,6 +47,7 @@ void SpinEditor::initialize()
     markerDefine(Background, 0);
     setMarkerBackgroundColor(QColor(240,240,240), 0);
     readPreferences();
+    registerIcons();
 }
 
 
@@ -59,10 +69,10 @@ SpinEditor *SpinEditor::loadFile(QString fName, QWidget *parent)
     QTextStream in(&file);
     in.setCodec(utf8);
     e->setText(in.readAll().replace("\r\n", "\n").replace("\r", "\n"));
-    e->parseMethods();
     e->setFileName(fName);
     e->setModified(false);
     e->updateModificationStatus(false);
+    SpinSourceFactory::instance()->addSource(e->fileName, e->text());
     QApplication::restoreOverrideCursor();
     return e;
 }
@@ -82,7 +92,7 @@ void SpinEditor::updateCaption()
     setWindowTitle(caption);
 }
 
-void SpinEditor::updateModificationStatus(bool m)
+void SpinEditor::updateModificationStatus(bool)
 {
     updateCaption();
 }
@@ -124,7 +134,9 @@ bool SpinEditor::save(QString fName)
         out.setCodec(QTextCodec::codecForName("UTF8"));
     }
     out << text();
+    SpinSourceFactory::instance()->removeSource(fileName);
     fileName = fName;
+    SpinSourceFactory::instance()->addSource(fileName, text());
     HasFilename = true;
     setModified(false);
     return true;
@@ -188,6 +200,7 @@ void SpinEditor::readPreferences()
         setMarginWidth(1, "0");
         setMarginLineNumbers(1, false);
     }
+    //setFolding(QsciScintilla::BoxedTreeFoldStyle, 2);
     if (pref.getCurLineMarker()) {
         connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
         int l, c;
@@ -197,23 +210,20 @@ void SpinEditor::readPreferences()
         markerDeleteAll(0);
         disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
     }
+    setAutoCompletionSource(AcsAPIs);
+    setAutoCompletionShowSingle(true);
 }
 
 
 void SpinEditor::documentModified()
 {
-    parser.parse(text());
-    emit methodsListChanged(parser.getMethods());
+    QString code = text();
+    SpinSourceFactory::instance()->addSource(fileName, code);
 }
 
-void SpinEditor::parseMethods()
+SpinContextList SpinEditor::getMethodDefs()
 {
-    parser.parse(text());
-}
-
-SpinMethodInfoList SpinEditor::getMethodDefs()
-{
-    return parser.getMethods();
+    return SpinSourceFactory::instance()->getParser(fileName)->getMethods();
 }
 
 QString SpinEditor::getWordAtCursor() const
@@ -298,6 +308,9 @@ int SpinEditor::getSearchTargetStartPosition(QString &target, bool backward)
 void SpinEditor::replaceInTarget(QString &target, int start, int len, QString &text)
 {
     Q_UNUSED(target);
+    Q_UNUSED(start);
+    Q_UNUSED(len);
+    Q_UNUSED(text);
 }
 
 bool SpinEditor::supportsReplace(QString &target)
@@ -323,4 +336,162 @@ void SpinEditor::keyPressEvent(QKeyEvent *e)
         }
     }
     QsciScintilla::keyPressEvent(e);
+}
+
+void SpinEditor::registerIcons()
+{
+    registerImage(1, QPixmap(":/Icons/pub.png"));
+    registerImage(2, QPixmap(":/Icons/pri.png"));
+    registerImage(3, QPixmap(":/Icons/constant.png"));
+    registerImage(4, QPixmap(":/Icons/long.png"));
+    registerImage(5, QPixmap(":/Icons/local.png"));
+    registerImage(6, QPixmap(":/Icons/label.png"));
+    registerImage(7, QPixmap(":/Icons/word.png"));
+    registerImage(8, QPixmap(":/Icons/byte.png"));
+    registerImage(9, QPixmap(":/Icons/obj.png"));
+}
+
+QStringList SpinEditor::apiContext(int pos, int &context_start,
+        int &last_word_start)
+{
+
+    enum {
+        Either,
+        Separator,
+        Word
+    };
+
+    QStringList words;
+    int good_pos = pos, expecting = Either;
+
+    last_word_start = -1;
+
+    while (pos > 0)
+    {
+        QString sep;
+        if (!(sep = getSeparator(pos)).isNull())
+        {
+            if (expecting != Word)
+                words.prepend(sep);
+            else break;
+
+            good_pos = pos;
+            expecting = Word;
+        }
+        else
+        {
+            QString word = getWord(pos);
+
+            if (word.isEmpty() || expecting == Separator)
+                break;
+
+            words.prepend(word);
+
+            good_pos = pos;
+            expecting = Separator;
+
+            // Return the position of the start of the last word if required.
+            if (last_word_start < 0)
+                last_word_start = pos;
+        }
+
+        // Strip any preceding spaces (mainly around operators).
+        char ch;
+
+        while ((ch = getCharacter(pos)) != '\0')
+        {
+            // This is the same definition of space that Scintilla uses.
+            if (ch != ' ' && (ch < 0x09 || ch > 0x0d))
+            {
+                ++pos;
+                break;
+            }
+        }
+    }
+
+    context_start = good_pos;
+
+    if (!words.isEmpty()) {
+        if (words.last() == "." || words.last() == "#") words << "";
+    }
+    return words;
+
+
+
+}
+
+
+char SpinEditor::getCharacter(int &pos) const
+{
+    if (pos <= 0) return '\0';
+    char ch = SendScintilla(SCI_GETCHARAT, --pos);
+    // Don't go past the end of the previous line.
+    if (ch == '\n' || ch == '\r') {
+        ++pos;
+        return '\0';
+    }
+    return ch;
+}
+
+QString SpinEditor::getSeparator(int &pos) const
+{
+    int opos = pos;
+
+    QStringList wseps = lexer()->autoCompletionWordSeparators();
+    // Go through each separator.
+    for (int i = 0; i < wseps.count(); ++i)
+    {
+        const QString &ws = wseps[i];
+
+        // Work backwards.
+        uint l;
+
+        for (l = ws.length(); l; --l)
+        {
+            char ch = getCharacter(pos);
+
+            if (ch == '\0' || ws.at(l - 1) != ch)
+                break;
+        }
+
+        if (!l)
+            return ws;
+
+        // Reset for the next separator.
+        pos = opos;
+    }
+
+    return QString();
+}
+
+QString SpinEditor::getWord(int &pos) const
+{
+    QString word;
+    bool numeric = true;
+    char ch;
+
+    while ((ch = getCharacter(pos)) != '\0')
+    {
+        if (!isWordCharacter(ch))
+        {
+            ++pos;
+            break;
+        }
+
+        if (ch < '0' || ch > '9')
+            numeric = false;
+
+        word.prepend(ch);
+    }
+
+    // We don't auto-complete numbers.
+    if (numeric)
+        word.truncate(0);
+
+    return word;
+}
+
+SpinCodeParser * SpinEditor::getParser()
+{
+    return SpinSourceFactory::instance()->getParser(fileName);
 }

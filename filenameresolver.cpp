@@ -22,9 +22,12 @@ FilenameResolver * FilenameResolver::getInstance()
 
 QString FilenameResolver::pResolve(QString filename, QString ext, QString curDir)
 {
+    if (QDir::isAbsolutePath(filename)) return QDir::toNativeSeparators(filename);
     Preferences pref;
     QString search = filename;
-    if (!search.toLower().endsWith(ext.toLower().prepend("."))) search +=  "." + ext;
+    if (!ext.isEmpty()) {
+        if (!search.toLower().endsWith(ext.toLower().prepend("."))) search +=  "." + ext;
+    }
     QStringList paths;
     if (!curDir.isEmpty()) paths << curDir;
     paths << additionalPaths;

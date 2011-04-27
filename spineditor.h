@@ -2,8 +2,9 @@
 #define SPINEDITOR_H
 
 #include <Qsci/qsciscintilla.h>
-#include "spinparser.h"
+#include "spincodeparser.h"
 #include "searchable.h"
+#include "spincompletionsource.h"
 
 namespace PZST {
     class SpinEditor : public QsciScintilla, public Searchable
@@ -11,6 +12,7 @@ namespace PZST {
         Q_OBJECT
     public:
         SpinEditor(QWidget *p = 0);
+        ~SpinEditor();
         static SpinEditor *loadFile(QString fName, QWidget *parent = 0);
         void setFileName(QString fName);
         QString getFileName() {return fileName;};
@@ -19,22 +21,27 @@ namespace PZST {
         int maybeSave(QWidget *parent = 0, bool forClose = true);
         void readPreferences();
         bool hasFilename() {return HasFilename;};
-        SpinMethodInfoList getMethodDefs();
+        SpinContextList getMethodDefs();
+        SpinCodeParser *getParser();
         QString getWordAtCursor() const;
         virtual QStringList getSearchTargets();
         virtual QString getSearchTargetText(QString &target);
         virtual int getSearchTargetStartPosition(QString &target, bool backward);
         virtual void replaceInTarget(QString &target, int start, int len, QString &text);
         virtual bool supportsReplace(QString &target);
+        virtual QStringList apiContext(int pos, int &context_start, int &last_word_start);
+        char getCharacter(int &pos) const;
+        QString getSeparator(int &pos) const;
+        QString getWord(int &pos) const;
 
     private:
         void initialize();
         void updateCaption();
         QString fileName;
         bool HasFilename;
-        SpinParser parser;
-        void parseMethods();
         char getChar(int &pos, int delta) const;
+        SpinCompletionSource *completion;
+        void registerIcons();
     protected:
         virtual void closeEvent ( QCloseEvent * event );
         virtual void keyPressEvent(QKeyEvent *e);
@@ -44,7 +51,7 @@ namespace PZST {
         void updateModificationStatus(bool m);
         void documentModified();
     signals:
-        void methodsListChanged(SpinMethodInfoList);
+        void methodsListChanged(SpinContextList);
         // !!!!!!!!! e can be already deleted !!!!!!!!
         void closed(SpinEditor*e);
     };

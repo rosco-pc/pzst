@@ -82,9 +82,13 @@ namespace PZST {
         void closeWindowAll();
         void contextMenuRequested(const QPoint &position);
         void find();
+        void autoComplete();
+        void callTip();
+        void fold();
+        void unfold();
 
     private slots:
-        void methodsListChanged(SpinMethodInfoList);
+        void methodsListChanged(SpinContextList);
         void methodChosen(int);
         void jumpToMethod();
         void searchRequested(QString search, SearchEngine::SearchOptions options);
@@ -120,7 +124,7 @@ namespace PZST {
         // 3 - save EEPROM
         void doCompilation(int command);
 
-        int cursorPositionToMethodIndex(int line);
+        int cursorPositionToMethodIndex(int pos);
         int wordToMethodIndex(QString w);
 
         QDockWidget *errorsDock;
@@ -165,6 +169,10 @@ namespace PZST {
         QAction *actFind;
         QAction *actFindNext;
         QAction *actReplace;
+        QAction *actComplete;
+        QAction *actCallTip;
+        QAction *actFold;
+        QAction *actUnfold;
 
         QAction *actTerminal;
 

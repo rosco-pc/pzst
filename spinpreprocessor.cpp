@@ -1,4 +1,6 @@
 #include "spinpreprocessor.h"
+#include "spincodelexer.h"
+#include "spinsourcefactory.h"
 #include "filenameresolver.h"
 #include <QFile>
 #include <QTextStream>
@@ -23,16 +25,27 @@ void SpinPreprocessor::setSearchPath(QStringList path)
 }
 PreprocessedFiles SpinPreprocessor::findFiles()
 {
-    QStringList newObjects, allObjects;
+    QStringList newObjects, allObjects, dataFiles;
     PreprocessedFiles files;
     QQueue<QString> queue;
     queue.enqueue(topFile);
     while (!queue.isEmpty()) {
         QString fileName = queue.dequeue();
         newObjects.clear();
+        dataFiles.clear();
         PreprocessedFile p;
         p.fileName = fileName;
-        p.data = findObjects(fileName, allObjects, newObjects);
+        p.data = findObjects(fileName, allObjects, newObjects, dataFiles);
+        for (int i = 0; i < dataFiles.size(); i++) {
+            PreprocessedFile p;
+            QString fileName = FilenameResolver::resolve(dataFiles[i], "", topDir);
+            p.fileName = dataFiles[i];
+            QFile f(fileName);
+            if (f.open(QIODevice::ReadOnly)) {
+                p.data = f.readAll();
+                files.append(p);
+            }
+        }
         if (!p.data.isNull()) {
             files.append(p);
         }
@@ -51,155 +64,89 @@ if (pos > var) { \
         else var = c - source; \
    } \
 }
-QByteArray SpinPreprocessor::findObjects(QString fileName, QStringList existing, QStringList &newObjects)
+QByteArray SpinPreprocessor::findObjects(QString fileName, QStringList existing, QStringList &newObjects, QStringList &dataFiles)
 {
+    enum State {
+        Initial = 0,
+        InObj,
+        InFile,
+    };
+    State state = Initial;
     QByteArray ret;
-    char NL[] = "\n";
-    char QUOTE[] = "\"";
-    char COMMENT[] = "'";
-    char MLCOMMENT[] = "{";
-    char MLCOMMENT2[] = "{{";
-    char MLCOMMENTEND[] = "}";
-    char MLCOMMENT2END[] = "}}";
-    char OBJ[] = "\nobj";
-    char PUB[] = "\npub";
-    char PRI[] = "\npri";
-    char DAT[] = "\ndat";
-    char VAR[] = "\nvar";
-    char CON[] = "\ncon";
-
-    QString original;
-    QByteArray originalASCII;
-    char *source;
-    {
-        QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly)) return ret;
-        QTextStream in(&file);
-        QTextCodec *codec = QTextCodec::codecForName("UTF8");
-        in.setCodec(codec);
-        original = QString("\n").append(in.readAll());
-        originalASCII = original.toLower().toAscii();
-        source = originalASCII.data();
-    }
-    ret.reserve(originalASCII.size());
-    int max = ::strlen(source);
-    int pos = 0;
-    int state = Initial;
-    int appendFrom = 0;
-    int posOBJ = -1;
-    int posQuote = -1;
-    int posPUB = -1;
-    int posPRI = -1;
-    int posVAR = -1;
-    int posDAT = -1;
-    int posCON = -1;
-    int posComment = -1;
-    int posMLComment = -1;
-    int posMLComment2 = -1;
-    int posNL = -1;
-    int posMLCOMMENTEND = -1;
-    int posMLCOMMENT2END = -1;
-    while (pos < max) {
-        switch(state & StateMask) {
-        case Initial: {
-            //if (state & InObj) {
-                GET_POS(PUB, posPUB, 0);
-                GET_POS(PRI, posPRI, 0);
-                GET_POS(VAR, posVAR, 0);
-                GET_POS(DAT, posDAT, 0);
-                GET_POS(CON, posCON, 0);
-            //} else {
-                GET_POS(OBJ, posOBJ, 0);
-            //}
-            GET_POS(QUOTE, posQuote, 0);
-            GET_POS(COMMENT, posComment, 0);
-            GET_POS(MLCOMMENT, posMLComment, 0);
-            GET_POS(MLCOMMENT2, posMLComment2, 0);
-            int index = Min(posQuote, Min(posComment, Min(posMLComment, Min(posMLComment2, posOBJ))));
-            index = Min(index, Min(posPUB, Min(posPRI, Min(posVAR, Min(posDAT, posCON)))));
-
-            if (index >= max || index < 0) {
-                pos = max;
+    QString source = SpinSourceFactory::instance()->getSource(fileName);
+    if (source.isEmpty()) return ret;
+    QByteArray bytes = source.toAscii();
+    bytes.append((char)0);
+    char *start = bytes.data();
+    char *firstChar = start;
+    char *end = start + bytes.size() - 1;
+    while (start < end) {
+        char *next;
+        SpinCodeLexer::Retval token = SpinCodeLexer::scan(start, end, &next);
+        if (token == SpinCodeLexer::EOI) break;
+        if (state == Initial) {
+            switch (token) {
+            case SpinCodeLexer::OBJ:
+                state = InObj;
+                ret.append(start, next - start);
+                break;
+            case SpinCodeLexer::FILE:
+                state = InFile;
+                ret.append(start, next - start);
+                break;
+            case SpinCodeLexer::STRING: {
+                QString str = encodeChars(source.mid(start - firstChar + 1, next - start -2));
+                ret.append(str);
                 break;
             }
-
-            if (posQuote == index) {
-                state = (state & ~StateMask) | InString;
-                pos = index + 1;
-                posQuote = -1;
-            } else if (posComment == index) {
-                state = (state & ~StateMask) | InComment;
-                pos = index + 1;
-                posComment = -1;
-            } else if (posMLComment2 == index) {
-                state = (state & ~StateMask) | InMLComment2;
-                pos = index + 2;
-                posMLComment2 = -1;
-            } else if (posMLComment == index) {
-                state = (state & ~StateMask) | InMLComment;
-                pos = index + 1;
-                posMLComment = -1;
-            } else if (posOBJ == index) {
-                state = InObj;
-                pos = index + 4;
-                posOBJ = -1;
-            } else if (
-                       posPUB == index
-                     || posPRI == index
-                     || posVAR == index
-                     || posDAT == index
-                     || posCON == index
-                    ) {
-                state = 0;
-                pos = index + 4;
-                posPUB = posPRI = posVAR = posDAT = posCON = -1;
+            default:
+                ret.append(start, next - start);
+                break;
             }
-            break;
-        }
-        case InComment: {
-            GET_POS(NL, posNL, 0);
-            state = state & ~StateMask;
-            pos = posNL;
-            break;
-        }
-        case InMLComment: {
-            GET_POS(MLCOMMENTEND, posMLCOMMENTEND, -1);
-            state = state & ~StateMask;
-            pos = posMLCOMMENTEND + 1;
-            break;
-        }
-        case InMLComment2: {
-            GET_POS(MLCOMMENT2END, posMLCOMMENT2END, -2);
-            state = state & ~StateMask;
-            pos = posMLCOMMENT2END + 2;
-            break;
-        }
-        case InString: {
-            char *c = ::strstr(source + pos, QUOTE);
-            posQuote = c - source;
-            if (!c) {
-                posQuote = max;
-            } else if (state & InObj) {
-                QString name = QString(QByteArray(source + pos, posQuote - pos)).toLower();
+        } else if (state == InObj) {
+            switch (token) {
+            case SpinCodeLexer::DAT:
+            case SpinCodeLexer::PUB:
+            case SpinCodeLexer::PRI:
+            case SpinCodeLexer::CON:
+            case SpinCodeLexer::VAR:
+                state = Initial;
+                ret.append(start, next - start);
+                break;
+            case SpinCodeLexer::STRING: {
+                QString name = source.mid(start - firstChar + 1, next - start - 2).toLower();
                 if (!existing.contains(name) && !newObjects.contains(name)) newObjects.append(name);
-            } else {
-                ret.append(source + appendFrom, pos - appendFrom - 1);
-                ret.append(encodeChars(original.mid(pos, posQuote- pos)));
-                appendFrom = posQuote + 1;
+                ret.append(start, next - start);
+                }
+                break;
+            default:
+                ret.append(start, next - start);
+                break;
             }
-            state = state & ~StateMask;
-            pos = posQuote + 1;
-            break;
+        } else if (state == InFile) {
+            switch (token) {
+            case SpinCodeLexer::WHITESPACE:
+            case SpinCodeLexer::COMMENT:
+            case SpinCodeLexer::CHAR:
+                ret.append(start, next - start);
+                break;
+            case SpinCodeLexer::STRING: {
+                QString name = source.mid(start - firstChar + 1, next - start -2);
+                if (!existing.contains(name) && !dataFiles.contains(name)) dataFiles.append(name);
+                ret.append(start, next - start);
+                break;
+            }
+            default:
+                ret.append(start, next - start);
+                state = Initial;
+                break;
+            }
         }
-
-
-        }
+        start = next;
     }
-    if (appendFrom < max) {
-        ret.append(source + appendFrom, max - appendFrom);
-    }
-    return ret.right(ret.size()-1);
+    return ret;
 }
+
 QString SpinPreprocessor::encodeChars(QString str)
 {
     QTextCodec *codec = QTextCodec::codecForName(encoding.toAscii().data());

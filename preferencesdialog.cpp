@@ -82,8 +82,22 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     }
 #endif
     ui->portName->setEditText(pref.getPortName());
+    QList<QByteArray> available = QTextCodec::availableCodecs();
+    QStringList codecs;
+    QStringList seen;
+    for (int i = 0; i < available.size(); i++) {
+        QString codecName = QString(available.at(i));
+        if (seen.contains(codecName)) continue;
 
-
+        QTextCodec *codec = QTextCodec::codecForName(available.at(i));
+        codecs << codecName;
+        for (int j = 0; j < codec->aliases().size(); j++) {
+            seen << codec->aliases().at(j);
+        }
+    }
+    codecs.sort();
+    ui->encoding->addItems(codecs);
+    ui->encoding->setCurrentIndex(codecs.indexOf(pref.getEncoding()));
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -149,6 +163,8 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setInfo(ui->genInfo->isChecked());
 
     pref.setPortName(ui->portName->currentText());
+
+    pref.setEncoding(ui->encoding->currentText());
 }
 
 void PreferencesDialog::on_pathAdd_clicked()

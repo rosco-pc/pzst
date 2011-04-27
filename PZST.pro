@@ -18,12 +18,14 @@ SOURCES += mainwindow.cpp \
     termialwindow.cpp \
     terminalwidget.cpp \
     terminaldisplay.cpp \
-    spinparser.cpp \
     finddialog.cpp \
     searchengine.cpp \
     searchable.cpp \
     filenameresolver.cpp \
-    spinpreprocessor.cpp
+    spinpreprocessor.cpp \
+    spinsourcefactory.cpp \
+    spincodeparser.cpp \
+    spincompletionsource.cpp
 HEADERS += mainwindow.h \
     spineditor.h \
     spinlexer.h \
@@ -38,12 +40,15 @@ HEADERS += mainwindow.h \
     termialwindow.h \
     terminalwidget.h \
     terminaldisplay.h \
-    spinparser.h \
     finddialog.h \
     searchengine.h \
     searchable.h \
     filenameresolver.h \
-    spinpreprocessor.h
+    spinpreprocessor.h \
+    spinsourcefactory.h \
+    spincodelexer.h \
+    spincodeparser.h \
+    spincompletionsource.h
 FORMS += aboutdialog.ui \
     preferencesdialog.ui \
     terminalwidget.ui \
@@ -55,3 +60,16 @@ win32:SOURCES += eserialport_win.cpp
 TRANSLATIONS = pzst_ru_RU.ts
 QMAKE_CXXFLAGS_DEBUG += -pg
 QMAKE_LFLAGS_DEBUG += -pg
+MAKE_SPIN_LEXER_INPUT = spincodelexer.re
+make_spin_lexer.commands = re2c \
+    -s \
+    --case-insensitive \
+    ${QMAKE_FILE_IN} \
+    > \
+    spincodelexer.cpp
+make_spin_lexer.input = MAKE_SPIN_LEXER_INPUT
+make_spin_lexer.output = spincodelexer.cpp
+make_spin_lexer.variable_out = SOURCES
+make_spin_lexer.name = make_spin_lexer
+QMAKE_EXTRA_COMPILERS += make_spin_lexer
+OTHER_FILES += spincodelexer.re
