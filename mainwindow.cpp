@@ -16,6 +16,9 @@
 #include <QPainter>
 #include <QLineEdit>
 #include <QKeyEvent>
+#include <Qsci/qsciprinter.h>
+#include <QPrintDialog>
+#include <QPrinter>
 
 #include "mainwindow.h"
 #include "spineditor.h"
@@ -132,6 +135,9 @@ void MainWindow::createActions()
     actSaveAs = createAction(tr("Save as ..."), "Shift+Ctrl+S", ":/Icons/saveas.png", true);
     connect(actSaveAs, SIGNAL(triggered()), this, SLOT(saveDocumentAs()));
 
+    actPrint = createAction(tr("Print ..."), "Ctrl+P", ":/Icons/print.png", true);
+    connect(actPrint, SIGNAL(triggered()), this, SLOT(printDocument()));
+
     actQuit = createAction(tr("Quit"), "Ctrl+Q", ":/Icons/exit.png", true);
     connect(actQuit, SIGNAL(triggered()), this, SLOT(close()));
 
@@ -230,6 +236,8 @@ void MainWindow::createMenus()
     menuFile->addSeparator();
     menuFile->addAction(actClose);
     menuFile->addAction(actCloseAll);
+    menuFile->addSeparator();
+    menuFile->addAction(actPrint);
     menuFile->addSeparator();
     menuFile->addAction(actQuit);
 
@@ -417,6 +425,7 @@ void MainWindow::windowActivated(QWidget *w)
             actFold->setEnabled(true);
             actUnfold->setEnabled(true);
             actCallTip->setEnabled(true);
+            actPrint->setEnabled(true);
             actClose->setEnabled(true);
             actCloseAll->setEnabled(true);
             actFind->setEnabled(true);
@@ -440,6 +449,7 @@ void MainWindow::windowActivated(QWidget *w)
         actLoadEEPROM->setEnabled(false);
         actSaveBIN->setEnabled(false);
         actSaveEEPROM->setEnabled(false);
+        actPrint->setEnabled(false);
         actClose->setEnabled(false);
         actCloseAll->setEnabled(false);
         actComplete->setEnabled(false);
@@ -1292,5 +1302,18 @@ void MainWindow::unfold()
         if (parent >= 0) line = parent;
         if (!e->SendScintilla(QsciScintilla::SCI_GETFOLDEXPANDED, line))
             e->SendScintilla(QsciScintilla::SCI_TOGGLEFOLD, line);
+    }
+}
+
+void MainWindow::printDocument()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        QsciPrinter p(QPrinter::HighResolution);
+        QPrintDialog pd(&p, this);
+        if (pd.exec() ==  QDialog::Accepted) {
+            p.setMagnification(7 - e->font().pointSize() );
+            p.printRange(e);
+        }
     }
 }

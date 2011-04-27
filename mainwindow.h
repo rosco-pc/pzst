@@ -86,6 +86,7 @@ namespace PZST {
         void callTip();
         void fold();
         void unfold();
+        void printDocument();
 
     private slots:
         void methodsListChanged(SpinContextList);
@@ -173,6 +174,7 @@ namespace PZST {
         QAction *actCallTip;
         QAction *actFold;
         QAction *actUnfold;
+        QAction *actPrint;
 
         QAction *actTerminal;
 

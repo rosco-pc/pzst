@@ -29,5 +29,6 @@
         <file alias="long.png">icons/long.png</file>
         <file alias="word.png">icons/word.png</file>
         <file alias="obj.png">icons/obj.png</file>
+        <file alias="print.png">icons/print.png</file>
     </qresource>
 </RCC>
