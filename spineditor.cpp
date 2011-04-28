@@ -26,7 +26,6 @@ SpinEditor::SpinEditor(QWidget *p)
 SpinEditor::~SpinEditor()
 {
     SpinSourceFactory::instance()->removeSource(fileName);
-    delete completion;
 }
 
 void SpinEditor::initialize()
@@ -34,8 +33,7 @@ void SpinEditor::initialize()
     static int c = 1;
     fileName = QString("Untitled%1.spin").arg(c++);
     setLexer(new SpinLexer());
-    completion = new SpinCompletionSource(lexer(), this);
-    lexer()->setAPIs(completion);
+    new SpinCompletionSource(lexer(), this);
     setUtf8(true);
     setAutoIndent(true);
     setBackspaceUnindents(true);
