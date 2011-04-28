@@ -63,10 +63,9 @@ QMAKE_LFLAGS_DEBUG += -pg
 MAKE_SPIN_LEXER_INPUT = spincodelexer.re
 make_spin_lexer.commands = re2c \
     -s \
+    -o spincodelexer.cpp \
     --case-insensitive \
-    ${QMAKE_FILE_IN} \
-    > \
-    spincodelexer.cpp
+    ${QMAKE_FILE_IN}
 make_spin_lexer.input = MAKE_SPIN_LEXER_INPUT
 make_spin_lexer.output = spincodelexer.cpp
 make_spin_lexer.variable_out = SOURCES
