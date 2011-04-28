@@ -1,4 +1,4 @@
-#include <QProcess>
+#include <QtGlobal>
 #include <QDir>
 #include <QCoreApplication>
 #include <QRegExp>
@@ -12,12 +12,16 @@
 
 using namespace PZST;
 
-SpinCompiler::SpinCompiler() : QThread()
+SpinCompiler::SpinCompiler() : QThread(), bstc(0)
 {
 }
 
 SpinCompiler::~SpinCompiler()
 {
+    if (bstc) {
+        bstc->terminate();
+        delete bstc;
+    }
 }
 
 CompilerTempFile::CompilerTempFile()
@@ -59,7 +63,6 @@ void SpinCompiler::compile(QString srcFileName, CompileDestination dest)
 
 void SpinCompiler::run()
 {
-
     Preferences pref;
     errors.clear();
     QFile sf;
@@ -123,22 +126,11 @@ void SpinCompiler::run()
     args << "-b";
     args << "-lm";
     args << topFile;
-    QProcess bstc;
-    bstc.setWorkingDirectory(tmpName);
-    bstc.start("bstc", args);
-    if (!bstc.waitForStarted(5000)) {
-        bstc.terminate();
-        status = StartError;
-        return;
-    }
-    if (!bstc.waitForFinished(10000)) {
-        bstc.terminate();
-        status = StartError;
-        return;
-    }
-    while (bstc.bytesAvailable()) bstcOutput.append(bstc.readLine());
+    bstc = runCompiler(tmpName, args);
+    if (!bstc) return;
+    while (bstc->bytesAvailable()) bstcOutput.append(bstc->readLine());
     parseOutput();
-    if (bstc.exitCode()) {
+    if (bstc->exitCode()) {
         status = CompileError;
         return;
     }
@@ -304,4 +296,40 @@ SpinCodeInfo SpinCompiler::parseListFile()
         }
     }
     return ret;
+}
+
+QProcess* SpinCompiler::runCompiler(const QString &workingDir, const QStringList &args)
+{
+    QProcess* compiler = new QProcess();
+    compiler->setWorkingDirectory(workingDir);
+    compiler->start("bstc", args);
+    if (!compiler->waitForStarted(5000)) {
+#ifndef Q_OS_WIN32
+#ifndef Q_OS_MAC
+        QString altExe = "bstc.linux";
+#else
+        QString altExe = "bstc.osx";
+#endif
+        compiler->terminate();
+        delete compiler;
+        compiler = new QProcess();
+        compiler->setWorkingDirectory(workingDir);
+        compiler->start(altExe, args);
+        if (!compiler->waitForStarted(5000)) {
+#endif
+        compiler->terminate();
+        delete compiler;
+        status = StartError;
+        return 0;
+#ifndef Q_OS_WIN32
+    }
+#endif
+    }
+    if (!compiler->waitForFinished(10000)) {
+        compiler->terminate();
+        delete compiler;
+        status = StartError;
+        return 0;
+    }
+    return compiler;
 }

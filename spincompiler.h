@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QStringList>
 #include <QList>
+#include <QProcess>
 
 namespace PZST {
     struct SpinError
@@ -76,9 +77,10 @@ namespace PZST {
         QByteArray eepromFileContent;
         QStringList bstcOutput;
         SpinErrors errors;
-
+        QProcess *runCompiler(const QString &workingDir, const QStringList &args);
         void parseOutput();
         QString objFileName(QString f);
+        QProcess *bstc;
 
     protected:
         virtual void run();
