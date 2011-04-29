@@ -74,8 +74,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     setWindowIcon(icon);
     setDocumentMode(true);
 
-    terminal = new TermialWindow(this);
-
     createActions();
     createMenus();
     createStatusBar();
@@ -183,12 +181,6 @@ void MainWindow::createActions()
 
     actPreferences = createAction(tr("Preferences ..."), "", ":/Icons/configure.png", true);
     connect(actPreferences, SIGNAL(triggered()), this, SLOT(preferences()));
-
-    actTerminal = new QAction(tr("Terminal"), this);
-    actTerminal->setEnabled(false);
-    actTerminal->setCheckable(true);
-    connect(actTerminal, SIGNAL(triggered(bool)), terminal, SLOT(setVisible(bool)));
-    connect(terminal, SIGNAL(visibilityChanged(bool)), actTerminal, SLOT(setChecked(bool)));
 
     actFind = createAction(tr("Search/Replace"), "Ctrl+F", ":/Icons/find.png", true);
     connect(actFind, SIGNAL(triggered()), this, SLOT(find()));
@@ -509,7 +501,6 @@ void MainWindow::rebuildWindowMenu()
         }
         menuWindow->addSeparator();
     }
-    menuWindow->addAction(actTerminal);
     menuWindow->addAction(errorsDock->toggleViewAction());
     menuWindow->addAction(infoDock->toggleViewAction());
     menuWindow->addAction(charTableDock->toggleViewAction());

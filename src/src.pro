@@ -15,9 +15,6 @@ SOURCES += mainwindow.cpp \
     preferencesdialog.cpp \
     pzstpreferences.cpp \
     chartable.cpp \
-    termialwindow.cpp \
-    terminalwidget.cpp \
-    terminaldisplay.cpp \
     finddialog.cpp \
     searchengine.cpp \
     searchable.cpp \
@@ -37,9 +34,6 @@ HEADERS += mainwindow.h \
     preferencesdialog.h \
     pzstpreferences.h \
     chartable.h \
-    termialwindow.h \
-    terminalwidget.h \
-    terminaldisplay.h \
     finddialog.h \
     searchengine.h \
     searchable.h \
@@ -51,7 +45,6 @@ HEADERS += mainwindow.h \
     spincompletionsource.h
 FORMS += aboutdialog.ui \
     preferencesdialog.ui \
-    terminalwidget.ui \
     finddialog.ui
 LIBS += -lqscintilla2
 RESOURCES += PZST.qrc
@@ -63,7 +56,8 @@ QMAKE_LFLAGS_DEBUG += -pg
 MAKE_SPIN_LEXER_INPUT = spincodelexer.re
 make_spin_lexer.commands = re2c \
     -s \
-    -o spincodelexer.cpp \
+    -o \
+    spincodelexer.cpp \
     --case-insensitive \
     ${QMAKE_FILE_IN}
 make_spin_lexer.input = MAKE_SPIN_LEXER_INPUT

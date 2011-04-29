@@ -22,7 +22,6 @@
 
 #include "spineditor.h"
 #include "chartable.h"
-#include "termialwindow.h"
 #include "finddialog.h"
 #include "searchengine.h"
 
@@ -176,8 +175,6 @@ namespace PZST {
         QAction *actUnfold;
         QAction *actPrint;
 
-        QAction *actTerminal;
-
         QLabel *statusFileName;
         QLabel *statusPosition;
         QLabel *statusMessage;
@@ -191,8 +188,6 @@ namespace PZST {
         QComboBox *methodsListCombo;
 
         QString wordUnderCursor;
-
-        TermialWindow *terminal;
 
         SearchSettings searchSettings;
         FindDialog findDialog;

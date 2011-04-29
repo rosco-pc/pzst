@@ -68,7 +68,7 @@ SpinCodeLexer::Retval SpinCodeLexer::scan(char *start_, char *end_, char** next_
 	[\n] {RET(NL);}
         ([ ] | '\t' | '\r')+ {RET(WHITESPACE);}
 	[\x00] {RET(EOI);}
-        [\x80-\xFF]+ {qDebug("%d", YYCURSOR - start); RET(CHAR);}
+        [\x80-\xFF]+ {RET(CHAR);}
         [^\x80-\xFF] {RET(CHAR);}
 
 */
