@@ -178,6 +178,38 @@ void PreferencesDialog::on_pathAdd_clicked()
 void PreferencesDialog::on_pathRemove_clicked()
 {
     if (ui->searchPaths->currentRow() >= 0) {
-        ui->searchPaths->takeItem(ui->searchPaths->currentRow());
+        QListWidgetItem *item= ui->searchPaths->takeItem(ui->searchPaths->currentRow());
+        delete item;
     }
+}
+
+void PZST::PreferencesDialog::on_searchPaths_currentRowChanged(int currentRow)
+{
+    if (currentRow < 0) {
+        ui->moveUp->setEnabled(false);
+        ui->moveUp->setEnabled(false);
+    } else {
+        ui->moveUp->setEnabled(currentRow > 0);
+        ui->moveDown->setEnabled(currentRow < ui->searchPaths->count()-1);
+    }
+}
+
+void PZST::PreferencesDialog::on_moveUp_clicked()
+{
+    int idx = ui->searchPaths->currentRow();
+    QString text = ui->searchPaths->item(idx)->text();
+    QListWidgetItem *item= ui->searchPaths->takeItem(ui->searchPaths->currentRow());
+    delete item;
+    ui->searchPaths->insertItem(idx - 1, text);
+    ui->searchPaths->setCurrentRow(idx - 1);
+}
+
+void PZST::PreferencesDialog::on_moveDown_clicked()
+{
+    int idx = ui->searchPaths->currentRow();
+    QString text = ui->searchPaths->item(idx)->text();
+    QListWidgetItem *item= ui->searchPaths->takeItem(ui->searchPaths->currentRow());
+    delete item;
+    ui->searchPaths->insertItem(idx + 1, text);
+    ui->searchPaths->setCurrentRow(idx + 1);
 }
