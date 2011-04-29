@@ -44,7 +44,7 @@ QString SpinSourceFactory::getSource(QString fileName)
     QTextStream in(&file);
     QTextCodec *codec = QTextCodec::codecForName("UTF8");
     in.setCodec(codec);
-    QString ret = in.readAll();
+    QString ret = in.readAll().replace("\r\n", "\n").replace("\r", "\n");
     sourceTexts[fileName] = ret;
     return ret;
 }
