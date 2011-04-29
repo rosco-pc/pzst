@@ -393,303 +393,327 @@
 <context>
     <name>PZST::MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="118"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="121"/>
         <source>Open ...</source>
         <translation>Открыть ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="111"/>
+        <location filename="mainwindow.cpp" line="124"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="114"/>
+        <location filename="mainwindow.cpp" line="127"/>
         <source>Close all</source>
         <translation>Закрыть все</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="117"/>
+        <location filename="mainwindow.cpp" line="130"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="133"/>
         <source>Save as ...</source>
         <translation>Сохранить как ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="136"/>
+        <source>Print ...</source>
+        <translation>Печать ...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="126"/>
+        <location filename="mainwindow.cpp" line="142"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="129"/>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="132"/>
+        <location filename="mainwindow.cpp" line="148"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="151"/>
         <source>Undo</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="154"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>Detect Propeller</source>
         <translation>Найти Пропеллер</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="161"/>
         <source>Compile</source>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="165"/>
         <source>Compile and load RAM</source>
         <translation>Скомпилировать и загрузить в ОЗУ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="153"/>
+        <location filename="mainwindow.cpp" line="169"/>
         <source>Compile and load EEPROM</source>
         <translation>Скомпилировать и загрузить в ПЗУ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="157"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>Compile and save BINARY file</source>
         <translation>Скомпилировать и сохранить в файл BINARY</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="160"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>Compile and save EEPROM file</source>
         <translation>Скомпилировать и сохранить в файл EEPROM</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>About PZST ...</source>
         <translation>О программе ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="182"/>
         <source>Preferences ...</source>
         <translation>Параметры ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="169"/>
         <source>Terminal</source>
-        <translation>Терминал</translation>
+        <translation type="obsolete">Терминал</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="175"/>
+        <location filename="mainwindow.cpp" line="185"/>
         <source>Search/Replace</source>
         <translation>Поиск/Замена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="178"/>
+        <location filename="mainwindow.cpp" line="188"/>
         <source>Find next</source>
         <translation>Повторить поиск</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="181"/>
+        <location filename="mainwindow.cpp" line="191"/>
         <source>Replace and find next</source>
         <translation>Заменить и продолжить поиск</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="188"/>
+        <location filename="mainwindow.cpp" line="195"/>
+        <source>Autocomplete</source>
+        <translation>Автозавершение</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="199"/>
+        <source>Call tip</source>
+        <translation>Показать аргументы</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="203"/>
+        <source>Fold</source>
+        <translation>Свернуть</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="207"/>
+        <source>Unfold</source>
+        <translation>Развернуть</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="214"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="189"/>
+        <location filename="mainwindow.cpp" line="215"/>
         <source>&amp;Edit</source>
         <translation>&amp;Правка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="190"/>
+        <location filename="mainwindow.cpp" line="216"/>
         <source>&amp;Compile</source>
         <translation>Компиляция</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="191"/>
+        <location filename="mainwindow.cpp" line="217"/>
         <source>&amp;Window</source>
         <translation>&amp;Окно</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="192"/>
+        <location filename="mainwindow.cpp" line="218"/>
         <source>&amp;Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="197"/>
+        <location filename="mainwindow.cpp" line="223"/>
         <source>Recent files</source>
         <translation>Недавно открытые файлы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="mainwindow.cpp" line="268"/>
         <source>Editor toolbar</source>
         <translation>Инструменты редактора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="250"/>
+        <location filename="mainwindow.cpp" line="284"/>
         <source> Method:</source>
         <translation> Метод:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="280"/>
+        <location filename="mainwindow.cpp" line="314"/>
         <source>Errors</source>
         <translation>Ошибки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="288"/>
+        <location filename="mainwindow.cpp" line="322"/>
         <source>Compiler information</source>
         <translation>Информация компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="297"/>
+        <location filename="mainwindow.cpp" line="331"/>
         <source>Character table</source>
         <translation>Таблица символов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="310"/>
+        <location filename="mainwindow.cpp" line="344"/>
         <source>Search results</source>
         <translation>Результаты поиска</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="477"/>
+        <location filename="mainwindow.cpp" line="523"/>
         <source>No recent files</source>
         <translation>Нет файлов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="487"/>
-        <location filename="mainwindow.cpp" line="497"/>
+        <location filename="mainwindow.cpp" line="533"/>
+        <location filename="mainwindow.cpp" line="543"/>
         <source>File %1 saved</source>
         <translation>Файл %1 сохранен</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="709"/>
+        <location filename="mainwindow.cpp" line="754"/>
         <source>Propeller detected on port %1</source>
         <translation>Найден Пропеллер на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="711"/>
+        <location filename="mainwindow.cpp" line="756"/>
         <source>Propeller not found on port %1</source>
         <translation>Пропеллер не найден на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="715"/>
+        <location filename="mainwindow.cpp" line="760"/>
         <source>Propeller programmed!</source>
         <translation>Программирование завершено!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="717"/>
+        <location filename="mainwindow.cpp" line="762"/>
         <source>Propeller programming failed</source>
         <translation>Ошибка программирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="721"/>
+        <location filename="mainwindow.cpp" line="766"/>
         <source>Unable to open port %1</source>
         <translation>Не удалось открыть порт %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="833"/>
+        <location filename="mainwindow.cpp" line="884"/>
         <source>Failed to start compiler</source>
         <translation>Не удалось запустить компилятор</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="837"/>
+        <location filename="mainwindow.cpp" line="888"/>
         <source>Compile error</source>
         <translation>Ошибка компиляции</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="844"/>
+        <location filename="mainwindow.cpp" line="892"/>
         <source>Compile warning</source>
         <translation>Предупреждение компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="845"/>
+        <location filename="mainwindow.cpp" line="893"/>
         <source>Compile note</source>
         <translation>Замечание компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="856"/>
+        <location filename="mainwindow.cpp" line="903"/>
         <source>Compiled successfully</source>
         <translation>Скомпилировано</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="859"/>
+        <location filename="mainwindow.cpp" line="906"/>
         <source>Code size: %1 bytes, %2 longs</source>
         <translation>Размер кода: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="860"/>
+        <location filename="mainwindow.cpp" line="907"/>
         <source>Variables size: %1 bytes, %2 longs</source>
         <translation>Размер переменных: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="861"/>
+        <location filename="mainwindow.cpp" line="908"/>
         <source>Stack/free space: %1 bytes, %2 longs</source>
         <translation>Стэк/свободно: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="862"/>
+        <location filename="mainwindow.cpp" line="909"/>
         <source>Clock frequency: %1 Hz</source>
         <translation>Тактовая частота: %1 Гц</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="863"/>
+        <location filename="mainwindow.cpp" line="910"/>
         <source>Clock mode: %1</source>
         <translation>Режим тактирования: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="872"/>
+        <location filename="mainwindow.cpp" line="919"/>
         <source>BINARY files (*.binary)</source>
         <translation>Файлы BINARY (*.binary)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="873"/>
+        <location filename="mainwindow.cpp" line="920"/>
         <source>EEPROM files (*.eeprom)</source>
         <translation>Файлы EEPROM (*.eeprom)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="874"/>
+        <location filename="mainwindow.cpp" line="921"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="885"/>
+        <location filename="mainwindow.cpp" line="932"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886"/>
+        <location filename="mainwindow.cpp" line="933"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось сохранить %1 : %2.</translation>
@@ -763,77 +787,102 @@
         <translation>После изменения языка нужно перезапустить программу</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="176"/>
+        <location filename="preferencesdialog.ui" line="175"/>
+        <source>Save as UTF-16</source>
+        <translation>Сохранять UTF-16</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="182"/>
+        <source>Line numbers</source>
+        <translation>Номера строк</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="189"/>
+        <source>Highlight current line</source>
+        <translation>Подсветка текущей строки</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="197"/>
         <source>Search paths</source>
         <translation>Пути поиска</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="188"/>
+        <location filename="preferencesdialog.ui" line="209"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="195"/>
+        <location filename="preferencesdialog.ui" line="216"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="219"/>
+        <location filename="preferencesdialog.ui" line="226"/>
+        <source>Move up</source>
+        <translation>Вверх</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="236"/>
+        <source>Move down</source>
+        <translation>Вниз</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="260"/>
         <source>Compiler options</source>
         <translation>Опции компилятора</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="238"/>
+        <location filename="preferencesdialog.ui" line="279"/>
         <source>Generate Info messages</source>
         <translation>Показывать информационные сообщения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="245"/>
+        <location filename="preferencesdialog.ui" line="286"/>
         <source>Generate Warning messages</source>
         <translation>Показывать предупреждения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="252"/>
+        <location filename="preferencesdialog.ui" line="293"/>
         <source>Non-Parallax compatible extensions</source>
         <translation>Расширения несовместимые с компилятором Parallax</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="259"/>
+        <location filename="preferencesdialog.ui" line="300"/>
         <source>Fast Constants</source>
         <translation>&quot;Быстрые&quot; константы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="266"/>
+        <location filename="preferencesdialog.ui" line="307"/>
         <source>Generic &quot;Safe&quot; optimizations</source>
         <translation>Общие &quot;безопасные&quot; оптимизации</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="273"/>
+        <location filename="preferencesdialog.ui" line="314"/>
         <source>Fold Constant/Unary pairs</source>
         <translation>Упрощение пар константа/унарный оператор</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="280"/>
+        <location filename="preferencesdialog.ui" line="321"/>
         <source>Eliminate unused SPIN methods</source>
         <translation>Удаление неиспользуемых методов</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="287"/>
+        <location filename="preferencesdialog.ui" line="328"/>
         <source>Fold constants</source>
         <translation>Упрощение констант</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="294"/>
+        <location filename="preferencesdialog.ui" line="335"/>
         <source>Port</source>
         <translation>Порт</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="311"/>
+        <location filename="preferencesdialog.ui" line="352"/>
         <source>Encoding</source>
         <translation>Кодировка</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.cpp" line="150"/>
+        <location filename="preferencesdialog.cpp" line="172"/>
         <source>Add directory</source>
         <translation>Добавить путь</translation>
     </message>
@@ -859,12 +908,12 @@
 <context>
     <name>PZST::SpinCompiler</name>
     <message>
-        <location filename="spincompiler.cpp" line="70"/>
+        <location filename="spincompiler.cpp" line="74"/>
         <source>Cannot create temp directory %1</source>
         <translation>Не удалось создать временный каталог %1</translation>
     </message>
     <message>
-        <location filename="spincompiler.cpp" line="170"/>
+        <location filename="spincompiler.cpp" line="163"/>
         <source>bstc compiler bug</source>
         <translation>баг компилятора bstc</translation>
     </message>
@@ -872,113 +921,47 @@
 <context>
     <name>PZST::SpinEditor</name>
     <message>
-        <location filename="spineditor.cpp" line="47"/>
-        <location filename="spineditor.cpp" line="110"/>
+        <location filename="spineditor.cpp" line="57"/>
+        <location filename="spineditor.cpp" line="120"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="48"/>
+        <location filename="spineditor.cpp" line="58"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="96"/>
+        <location filename="spineditor.cpp" line="106"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="96"/>
+        <location filename="spineditor.cpp" line="106"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="111"/>
+        <location filename="spineditor.cpp" line="121"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="138"/>
+        <location filename="spineditor.cpp" line="156"/>
         <source>The document has been modified.</source>
         <translation>Документ изменен.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="139"/>
+        <location filename="spineditor.cpp" line="157"/>
         <source>Do you want to save changes to %1?</source>
         <translation>Вы хотите сохранить изменения в файл %1?</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="143"/>
+        <location filename="spineditor.cpp" line="161"/>
         <source>Continue without saving</source>
         <translation>Продолжить без сохранения</translation>
-    </message>
-</context>
-<context>
-    <name>PZST::TermialWindow</name>
-    <message>
-        <location filename="termialwindow.cpp" line="9"/>
-        <source>PZST Terminal</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>PZST::TerminalWidget</name>
-    <message>
-        <location filename="terminalwidget.ui" line="14"/>
-        <source>Form</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="43"/>
-        <source>PushButton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="56"/>
-        <source>Input format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="62"/>
-        <source>Plain text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="72"/>
-        <source>Text with escape  sequences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="79"/>
-        <source>Hex</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="89"/>
-        <source>Line ends</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="95"/>
-        <source>Do not add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="105"/>
-        <source>Add CR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="112"/>
-        <source>Add LF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="terminalwidget.ui" line="119"/>
-        <source>Add CR+LF</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
