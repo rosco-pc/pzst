@@ -176,6 +176,10 @@ void SpinCompiler::parseOutput()
             } else if (re.capturedTexts().at(4) == "Information" && max < 1) {
                 max = 1;
             }
+        } else {
+            errors.append(SpinError(s.trimmed(), "", -1, -1));
+            status = CompileError;
+            return;
         }
         switch (max) {
         case 0: status = OK; break;
