@@ -74,11 +74,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     setWindowIcon(icon);
     setDocumentMode(true);
 
+    createDocks();
     createActions();
     createMenus();
     createStatusBar();
     createToolbars();
-    createDocks();
 
     QSettings *s = new QSettings();
     restoreGeometry(s->value("geometry").toByteArray());
@@ -214,11 +214,11 @@ void MainWindow::createActions()
     connect(actUnfold, SIGNAL(triggered()), this, SLOT(unfold()));
     actUnfold->setEnabled(false);
 
-    actFontLarger = createAction(tr("Increase font size"), QKeySequence::ZoomIn);
+    actFontLarger = createAction(tr("Increase font size"), QKeySequence::ZoomIn, ":/Icons/fontsizeup.png", true);
     connect(actFontLarger, SIGNAL(triggered()), this, SLOT(increaseFontSize()));
     actFontLarger->setEnabled(false);
 
-    actFontSmaller = createAction(tr("Decrease font size"), QKeySequence::ZoomOut);
+    actFontSmaller = createAction(tr("Decrease font size"), QKeySequence::ZoomOut, ":/Icons/fontsizedown.png", true);
     connect(actFontSmaller, SIGNAL(triggered()), this, SLOT(decreaseFontSize()));
     actFontSmaller->setEnabled(false);
 }
@@ -268,6 +268,11 @@ void MainWindow::createMenus()
 
     menuView->addAction(actFontLarger);
     menuView->addAction(actFontSmaller);
+    menuView->addSeparator();
+    menuView->addAction(errorsDock->toggleViewAction());
+    menuView->addAction(infoDock->toggleViewAction());
+    menuView->addAction(charTableDock->toggleViewAction());
+    menuView->addAction(searchResultsDock->toggleViewAction());
 
     menuCompile->addAction(actDetectProp);
     menuCompile->addSeparator();
@@ -522,11 +527,8 @@ void MainWindow::rebuildWindowMenu()
         }
         menuWindow->addSeparator();
     }
-    menuWindow->addAction(errorsDock->toggleViewAction());
-    menuWindow->addAction(infoDock->toggleViewAction());
-    menuWindow->addAction(charTableDock->toggleViewAction());
-    menuWindow->addAction(searchResultsDock->toggleViewAction());
 }
+
 void MainWindow::rebuildMRUMenu()
 {
     QList<QMdiSubWindow*> windows = mdi->subWindowList();

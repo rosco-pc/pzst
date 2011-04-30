@@ -30,5 +30,7 @@
         <file alias="word.png">icons/word.png</file>
         <file alias="obj.png">icons/obj.png</file>
         <file alias="print.png">icons/print.png</file>
+        <file alias="fontsizedown.png">icons/fontsizedown.png</file>
+        <file alias="fontsizeup.png">icons/fontsizeup.png</file>
     </qresource>
 </RCC>
