@@ -118,6 +118,11 @@ QAction* MainWindow::createAction(QString text, QKeySequence seq, QString iconFi
     return act;
 }
 
+QAction* MainWindow::createAction(QString text, QKeySequence::StandardKey seq, QString iconFile, bool inMenu)
+{
+    return createAction(text, QKeySequence(seq), iconFile, inMenu);
+}
+
 void MainWindow::createActions()
 {
     actNew = createAction(tr("New"), QKeySequence(QKeySequence::New), ":/Icons/new.png", true);
@@ -209,11 +214,19 @@ void MainWindow::createActions()
     connect(actUnfold, SIGNAL(triggered()), this, SLOT(unfold()));
     actUnfold->setEnabled(false);
 
+    actFontLarger = createAction(tr("Increase font size"), QKeySequence::ZoomIn);
+    connect(actFontLarger, SIGNAL(triggered()), this, SLOT(increaseFontSize()));
+    actFontLarger->setEnabled(false);
+
+    actFontSmaller = createAction(tr("Decrease font size"), QKeySequence::ZoomOut);
+    connect(actFontSmaller, SIGNAL(triggered()), this, SLOT(decreaseFontSize()));
+    actFontSmaller->setEnabled(false);
 }
 void MainWindow::createMenus()
 {
     menuFile = menuBar()->addMenu(tr("&File"));
     menuEdit = menuBar()->addMenu(tr("&Edit"));
+    menuView = menuBar()->addMenu(tr("&View"));
     menuCompile = menuBar()->addMenu(tr("&Compile"));
     menuWindow = menuBar()->addMenu(tr("&Window"));
     menuHelp = menuBar()->addMenu(tr("&Help"));
@@ -252,6 +265,9 @@ void MainWindow::createMenus()
     //menuEdit->addAction(actUnfold);
     //menuEdit->addSeparator();
     menuEdit->addAction(actPreferences);
+
+    menuView->addAction(actFontLarger);
+    menuView->addAction(actFontSmaller);
 
     menuCompile->addAction(actDetectProp);
     menuCompile->addSeparator();
@@ -422,6 +438,8 @@ void MainWindow::windowActivated(QWidget *w)
             actClose->setEnabled(true);
             actCloseAll->setEnabled(true);
             actFind->setEnabled(true);
+            actFontLarger->setEnabled(true);
+            actFontSmaller->setEnabled(true);
             actFindNext->setEnabled(!searchSettings.text.isEmpty());
             methodsListChanged(e->getMethodDefs());
             methodsListCombo->setEnabled(true);
@@ -451,6 +469,8 @@ void MainWindow::windowActivated(QWidget *w)
         actUnfold->setEnabled(false);
         actFind->setEnabled(false);
         actFindNext->setEnabled(false);
+        actFontLarger->setEnabled(false);
+        actFontSmaller->setEnabled(false);
         methodsListCombo->clear();
         methodsListCombo->setEnabled(false);
         searchEngine->setCurrentSearchTarget(NULL);
@@ -1308,4 +1328,24 @@ void MainWindow::printDocument()
             p.printRange(e);
         }
     }
+}
+
+void MainWindow::increaseFontSize()
+{
+    Preferences pref;
+    int fontSize = pref.getFontSize();
+    fontSize = (fontSize >= 10) ? fontSize + 2 : fontSize + 1;
+    if (fontSize > 48) fontSize = 48;
+    pref.setFontSize(fontSize);
+    readPreferences();
+}
+
+void MainWindow::decreaseFontSize()
+{
+    Preferences pref;
+    int fontSize = pref.getFontSize();
+    fontSize = (fontSize <= 10) ? fontSize - 1 : fontSize - 2;
+    if (fontSize < 6) fontSize = 6;
+    pref.setFontSize(fontSize);
+    readPreferences();
 }

@@ -86,6 +86,8 @@ namespace PZST {
         void fold();
         void unfold();
         void printDocument();
+        void increaseFontSize();
+        void decreaseFontSize();
 
     private slots:
         void methodsListChanged(SpinContextList);
@@ -112,6 +114,8 @@ namespace PZST {
         void createActions();
         QAction* createAction(QString text, QString seq = QString(), QString iconFile = QString(), bool inMenu = false);
         QAction* createAction(QString text, QKeySequence seq, QString iconFile = QString(), bool inMenu = false);
+        QAction* createAction(QString text, QKeySequence::StandardKey seq, QString iconFile = QString(), bool inMenu = false);
+
         void createMenus();
         void createStatusBar();
         void createToolbars();
@@ -142,6 +146,7 @@ namespace PZST {
 
         QMenu *menuFile;
         QMenu *menuEdit;
+        QMenu *menuView;
         QMenu *menuWindow;
         QMenu *menuCompile;
         QMenu *menuMRU;
@@ -175,6 +180,8 @@ namespace PZST {
         QAction *actFold;
         QAction *actUnfold;
         QAction *actPrint;
+        QAction *actFontLarger;
+        QAction *actFontSmaller;
 
         QLabel *statusFileName;
         QLabel *statusPosition;
