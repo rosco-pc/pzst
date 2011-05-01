@@ -6,10 +6,7 @@
 #include <QList>
 #include <QTextCodec>
 #include  "pzstpreferences.h"
-
-#ifdef Q_OS_WIN
-#include "windows.h"
-#endif
+#include  "eserialport.h"
 
 using namespace PZST;
 
@@ -52,35 +49,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     f.setPointSize(ui->fontSize->value());
     ui->fontSample->setFont(f);
 
-#ifdef Q_OS_WIN
-    QString template1 = "COM%1:";
-    for (int i = 0; i < 30; i++) {
-        QString fName = template1.arg(i);
-        HANDLE h = CreateFileA(fName.toAscii().data(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
-        bool success = false;
-        if (h == INVALID_HANDLE_VALUE)
-        {
-            DWORD dwError = GetLastError();
-            if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
-              success = true;
-        } else {
-            success = true;
-            ::CloseHandle(h);
-        }
-        if (success) ui->portName->addItem(fName);
-    }
-#else
-    QString template1 = "/dev/ttyS%1";
-    QString template2 = "/dev/ttyUSB%1";
-    for (int i = 0; i < 30; i++) {
-        QString fName = template1.arg(i);
-        if (QFile::exists(fName)) ui->portName->addItem(fName);
-    }
-    for (int i = 0; i < 30; i++) {
-        QString fName = template2.arg(i);
-        if (QFile::exists(fName)) ui->portName->addItem(fName);
-    }
-#endif
+    ui->portName->addItems(ESerialPort::enumeratePorts());
     ui->portName->setEditText(pref.getPortName());
     QList<QByteArray> available = QTextCodec::availableCodecs();
     QStringList codecs;

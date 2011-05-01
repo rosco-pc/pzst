@@ -70,3 +70,4 @@ void ESerialPort::setTimeout(int milli)
 {
     timeout = milli;
 }
+

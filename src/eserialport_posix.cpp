@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <QFile>
+#include <QStringList>
 
 using namespace PZST;
 
@@ -286,3 +288,4 @@ void ESerialPort::setDtr(bool v)
     }
     ioctl(fd, TIOCMSET, &control);
 }
+

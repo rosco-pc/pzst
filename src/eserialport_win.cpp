@@ -1,5 +1,6 @@
 #include "eserialport.h"
 #include <QTime>
+#include <QStringList>
 
 using namespace PZST;
 
@@ -264,3 +265,25 @@ qint64 ESerialPort::bytesAvailable() const
     return (unsigned int)-1;
 }
 
+
+QStringList ESerialPort::enumeratePorts()
+{
+    QStringList ports;
+    QString tpl = "COM%1:";
+    for (int i = 0; i < 30; i++) {
+        QString fName = tpl.arg(i);
+        HANDLE h = CreateFileA(fName.toAscii().data(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
+        bool success = false;
+        if (h == INVALID_HANDLE_VALUE)
+        {
+            DWORD dwError = GetLastError();
+            if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
+              success = true;
+        } else {
+            success = true;
+            ::CloseHandle(h);
+        }
+        if (success) ports << fName;
+    }
+    return ports;
+}

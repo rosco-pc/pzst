@@ -56,6 +56,8 @@ namespace PZST {
         ESerialPort(QObject *parent);
         virtual ~ESerialPort();
 
+        static QStringList enumeratePorts();
+
         virtual qint64 bytesAvailable() const;
         virtual bool canReadLine () const;
         virtual void close();
