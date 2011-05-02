@@ -49,6 +49,10 @@ unix:SOURCES += eserialport_posix.cpp
 unix:!macx:SOURCES += eserialport_nonosx.cpp
 unix:!macx:INCLUDEPATH += /usr/lib/dbus-1.0/include
 macx:SOURCES += eserialport_osx.cpp
+macx:LIBS += -framework \
+    IOKit
+macx:LIBS += -framework \
+    CoreFoundation
 win32:SOURCES += eserialport_win.cpp
 TRANSLATIONS = pzst_ru_RU.ts
 QMAKE_CXXFLAGS_DEBUG += -pg
