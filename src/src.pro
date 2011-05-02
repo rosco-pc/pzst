@@ -70,8 +70,7 @@ make_spin_lexer.variable_out = SOURCES
 make_spin_lexer.name = make_spin_lexer
 QMAKE_EXTRA_COMPILERS += make_spin_lexer
 OTHER_FILES += spincodelexer.re
-touch_version_h.commands = touch \
-    version.h
+touch_version_h.commands = cat version_tpl.h > version.h ; echo -n // >> version.h ; date --rfc-2822 >> version.h
 touch_version_h.input = SOURCES
 touch_version_h.depends = ${SOURCES} \
     ${HEADERS} \
@@ -80,4 +79,5 @@ touch_version_h.depends = ${SOURCES} \
     ${OTHER_FILES}
 touch_version_h.output = version.h
 touch_version_h.CONFIG += combine
+
 QMAKE_EXTRA_COMPILERS += touch_version_h
