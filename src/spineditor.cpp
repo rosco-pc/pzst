@@ -18,7 +18,7 @@
 using namespace PZST;
 
 SpinEditor::SpinEditor(QWidget *p)
-    :QsciScintilla(p), Searchable(), HasFilename(false)
+    :QsciScintilla(p), HasFilename(false)
 {
     initialize();
 }
@@ -269,53 +269,6 @@ char SpinEditor::getChar(int &pos, int delta) const
     return ch;
 }
 
-QStringList SpinEditor::getSearchTargets()
-{
-    QStringList targets;
-    targets << fileName;
-    return targets;
-}
-
-QString SpinEditor::getSearchTargetText(QString &target)
-{
-    Q_UNUSED(target);
-    return text();
-}
-
-int SpinEditor::getSearchTargetStartPosition(QString &target, bool backward)
-{
-    Q_UNUSED(target);
-    int l, i;
-    getCursorPosition(&l, &i);
-    QByteArray bytes = text().toUtf8();
-    int pos;
-    if (hasSelectedText()) {
-        int sL, sI, eL, eI;
-        getSelection(&sL, &sI, &eL, &eI);
-        if (backward) {
-            pos = QString::fromUtf8(bytes.data(), positionFromLineIndex(sL, sI)).size();
-        } else {
-            pos = QString::fromUtf8(bytes.data(), positionFromLineIndex(eL, eI)).size();
-        }
-    } else {
-        pos = QString::fromUtf8(bytes.data(), positionFromLineIndex(l, i)).size();
-    }
-    return pos;
-}
-
-void SpinEditor::replaceInTarget(QString &target, int start, int len, QString &text)
-{
-    Q_UNUSED(target);
-    Q_UNUSED(start);
-    Q_UNUSED(len);
-    Q_UNUSED(text);
-}
-
-bool SpinEditor::supportsReplace(QString &target)
-{
-    Q_UNUSED(target);
-    return true;
-}
 
 void SpinEditor::cursorPositionChanged(int l, int)
 {

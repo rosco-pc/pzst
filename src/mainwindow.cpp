@@ -42,7 +42,6 @@ SpinError::SpinError() :message(""), filename(""), line(-1), col(-1)
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
 {
     lastActiveWindow = 0;
-    searchEngine = new SearchEngine();
 
     windowSwitcher = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(windowSwitcher);
@@ -92,15 +91,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     setTabShape(QTabWidget::Triangular);
     windowActivated((QWidget*)0);
 
-
-    connect(
-        &findDialog,
-        SIGNAL(searchRequested(QString,SearchEngine::SearchOptions)),
-        this,
-        SLOT(searchRequested(QString,SearchEngine::SearchOptions))
-    );
-    qRegisterMetaType<SearchEngine::Result>("SearchEngine::Result");
-    connect(searchEngine, SIGNAL(foundInTarget(QString,SearchEngine::Result,bool)), this, SLOT(foundInTarget(QString,SearchEngine::Result,bool)));
 
     QApplication::instance()->installEventFilter(this);
 }
@@ -369,9 +359,6 @@ void MainWindow::createDocks()
     searchTree->setHeaderHidden(true);
     searchResultsDock->setWidget(searchTree);
     addDockWidget(Qt::BottomDockWidgetArea, searchResultsDock);
-    connect(searchEngine, SIGNAL(searchStarted(bool)), this, SLOT(searchStarted(bool)));
-    connect(searchEngine, SIGNAL(searchFinished(bool)), this, SLOT(searchFinished(bool)));
-    connect(searchTree, SIGNAL(activated(QModelIndex)), this, SLOT(searchTreeClicked(QModelIndex)));
 }
 void MainWindow::newDocument()
 {
@@ -382,7 +369,6 @@ void MainWindow::newDocument()
     w->setAttribute(Qt::WA_DeleteOnClose);
     connectEditor(e);
     checkClipboard();
-    searchEngine->registerSearchable(e);
     connect(e, SIGNAL(closed(SpinEditor*)), this, SLOT(editorClosed(SpinEditor*)));
 }
 void MainWindow::openDocument()
@@ -478,7 +464,6 @@ void MainWindow::windowActivated(QWidget *w)
         actFontSmaller->setEnabled(false);
         methodsListCombo->clear();
         methodsListCombo->setEnabled(false);
-        searchEngine->setCurrentSearchTarget(NULL);
     }
     Q_FOREACH (QTabBar* tabBar, mdi->findChildren<QTabBar*>())
     {
@@ -496,7 +481,6 @@ void MainWindow::connectEditor(SpinEditor *e)
     connect(e, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
     connect(e, SIGNAL(methodsListChanged(SpinContextList)), this, SLOT(methodsListChanged(SpinContextList)));
     connect(e, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
-    searchEngine->setCurrentSearchTarget(e);
 }
 void MainWindow::updateCursorPosition(int r, int c)
 {
@@ -710,7 +694,6 @@ bool MainWindow::openOrActivate(QString fName, int l, int c, bool focus)
         checkClipboard();
         addToMRU(e->getFileName());
         connect(e, SIGNAL(closed(SpinEditor*)), this, SLOT(editorClosed(SpinEditor*)));
-        searchEngine->registerSearchable(e);
         return true;
     }
     return false;
@@ -1115,50 +1098,8 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 }
 
 
-void MainWindow::searchRequested(QString search, SearchEngine::SearchOptions options)
+void MainWindow::editorClosed(SpinEditor *)
 {
-    searchEngine->find(search, options);
-}
-
-void MainWindow::foundInTarget(QString target, SearchEngine::Result res, bool allTargets)
-{
-    if (!allTargets) {
-        openOrActivate(target, -1, -1, false);
-        SpinEditor *e = activeEditor();
-        if (e) {
-            int startIdx = e->text().left(res.pos).toUtf8().size();
-            int endIdx = startIdx + res.match.toUtf8().size();
-            int sL, sI, eL, eI;
-            e->lineIndexFromPosition(startIdx, &sL, &sI);
-            e->lineIndexFromPosition(endIdx, &eL, &eI);
-            e->setSelection(sL, sI, eL, eI);
-        }
-    } else {
-        QStringList data;
-        data << target;
-        QTreeWidgetItem *parentItem = NULL;
-        for (int i = 0; i < searchTree->topLevelItemCount(); i++) {
-            QTreeWidgetItem *item = searchTree->topLevelItem(i);
-            if (item->text(0) == target) {
-                parentItem = item;
-                break;
-            }
-        }
-        if (!parentItem) {
-            parentItem = new QTreeWidgetItem(data);
-            searchTree->addTopLevelItem(parentItem);
-        }
-        QTreeWidgetItem *childItem = new QTreeWidgetItem();
-        childItem->setText(0, res.context);
-        childItem->setData(0, Qt::UserRole, res.pos);
-        childItem->setData(0, Qt::UserRole + 1, res.match.size());
-        parentItem->addChild(childItem);
-    }
-}
-
-void MainWindow::editorClosed(SpinEditor *e)
-{
-    searchEngine->unregisterSearchable(e);
 }
 
 void MainWindow::searchStarted(bool allTargets)

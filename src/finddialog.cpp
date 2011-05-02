@@ -43,31 +43,9 @@ void FindDialog::on_closeButton_clicked()
 void FindDialog::on_findButton_clicked()
 {
     if (ui->searchFor->text().isEmpty()) return;
-    SearchEngine::SearchOptions options = 0;
-    if (ui->re->isChecked()) options |= SearchEngine::RegExp;
-    if (ui->cs->isChecked()) options |= SearchEngine::CaseSensitive;
-    if (ui->wo->isChecked()) options |= SearchEngine::WholeWord;
-    if (ui->wrap->isChecked()) options |= SearchEngine::Wrap;
-    if (ui->backward->isChecked()) options |= SearchEngine::Backward;
-    if (ui->allFiles->isChecked()) {
-        options |= SearchEngine::AllEntries;
-        options |= SearchEngine::AllFiles;
-    }
-    if (options & SearchEngine::AllFiles) accept();
-    emit searchRequested(ui->searchFor->text(), options);
 }
 
 void FindDialog::on_findAll_clicked()
 {
     if (ui->searchFor->text().isEmpty()) return;
-    SearchEngine::SearchOptions options = 0;
-    if (ui->re->isChecked()) options |= SearchEngine::RegExp;
-    if (ui->cs->isChecked()) options |= SearchEngine::CaseSensitive;
-    if (ui->wo->isChecked()) options |= SearchEngine::WholeWord;
-    if (ui->wrap->isChecked()) options |= SearchEngine::Wrap;
-    if (ui->backward->isChecked()) options |= SearchEngine::Backward;
-    if (ui->allFiles->isChecked()) options |= SearchEngine::AllFiles;
-    options |= SearchEngine::AllEntries;
-    if (options & SearchEngine::AllFiles) accept();
-    emit searchRequested(ui->searchFor->text(), options);
 }

@@ -2,7 +2,6 @@
 #define FINDDIALOG_H
 
 #include <QDialog>
-#include "searchengine.h"
 
 class Ui_FindDialog;
 namespace PZST {
@@ -12,9 +11,6 @@ namespace PZST {
     public:
         FindDialog(QWidget *parent = 0);
         ~FindDialog();
-
-    signals:
-        void searchRequested(QString text, SearchEngine::SearchOptions options);
 
 
     protected:

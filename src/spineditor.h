@@ -3,11 +3,10 @@
 
 #include <Qsci/qsciscintilla.h>
 #include "spincodeparser.h"
-#include "searchable.h"
 #include "spincompletionsource.h"
 
 namespace PZST {
-    class SpinEditor : public QsciScintilla, public Searchable
+    class SpinEditor : public QsciScintilla
     {
         Q_OBJECT
     public:
@@ -24,11 +23,6 @@ namespace PZST {
         SpinContextList getMethodDefs();
         SpinCodeParser *getParser();
         QString getWordAtCursor() const;
-        virtual QStringList getSearchTargets();
-        virtual QString getSearchTargetText(QString &target);
-        virtual int getSearchTargetStartPosition(QString &target, bool backward);
-        virtual void replaceInTarget(QString &target, int start, int len, QString &text);
-        virtual bool supportsReplace(QString &target);
         virtual QStringList apiContext(int pos, int &context_start, int &last_word_start);
         char getCharacter(int &pos) const;
         QString getSeparator(int &pos) const;

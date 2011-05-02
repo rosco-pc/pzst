@@ -23,7 +23,6 @@
 #include "spineditor.h"
 #include "chartable.h"
 #include "finddialog.h"
-#include "searchengine.h"
 
 namespace PZST {
 
@@ -93,8 +92,6 @@ namespace PZST {
         void methodsListChanged(SpinContextList);
         void methodChosen(int);
         void jumpToMethod();
-        void searchRequested(QString search, SearchEngine::SearchOptions options);
-        void foundInTarget(QString target, SearchEngine::Result res, bool allTargets);
         void editorClosed(SpinEditor *e);
         void searchStarted(bool allTargets);
         void searchFinished(bool allTargets);
@@ -201,7 +198,6 @@ namespace PZST {
         FindDialog findDialog;
         QWidget *lastActiveWindow;
 
-        SearchEngine *searchEngine;
         QTreeWidget *searchTree;
 
         QWidget *windowSwitcher;

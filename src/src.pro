@@ -16,8 +16,6 @@ SOURCES += mainwindow.cpp \
     pzstpreferences.cpp \
     chartable.cpp \
     finddialog.cpp \
-    searchengine.cpp \
-    searchable.cpp \
     filenameresolver.cpp \
     spinpreprocessor.cpp \
     spinsourcefactory.cpp \
@@ -35,8 +33,6 @@ HEADERS += mainwindow.h \
     pzstpreferences.h \
     chartable.h \
     finddialog.h \
-    searchengine.h \
-    searchable.h \
     filenameresolver.h \
     spinpreprocessor.h \
     spinsourcefactory.h \
@@ -69,4 +65,3 @@ make_spin_lexer.variable_out = SOURCES
 make_spin_lexer.name = make_spin_lexer
 QMAKE_EXTRA_COMPILERS += make_spin_lexer
 OTHER_FILES += spincodelexer.re
-
