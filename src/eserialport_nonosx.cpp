@@ -72,6 +72,7 @@ static bool initializeHal()
     hal.dbus_error_free = (dbus_error_free_t)dbusLib.resolve("dbus_error_free");
     if (!hal.dbus_error_free) {hal.initialized = 2; return false;}
 
+    hal.initialized = 1;
     return true;
 }
 
