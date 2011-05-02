@@ -50,6 +50,7 @@ LIBS += -lqscintilla2
 RESOURCES += PZST.qrc
 unix:SOURCES += eserialport_posix.cpp
 unix:!macx:SOURCES += eserialport_nonosx.cpp
+unix:!macx:INCLUDEPATH += /usr/lib/dbus-1.0/include
 macx:SOURCES += eserialport_osx.cpp
 win32:SOURCES += eserialport_win.cpp
 TRANSLATIONS = pzst_ru_RU.ts
@@ -68,3 +69,4 @@ make_spin_lexer.variable_out = SOURCES
 make_spin_lexer.name = make_spin_lexer
 QMAKE_EXTRA_COMPILERS += make_spin_lexer
 OTHER_FILES += spincodelexer.re
+
