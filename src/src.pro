@@ -79,5 +79,4 @@ touch_version_h.depends = ${SOURCES} \
     ${OTHER_FILES}
 touch_version_h.output = version.h
 touch_version_h.CONFIG += combine
-
 QMAKE_EXTRA_COMPILERS += touch_version_h
