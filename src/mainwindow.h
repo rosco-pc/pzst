@@ -19,6 +19,7 @@
 #include <QToolBar>
 #include <QComboBox>
 #include <QTreeWidget>
+#include <QLineEdit>
 
 #include "spineditor.h"
 #include "chartable.h"
@@ -101,6 +102,10 @@ namespace PZST {
         void searchStarted(const SearchRequest*);
         void searchFinished(bool allTargets);
         void searchTreeClicked(QModelIndex);
+        void quickSearch();
+        void quickSearch(QString);
+        void noResults();
+        void qsEnter();
 
     private:
         void showStatusMessage(const QString& msg, int type = 0);
@@ -176,6 +181,7 @@ namespace PZST {
         QAction *actPreferences;
         QAction *actFind;
         QAction *actFindNext;
+        QAction *actQuickSearch;
         QAction *actReplace;
         QAction *actComplete;
         QAction *actCallTip;
@@ -206,6 +212,10 @@ namespace PZST {
 
         QWidget *windowSwitcher;
         QListWidget *windowsList;
+
+        QLineEdit *qsText;
+
+        int qsLine, qsCol;
 
     protected:
         void closeEvent(QCloseEvent *event);

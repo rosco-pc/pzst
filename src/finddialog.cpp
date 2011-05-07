@@ -64,6 +64,7 @@ void FindDialog::searchClicked(bool all, bool repeat, bool allowReplace)
         scopes.append(openFiles);
         all = true;
     }
+    if (ui->cs->isChecked()) req.addOptions(SearchRequest::CaseSensitive);
     if (ui->wo->isChecked()) req.addOptions(SearchRequest::WholeWords);
     if (ui->re->isChecked()) req.addOptions(SearchRequest::RegExp);
     if (ui->backward->isChecked()) req.addOptions(SearchRequest::Backwards);
@@ -91,4 +92,19 @@ void FindDialog::on_replaceAllButton_clicked()
 {
     searchClicked(true, false, true);
     close();
+}
+
+void FindDialog::search(SearchRequest & request)
+{
+    ui->searchFor->setText(request.getQuery());
+    ui->replaceWith->setText(request.getReplacement());
+    ui->backward->setChecked(request.getOptions() & SearchRequest::Backwards);
+    ui->cs->setChecked(request.getOptions() & SearchRequest::CaseSensitive);
+    ui->re->setChecked(request.getOptions() & SearchRequest::RegExp);
+    ui->wrapSearch->setChecked(request.getOptions() & SearchRequest::Wrap);
+    ui->wo->setChecked(request.getOptions() & SearchRequest::WholeWords);
+    searchClicked(request.getOptions() & SearchRequest::All, false, request.getOptions() & SearchRequest::Replace);
+    ui->wo->setChecked(request.getOptions() & SearchRequest::WholeWords);
+    ui->currentFile->setChecked(true);
+    ui->openFiles->setChecked(false);
 }

@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QList>
 #include "searchscope.h"
+#include "searchengine.h"
 
 class Ui_FindDialog;
 namespace PZST {
@@ -16,6 +17,7 @@ namespace PZST {
 
         void setCurrentFile(SearchScope* s) {currentFile = s;};
         void setOpenFiles(SearchScope* s) {openFiles= s;};
+        void search(SearchRequest &);
 
     public slots:
         void on_findButton_clicked();

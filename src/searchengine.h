@@ -33,6 +33,8 @@ namespace PZST {
         void addScope(SearchScope* scope);
         void setScopes(QList<SearchScope*> s) {scopes = s;};
         Options getOptions() const {return options;}
+        const QString &getQuery() {return query;}
+        const QString &getReplacement() {return replacement;}
 
     private:
         QString query;
@@ -50,16 +52,18 @@ namespace PZST {
         explicit SearchEngine(QObject *parent = 0);
         static void search(const SearchRequest &request);
         static void connectInstance(const char*, const QObject*, const char*);
+        static bool parseQuickSearch(const QString query, SearchRequest &request);
 
     signals:
         void searchStarted(const SearchRequest*);
         void found(Searchable*, int pos, int len, const SearchRequest*);
+        void noResults();
 
     public slots:
     private:
         static SearchEngine &instance();
         void p_search(const SearchRequest &request);
-        void findIn(Searchable *target, const SearchRequest &request);
+        int findIn(Searchable *target, const SearchRequest &request);
     };
 
 } // namespace PZST

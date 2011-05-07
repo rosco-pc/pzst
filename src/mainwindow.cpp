@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     setWindowIcon(icon);
     setDocumentMode(true);
 
+    qsText = new QLineEdit(this);
+
     createDocks();
     createActions();
     createMenus();
@@ -96,6 +98,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     QApplication::instance()->installEventFilter(this);
     SearchEngine::connectInstance(SIGNAL(found(Searchable*,int,int,const SearchRequest*)), this, SLOT(searchFound(Searchable*,int,int,const SearchRequest*)));
     SearchEngine::connectInstance(SIGNAL(searchStarted(const SearchRequest*)), this, SLOT(searchStarted(const SearchRequest*)));
+    SearchEngine::connectInstance(SIGNAL(noResults()), this, SLOT(noResults()));
     findDialog.setOpenFiles(this);
 }
 QAction* MainWindow::createAction(QString text, QString seq, QString iconFile, bool inMenu)
@@ -191,6 +194,11 @@ void MainWindow::createActions()
     actReplace = createAction(tr("Replace and find next"), QKeySequence(QKeySequence::Replace), "", true);
     connect(actReplace, SIGNAL(triggered()), this, SLOT(replace()));
 
+    actQuickSearch = createAction(tr("Quick Search"), "Ctrl+/", ":/Icons/find.png", true);
+    connect(actQuickSearch, SIGNAL(triggered()), qsText, SLOT(setFocus()));
+    connect(actQuickSearch, SIGNAL(triggered()), qsText, SLOT(selectAll()));
+    connect(actQuickSearch, SIGNAL(triggered()), this, SLOT(qsEnter()));
+
     actComplete= createAction(tr("Autocomplete"), "Ctrl+Space", "", true);
     connect(actComplete, SIGNAL(triggered()), this, SLOT(autoComplete()));
     actComplete->setEnabled(false);
@@ -250,6 +258,7 @@ void MainWindow::createMenus()
     menuEdit->addAction(actFind);
     menuEdit->addAction(actFindNext);
     menuEdit->addAction(actReplace);
+    menuEdit->addAction(actQuickSearch);
     menuEdit->addSeparator();
     menuEdit->addAction(actComplete);
     menuEdit->addAction(actCallTip);
@@ -299,6 +308,12 @@ void MainWindow::createToolbars()
     editToolBar->addWidget(new QLabel(tr(" Method:")));
     editToolBar->addWidget(methodsListCombo);
     connect(methodsListCombo, SIGNAL(activated(int)), this, SLOT(methodChosen(int)));
+
+    editToolBar->addSeparator();
+    editToolBar->addWidget(new QLabel(tr(" Quick search:")));
+    editToolBar->addWidget(qsText);
+    connect(qsText, SIGNAL(returnPressed()), this, SLOT(quickSearch()));
+    connect(qsText, SIGNAL(textChanged(QString)), this, SLOT(quickSearch(QString)));
 
     addToolBar(editToolBar);
 }
@@ -438,12 +453,14 @@ void MainWindow::windowActivated(QWidget *w)
             actClose->setEnabled(true);
             actCloseAll->setEnabled(true);
             actFind->setEnabled(true);
+            actQuickSearch->setEnabled(true);
             actFontLarger->setEnabled(true);
             actFontSmaller->setEnabled(true);
             actFindNext->setEnabled(true);
             methodsListChanged(e->getMethodDefs());
             methodsListCombo->setEnabled(true);
             updateCursorPosition(line, col);
+            qsText->setEnabled(true);
         }
     }
     if (!hasEditor) {
@@ -468,12 +485,14 @@ void MainWindow::windowActivated(QWidget *w)
         actFold->setEnabled(false);
         actUnfold->setEnabled(false);
         actFind->setEnabled(false);
+        actQuickSearch->setEnabled(false);
         actFindNext->setEnabled(false);
         actReplace->setEnabled(false);
         actFontLarger->setEnabled(false);
         actFontSmaller->setEnabled(false);
         methodsListCombo->clear();
         methodsListCombo->setEnabled(false);
+        qsText->setEnabled(false);
     }
     Q_FOREACH (QTabBar* tabBar, mdi->findChildren<QTabBar*>())
     {
@@ -1350,3 +1369,50 @@ void MainWindow::searchFound(Searchable *target, int pos, int len, const SearchR
     }
 }
 
+
+void MainWindow::quickSearch()
+{
+    SpinEditor *e = activeEditor();
+    if (!e) return;
+    SearchRequest req;
+    if (!SearchEngine::parseQuickSearch(qsText->text(), req)) {
+        qsText->setStyleSheet("background-color: #FDD");
+        return;
+    }
+    qsText->setStyleSheet("");
+    findDialog.search(req);
+    if ((req.getOptions() & SearchRequest::All) && (req.getOptions() & SearchRequest::Replace)) {
+        e->setFocus();
+    }
+}
+
+void MainWindow::quickSearch(QString str)
+{
+    SpinEditor *e = activeEditor();
+    if (!e) return;
+    e->setCursorPosition(qsLine, qsCol);
+    SearchRequest req;
+    if (!SearchEngine::parseQuickSearch(str, req)) {
+        qsText->setStyleSheet("background-color: #FDD");
+        return;
+    }
+    qsText->setStyleSheet("");
+    req.removeOptions(SearchRequest::Replace);
+    req.removeOptions(SearchRequest::All);
+    findDialog.search(req);
+}
+
+void MainWindow::noResults()
+{
+    statusBar()->clearMessage();
+    statusBar()->showMessage(tr("No results"), 2000);
+    qsText->setStyleSheet("background-color: #FFC");
+}
+
+void MainWindow::qsEnter()
+{
+    SpinEditor *e = activeEditor();
+    if (!e) return;
+    e->getCursorPosition(&qsLine, &qsCol);
+    quickSearch(qsText->text());
+}
