@@ -52,6 +52,8 @@ namespace PZST {
     public slots:
         void updateModificationStatus(bool m);
         void documentModified();
+        void beginUndoActionSlot();
+        void endUndoActionSlot();
     signals:
         void methodsListChanged(SpinContextList);
         // !!!!!!!!! e can be already deleted !!!!!!!!

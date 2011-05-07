@@ -486,3 +486,13 @@ void SpinEditor::replaceInTarget(QString str)
         replaceSelectedText(str);
     }
 }
+
+void SpinEditor::beginUndoActionSlot()
+{
+    beginUndoAction();
+}
+
+void SpinEditor::endUndoActionSlot()
+{
+    endUndoAction();
+}

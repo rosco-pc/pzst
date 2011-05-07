@@ -95,6 +95,7 @@ void SearchEngine::p_search(const SearchRequest &request)
 {
     QStringList seen;
     int count = 0;
+    emit searchStarted();
     emit searchStarted(&request);
     foreach (SearchScope *scope, request.scopes) {
         foreach (Searchable * s, scope->getTargets()) {
@@ -105,6 +106,7 @@ void SearchEngine::p_search(const SearchRequest &request)
         }
     }
     if (!count) emit noResults();
+    emit searchFinished();
 }
 
 bool SearchEngine::parseQuickSearch(QString query, SearchRequest &request)

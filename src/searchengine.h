@@ -56,6 +56,8 @@ namespace PZST {
 
     signals:
         void searchStarted(const SearchRequest*);
+        void searchStarted();
+        void searchFinished();
         void found(Searchable*, int pos, int len, const SearchRequest*);
         void noResults();
 
