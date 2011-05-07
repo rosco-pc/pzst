@@ -1,15 +1,18 @@
 #include "finddialog.h"
 #include "ui_finddialog.h"
+#include "searchengine.h"
 
 using namespace PZST;
 
 FindDialog::FindDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::FindDialog)
+    ui(new Ui::FindDialog),
+    currentFile(0),
+    openFiles(0)
 {
     ui->setupUi(this);
-    connect(ui->allFiles, SIGNAL(clicked(bool)), ui->replaceButton, SLOT(setDisabled(bool)));
-    connect(ui->allFiles, SIGNAL(clicked(bool)), ui->replaceAllButton, SLOT(setDisabled(bool)));
+    connect(ui->openFiles, SIGNAL(clicked(bool)), ui->replaceButton, SLOT(setDisabled(bool)));
+    connect(ui->openFiles, SIGNAL(clicked(bool)), ui->replaceAllButton, SLOT(setDisabled(bool)));
 }
 
 FindDialog::~FindDialog()
@@ -42,10 +45,50 @@ void FindDialog::on_closeButton_clicked()
 
 void FindDialog::on_findButton_clicked()
 {
-    if (ui->searchFor->text().isEmpty()) return;
+    searchClicked(false);
 }
 
 void FindDialog::on_findAll_clicked()
 {
+    searchClicked(true);
+    close();
+}
+
+void FindDialog::searchClicked(bool all, bool repeat, bool allowReplace)
+{
     if (ui->searchFor->text().isEmpty()) return;
+    SearchRequest req(ui->searchFor->text());
+    QList<SearchScope*> scopes;
+    if ((repeat || ui->currentFile->isChecked()) && currentFile) scopes.append(currentFile);
+    if (!repeat && !allowReplace && ui->openFiles->isChecked() && openFiles) {
+        scopes.append(openFiles);
+        all = true;
+    }
+    if (ui->wo->isChecked()) req.addOptions(SearchRequest::WholeWords);
+    if (ui->re->isChecked()) req.addOptions(SearchRequest::RegExp);
+    if (ui->backward->isChecked()) req.addOptions(SearchRequest::Backwards);
+    if (ui->wrapSearch->isChecked()) req.addOptions(SearchRequest::Wrap);
+    if (all) req.addOptions(SearchRequest::All);
+    if (allowReplace) {
+        req.setReplacement(ui->replaceWith->text());
+        req.addOptions(SearchRequest::Replace);
+    }
+    req.setScopes(scopes);
+    SearchEngine::search(req);
+}
+
+void FindDialog::findNext()
+{
+    searchClicked(false, true);
+}
+
+void FindDialog::on_replaceButton_clicked()
+{
+    searchClicked(false, false, true);
+}
+
+void FindDialog::on_replaceAllButton_clicked()
+{
+    searchClicked(true, false, true);
+    close();
 }

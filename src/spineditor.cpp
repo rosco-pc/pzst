@@ -14,6 +14,7 @@
 #include <QAbstractButton>
 #include "pzstpreferences.h"
 #include "spincodeparser.h"
+#include "searchengine.h"
 
 using namespace PZST;
 
@@ -46,6 +47,7 @@ void SpinEditor::initialize()
     setMarkerBackgroundColor(QColor(240,240,240), 0);
     readPreferences();
     registerIcons();
+    addSearchable(this);
 }
 
 
@@ -143,6 +145,7 @@ bool SpinEditor::save(QString fName)
 void SpinEditor::closeEvent(QCloseEvent *event)
 {
     if (maybeSave(this)) {
+        // FIXME SearchEngine::removeScope(this);
         emit closed(this);
         event->accept();
     }
@@ -217,6 +220,7 @@ void SpinEditor::documentModified()
 {
     QString code = text();
     SpinSourceFactory::instance()->addSource(fileName, code);
+    emit methodsListChanged(SpinSourceFactory::instance()->getParser(fileName)->getMethods());
 }
 
 SpinContextList SpinEditor::getMethodDefs()
@@ -445,4 +449,40 @@ QString SpinEditor::getWord(int &pos) const
 SpinCodeParser * SpinEditor::getParser()
 {
     return SpinSourceFactory::instance()->getParser(fileName);
+}
+
+QString SpinEditor::searchTargetId() const
+{
+    return getFileName();
+}
+
+QString SpinEditor::searchTargetText() const
+{
+    return text();
+}
+
+QString SpinEditor::searchScopeName() const
+{
+    return tr("Current file");
+}
+
+bool SpinEditor::supportsReplace() const
+{
+    return true;
+}
+
+int SpinEditor::getStartPosition() const
+{
+    int line, col, pos;
+    getCursorPosition(&line, &col);
+    pos = positionFromLineIndex(line, col);
+    QByteArray bytes = text().toUtf8().mid(0, pos);
+    return QString::fromUtf8(bytes.data(), bytes.size()).size();
+}
+
+void SpinEditor::replaceInTarget(QString str)
+{
+    if (hasSelectedText()) {
+        replaceSelectedText(str);
+    }
 }

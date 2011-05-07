@@ -30,6 +30,7 @@
 #include "aboutdialog.h"
 #include "preferencesdialog.h"
 #include "pzstpreferences.h"
+#include "searchengine.h"
 
 using namespace PZST;
 
@@ -88,11 +89,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
     setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
 
+
     setTabShape(QTabWidget::Triangular);
     windowActivated((QWidget*)0);
 
-
     QApplication::instance()->installEventFilter(this);
+    SearchEngine::connectInstance(SIGNAL(found(Searchable*,int,int,const SearchRequest*)), this, SLOT(searchFound(Searchable*,int,int,const SearchRequest*)));
+    SearchEngine::connectInstance(SIGNAL(searchStarted(const SearchRequest*)), this, SLOT(searchStarted(const SearchRequest*)));
+    findDialog.setOpenFiles(this);
 }
 QAction* MainWindow::createAction(QString text, QString seq, QString iconFile, bool inMenu)
 {
@@ -182,10 +186,9 @@ void MainWindow::createActions()
     connect(actFind, SIGNAL(triggered()), this, SLOT(find()));
 
     actFindNext = createAction(tr("Find next"), QKeySequence(QKeySequence::FindNext), "", true);
-    connect(actFindNext, SIGNAL(triggered()), this, SLOT(findNext()));
+    connect(actFindNext, SIGNAL(triggered()), &findDialog, SLOT(findNext()));
 
     actReplace = createAction(tr("Replace and find next"), QKeySequence(QKeySequence::Replace), "", true);
-    actReplace->setEnabled(false);
     connect(actReplace, SIGNAL(triggered()), this, SLOT(replace()));
 
     actComplete= createAction(tr("Autocomplete"), "Ctrl+Space", "", true);
@@ -356,9 +359,11 @@ void MainWindow::createDocks()
     searchResultsDock = new QDockWidget(tr("Search results"), this);
     searchResultsDock->setObjectName("searchResultsDock");
     searchTree = new QTreeWidget(this);
+    searchTree->setFocusPolicy(Qt::ClickFocus);
     searchTree->setHeaderHidden(true);
     searchResultsDock->setWidget(searchTree);
     addDockWidget(Qt::BottomDockWidgetArea, searchResultsDock);
+    connect(searchTree, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(searchTreeClicked(QModelIndex)));
 }
 void MainWindow::newDocument()
 {
@@ -393,17 +398,20 @@ void MainWindow::windowActivated(QWidget *w)
     bool hasEditor = false;
     actSave->setEnabled(false);
     actSaveAs->setEnabled(false);
+
+    findDialog.setCurrentFile(0);
+
     if (!w) {
         w = mdi->currentSubWindow();
     }
     if (w) {
-        if (w != lastActiveWindow) actReplace->setEnabled(false);
         lastActiveWindow = w;
         QMdiSubWindow *sw = qobject_cast<QMdiSubWindow *>(w);
         QWidget *widget = sw->widget();
         mdi->setActiveSubWindow(sw);
         SpinEditor *e = qobject_cast<SpinEditor *>(widget);
         if (e) {
+            findDialog.setCurrentFile(e);
             hasEditor = true;
             statusFileName->setText(e->getFileName());
             statusFileName->show();
@@ -416,6 +424,7 @@ void MainWindow::windowActivated(QWidget *w)
             actCopy->setEnabled(e->hasSelectedText());
             actUndo->setEnabled(e->isUndoAvailable());
             actRedo->setEnabled(e->isRedoAvailable());
+            actReplace->setEnabled(e->hasSelectedText());
             actCompile->setEnabled(true);
             actLoadRAM->setEnabled(true);
             actLoadEEPROM->setEnabled(true);
@@ -431,7 +440,7 @@ void MainWindow::windowActivated(QWidget *w)
             actFind->setEnabled(true);
             actFontLarger->setEnabled(true);
             actFontSmaller->setEnabled(true);
-            actFindNext->setEnabled(!searchSettings.text.isEmpty());
+            actFindNext->setEnabled(true);
             methodsListChanged(e->getMethodDefs());
             methodsListCombo->setEnabled(true);
             updateCursorPosition(line, col);
@@ -460,6 +469,7 @@ void MainWindow::windowActivated(QWidget *w)
         actUnfold->setEnabled(false);
         actFind->setEnabled(false);
         actFindNext->setEnabled(false);
+        actReplace->setEnabled(false);
         actFontLarger->setEnabled(false);
         actFontSmaller->setEnabled(false);
         methodsListCombo->clear();
@@ -515,7 +525,6 @@ void MainWindow::rebuildWindowMenu()
 
 void MainWindow::rebuildMRUMenu()
 {
-    QList<QMdiSubWindow*> windows = mdi->subWindowList();
     menuMRU->clear();
     QSettings settings;
     int size = settings.beginReadArray("MRU");
@@ -598,7 +607,7 @@ void MainWindow::selectionChanged()
     if (e) {
         actCut->setEnabled(e->hasSelectedText());
         actCopy->setEnabled(e->hasSelectedText());
-        actReplace->setEnabled(false);
+        actReplace->setEnabled(e->hasSelectedText());
     }
 }
 SpinEditor* MainWindow::activeEditor()
@@ -682,6 +691,7 @@ bool MainWindow::openOrActivate(QString fName, int l, int c, bool focus)
     }
     SpinEditor *e = SpinEditor::loadFile(fName, this);
     if (e) {
+        addSearchable(e);
         e->setWindowTitle(QFileInfo(fName).completeBaseName());
         QMdiSubWindow *w = mdi->addSubWindow(e);
         w->setSystemMenu(0);
@@ -1088,6 +1098,14 @@ void MainWindow::find()
     }
 }
 
+void MainWindow::replace()
+{
+    SpinEditor *e = activeEditor();
+    if (e) {
+        findDialog.on_replaceButton_clicked();
+    }
+}
+
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Escape) {
@@ -1098,13 +1116,14 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 }
 
 
-void MainWindow::editorClosed(SpinEditor *)
+void MainWindow::editorClosed(SpinEditor *e)
 {
+    removeSearchable(e);
 }
 
-void MainWindow::searchStarted(bool allTargets)
+void MainWindow::searchStarted(const SearchRequest *)
 {
-    if (allTargets) searchTree->clear();
+    searchTree->clear();
 }
 
 void MainWindow::searchFinished(bool allTargets)
@@ -1127,14 +1146,10 @@ void MainWindow::searchTreeClicked(QModelIndex idx)
         SpinEditor *e = activeEditor();
         if (e) {
             int sl, si;
-            int el, ei;
             int charPos = idx.data(Qt::UserRole).toInt();
-            int charLen = idx.data(Qt::UserRole+1).toInt();
             int pos = e->text().left(charPos).toUtf8().size();
-            int len = e->text().mid(charPos, charLen).toUtf8().size();
             e->lineIndexFromPosition(pos, &sl, &si);
-            e->lineIndexFromPosition(pos+len, &el, &ei);
-            e->setSelection(sl, si, el, ei);
+            e->setCursorPosition(sl, si);
         }
     }
 }
@@ -1292,3 +1307,46 @@ void MainWindow::decreaseFontSize()
     pref.setFontSize(fontSize);
     readPreferences();
 }
+
+QString MainWindow::searchScopeName() const
+{
+    return tr("All open documents");
+}
+
+void MainWindow::searchFound(Searchable *target, int pos, int len, const SearchRequest* req)
+{
+    SpinEditor *e = activeEditor();
+    if (!e) return;
+    if (target == dynamic_cast<Searchable*>(e) && (!(req->getOptions() & SearchRequest::All) || req->getOptions() & SearchRequest::Replace)) {
+        QString txt = e->text();
+        int startPos = txt.left(pos).toUtf8().size();
+        int endPos = txt.left(pos + len).toUtf8().size();
+        int l1, c1, l2, c2;
+        e->lineIndexFromPosition(startPos, &l1, &c1);
+        e->lineIndexFromPosition(endPos, &l2, &c2);
+        if (req->getOptions() & SearchRequest::Backwards) e->setSelection(l2, c2, l1, c1);
+        else e->setSelection(l1, c1, l2, c2);
+        actReplace->setEnabled(true);
+    } else {
+        QStringList data;
+        data << target->searchTargetId();
+        QTreeWidgetItem *parentItem = NULL;
+        for (int i = 0; i < searchTree->topLevelItemCount(); i++) {
+            QTreeWidgetItem *item = searchTree->topLevelItem(i);
+            if (item->text(0) == target->searchTargetId()) {
+                parentItem = item;
+                break;
+            }
+        }
+        if (!parentItem) {
+            parentItem = new QTreeWidgetItem(data);
+            searchTree->addTopLevelItem(parentItem);
+        }
+        QTreeWidgetItem *childItem = new QTreeWidgetItem();
+        childItem->setText(0, target->searchTargetText().mid(pos, len));
+        childItem->setData(0, Qt::UserRole, pos);
+        childItem->setData(0, Qt::UserRole + 1, len);
+        parentItem->addChild(childItem);
+    }
+}
+

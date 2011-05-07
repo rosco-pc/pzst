@@ -2,6 +2,8 @@
 #define FINDDIALOG_H
 
 #include <QDialog>
+#include <QList>
+#include "searchscope.h"
 
 class Ui_FindDialog;
 namespace PZST {
@@ -12,6 +14,13 @@ namespace PZST {
         FindDialog(QWidget *parent = 0);
         ~FindDialog();
 
+        void setCurrentFile(SearchScope* s) {currentFile = s;};
+        void setOpenFiles(SearchScope* s) {openFiles= s;};
+
+    public slots:
+        void on_findButton_clicked();
+        void findNext();
+        void on_replaceButton_clicked();
 
     protected:
         void changeEvent(QEvent *e);
@@ -19,13 +28,14 @@ namespace PZST {
 
     private:
         Ui_FindDialog *ui;
+        SearchScope* currentFile;
+        SearchScope* openFiles;
+        void searchClicked(bool all, bool repeat = false, bool allowReplace = false);
 
     private slots:
-
-    private slots:
-        void on_findButton_clicked();
         void on_findAll_clicked();
         void on_closeButton_clicked();
+        void on_replaceAllButton_clicked();
     };
 }
 #endif // FINDDIALOG_H

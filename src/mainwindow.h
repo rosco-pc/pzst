@@ -23,6 +23,8 @@
 #include "spineditor.h"
 #include "chartable.h"
 #include "finddialog.h"
+#include "searchscope.h"
+#include "searchengine.h"
 
 namespace PZST {
 
@@ -36,11 +38,12 @@ namespace PZST {
         bool forward;
     } SearchSettings ;
 
-    class MainWindow : public QMainWindow
+    class MainWindow : public QMainWindow, public SearchScope
     {
     Q_OBJECT
     public:
         explicit MainWindow(QWidget *parent = 0);
+        virtual QString searchScopeName() const;
 
     signals:
 
@@ -80,6 +83,7 @@ namespace PZST {
         void closeWindowAll();
         void contextMenuRequested(const QPoint &position);
         void find();
+        void replace();
         void autoComplete();
         void callTip();
         void fold();
@@ -89,11 +93,12 @@ namespace PZST {
         void decreaseFontSize();
 
     private slots:
+        void searchFound(Searchable*, int pos, int len, const SearchRequest*);
         void methodsListChanged(SpinContextList);
         void methodChosen(int);
         void jumpToMethod();
         void editorClosed(SpinEditor *e);
-        void searchStarted(bool allTargets);
+        void searchStarted(const SearchRequest*);
         void searchFinished(bool allTargets);
         void searchTreeClicked(QModelIndex);
 
@@ -194,7 +199,6 @@ namespace PZST {
 
         QString wordUnderCursor;
 
-        SearchSettings searchSettings;
         FindDialog findDialog;
         QWidget *lastActiveWindow;
 

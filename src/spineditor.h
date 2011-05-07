@@ -4,9 +4,11 @@
 #include <Qsci/qsciscintilla.h>
 #include "spincodeparser.h"
 #include "spincompletionsource.h"
+#include "searchscope.h"
+#include "searchable.h"
 
 namespace PZST {
-    class SpinEditor : public QsciScintilla
+    class SpinEditor : public QsciScintilla, public Searchable, public SearchScope
     {
         Q_OBJECT
     public:
@@ -14,7 +16,7 @@ namespace PZST {
         ~SpinEditor();
         static SpinEditor *loadFile(QString fName, QWidget *parent = 0);
         void setFileName(QString fName);
-        QString getFileName() {return fileName;};
+        QString getFileName() const {return fileName;};
         bool save();
         bool save(QString fName);
         int maybeSave(QWidget *parent = 0, bool forClose = true);
@@ -27,6 +29,12 @@ namespace PZST {
         char getCharacter(int &pos) const;
         QString getSeparator(int &pos) const;
         QString getWord(int &pos) const;
+        virtual QString searchTargetId() const;
+        virtual QString searchTargetText() const;
+        virtual QString searchScopeName() const;
+        virtual bool supportsReplace() const;
+        virtual int getStartPosition() const;
+        virtual void replaceInTarget(QString);
 
     private:
         void initialize();
