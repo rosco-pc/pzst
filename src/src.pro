@@ -53,6 +53,7 @@ RESOURCES += PZST.qrc
 unix:SOURCES += eserialport_posix.cpp
 unix:!macx:SOURCES += eserialport_nonosx.cpp
 unix:!macx:INCLUDEPATH += /usr/lib/dbus-1.0/include
+unix:!macx:INCLUDEPATH += /usr/include/dbus-1.0
 macx:SOURCES += eserialport_osx.cpp
 macx:LIBS += -framework \
     IOKit
