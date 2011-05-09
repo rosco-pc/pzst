@@ -71,7 +71,9 @@ void SpinCompiler::run()
     QString tmpName;
     CompilerTempFile tmpFile;
     if (!tmpFile.status()) {
-        errors.append(SpinError(tr("Cannot create temp directory %1").arg(tmpName), "", -1, -1));
+        SpinError err(tr("Cannot create temp directory %1").arg(tmpName), "", -1, -1);
+        err.severity = SpinError::Error;
+        errors.append(err);
         status = CompileError;
         return;
     }
@@ -160,24 +162,32 @@ void SpinCompiler::parseOutput()
     for (int i = 0; i < bstcOutput.size(); i++) {
         QString s = bstcOutput.at(i);
         if (s.startsWith("An unhandled exception occurred")) {
-            errors.append(SpinError(tr("bstc compiler bug"), "", -1, -1));
+            SpinError err(tr("bstc compiler bug"), "", -1, -1);
+            err.severity = SpinError::Error;
+            errors.append(err);
             status = CompileError;
             return;
         } else if (re.indexIn(s) == 0) {
-            errors.append(SpinError(s.trimmed(),
+            SpinError err(s.trimmed(),
                 objFileName(re.capturedTexts().at(1)),
                 re.capturedTexts().at(2).toUInt(),
                 re.capturedTexts().at(3).toUInt()
-            ));
+            );
             if (re.capturedTexts().at(4) == "Error") {
                 max = 3;
-            } else if (re.capturedTexts().at(4) == "Warning" && max < 2) {
-                max = 2;
-            } else if (re.capturedTexts().at(4) == "Information" && max < 1) {
-                max = 1;
+                err.severity = SpinError::Error;
+            } else if (re.capturedTexts().at(4) == "Warning") {
+                if (max < 2) max = 2;
+                err.severity = SpinError::Warning;
+            } else if (re.capturedTexts().at(4) == "Information") {
+                if (max < 1) max = 1;
+                err.severity = SpinError::Info;
             }
+            errors.append(err);
         } else {
-            errors.append(SpinError(s.trimmed(), "", -1, -1));
+            SpinError err(s.trimmed(), "", -1, -1);
+            err.severity = SpinError::Error;
+            errors.append(err);
             status = CompileError;
             return;
         }

@@ -9,11 +9,17 @@
 namespace PZST {
     struct SpinError
     {
+        enum Severity {
+            Info = 0,
+            Warning,
+            Error,
+        } ;
         SpinError(QString msg, QString f, int l, int c);
         SpinError();
         QString message;
         QString filename;
         int line, col;
+        Severity severity;
     };
 
     struct SpinCodeInfo
