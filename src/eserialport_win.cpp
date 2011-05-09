@@ -1,8 +1,19 @@
 #include "eserialport.h"
 #include <QTime>
+#include <QRegExp>
 #include <QStringList>
-
+#include <objbase.h>
+#include <initguid.h>
+#include <Setupapi.h>
+#ifndef GUID_CLASS_COMPORT
+DEFINE_GUID(GUID_CLASS_COMPORT, 0x86e0d1e0L, 0x8089, 0x11d0, 0x9c, 0xe4, \
+                        0x08, 0x00, 0x3e, 0x30, 0x1f, 0x73);
+#endif
 using namespace PZST;
+
+
+void EnumPortsWdm(QStringList &ports);
+bool EnumSerialPorts(QStringList &ports);
 
 void ESerialPort::close()
 {
@@ -269,21 +280,132 @@ qint64 ESerialPort::bytesAvailable() const
 QStringList ESerialPort::enumeratePorts()
 {
     QStringList ports;
-    QString tpl = "COM%1:";
-    for (int i = 0; i < 30; i++) {
-        QString fName = tpl.arg(i);
-        HANDLE h = CreateFileA(fName.toAscii().data(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
-        bool success = false;
-        if (h == INVALID_HANDLE_VALUE)
-        {
-            DWORD dwError = GetLastError();
-            if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
-              success = true;
-        } else {
-            success = true;
-            ::CloseHandle(h);
+    if (!EnumSerialPorts(ports)) {
+        QString tpl = "COM%1:";
+        for (int i = 0; i < 30; i++) {
+            QString fName = tpl.arg(i);
+            HANDLE h = CreateFileA(fName.toAscii().data(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
+            bool success = false;
+            if (h == INVALID_HANDLE_VALUE)
+            {
+                DWORD dwError = GetLastError();
+                if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
+                  success = true;
+            } else {
+                success = true;
+                ::CloseHandle(h);
+            }
+            if (success) ports << fName;
         }
-        if (success) ports << fName;
     }
     return ports;
 }
+
+
+
+
+
+/*************************************************************************
+* Serial port enumeration routines
+*
+* The EnumSerialPort function will populate an array of SSerInfo structs,
+* each of which contains information about one serial port present in
+* the system. Note that this code must be linked with setupapi.lib,
+* which is included with the Win32 SDK.
+*
+* by Zach Gorman <gormanjz@hotmail.com>
+*
+* Copyright (c) 2002 Archetype Auction Software, Inc. All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following condition is
+* met: Redistributions of source code must retain the above copyright
+* notice, this condition and the following disclaimer.
+*
+* THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL ARCHETYPE AUCTION SOFTWARE OR ITS
+* AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+************************************************************************/
+void EnumPortsWdm(QStringList &ports)
+{
+        GUID *guidDev = (GUID*) &GUID_CLASS_COMPORT;
+
+        HDEVINFO hDevInfo = INVALID_HANDLE_VALUE;
+        SP_DEVICE_INTERFACE_DETAIL_DATA *pDetData = NULL;
+
+        hDevInfo = SetupDiGetClassDevs( guidDev,
+                NULL,
+                NULL,
+                DIGCF_PRESENT | DIGCF_DEVICEINTERFACE
+                );
+
+        if(hDevInfo == INVALID_HANDLE_VALUE) {
+            return;
+        }
+
+        // Enumerate the serial ports
+        BOOL bOk = TRUE;
+        SP_DEVICE_INTERFACE_DATA ifcData;
+        DWORD dwDetDataSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA) + 256;
+        pDetData = (SP_DEVICE_INTERFACE_DETAIL_DATA*) new char[dwDetDataSize];
+        // This is required, according to the documentation. Yes,
+        // it's weird.
+        ifcData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+        pDetData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+        for (DWORD ii=0; bOk; ii++) {
+                bOk = SetupDiEnumDeviceInterfaces(hDevInfo,
+                        NULL, guidDev, ii, &ifcData);
+                if (bOk) {
+                        // Got a device. Get the details.
+                        SP_DEVINFO_DATA devdata = {sizeof(SP_DEVINFO_DATA)};
+                        bOk = SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                                &ifcData, pDetData, dwDetDataSize, NULL, &devdata);
+                        if (bOk) {
+                            CHAR fname[256];
+                            SetupDiGetDeviceRegistryProperty(
+                                    hDevInfo, &devdata, SPDRP_FRIENDLYNAME, NULL,
+                                    (PBYTE)fname, sizeof(fname), NULL);
+
+                            QString name = QString::fromWCharArray((wchar_t*)fname);
+                            QRegExp re("\\((COM[\\d]+)\\)$");
+                            if (name.contains(re)) {
+                                ports << re.capturedTexts()[1] + ':';
+                            }
+
+                        }
+                        else {
+                            continue;
+                        }
+                }
+        }
+
+        if (pDetData != NULL)
+                delete [] (char*)pDetData;
+        if (hDevInfo != INVALID_HANDLE_VALUE)
+                SetupDiDestroyDeviceInfoList(hDevInfo);
+
+}
+
+bool EnumSerialPorts(QStringList &ports)
+{
+    OSVERSIONINFO vi;
+    vi.dwOSVersionInfoSize = sizeof(vi);
+    bool done = false;
+    if (::GetVersionEx(&vi)) {
+        if (vi.dwMajorVersion >= 5) {
+            EnumPortsWdm(ports);
+            done = true;
+        }
+    }
+    return done;
+}
+
+

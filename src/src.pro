@@ -60,6 +60,7 @@ macx:LIBS += -framework \
 macx:LIBS += -framework \
     CoreFoundation
 win32:SOURCES += eserialport_win.cpp
+win32:LIBS += -lsetupapi
 TRANSLATIONS = pzst_ru_RU.ts
 QMAKE_CXXFLAGS_DEBUG += -pg
 QMAKE_LFLAGS_DEBUG += -pg
