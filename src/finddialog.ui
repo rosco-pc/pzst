@@ -9,15 +9,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>495</width>
-    <height>268</height>
+    <width>523</width>
+    <height>295</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Search/Replace</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="PZST.qrc">
+   <iconset>
     <normaloff>:/Files/appicon.ico</normaloff>:/Files/appicon.ico</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="10,1">
@@ -110,6 +110,16 @@
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="ungreedy">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>&quot;Ungreedy&quot; regular expressions</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -163,7 +173,7 @@
          <string>Find</string>
         </property>
         <property name="icon">
-         <iconset resource="PZST.qrc">
+         <iconset>
           <normaloff>:/Icons/search.gif</normaloff>:/Icons/search.gif</iconset>
         </property>
         <property name="default">
@@ -196,7 +206,7 @@
          <string>Replace</string>
         </property>
         <property name="icon">
-         <iconset resource="PZST.qrc">
+         <iconset>
           <normaloff>:/Icons/replace.gif</normaloff>:/Icons/replace.gif</iconset>
         </property>
        </widget>
@@ -227,7 +237,7 @@
          <string>Find all</string>
         </property>
         <property name="icon">
-         <iconset resource="PZST.qrc">
+         <iconset>
           <normaloff>:/Icons/search.gif</normaloff>:/Icons/search.gif</iconset>
         </property>
        </widget>
@@ -246,8 +256,6 @@
   <tabstop>replaceAllButton</tabstop>
   <tabstop>closeButton</tabstop>
  </tabstops>
- <resources>
-  <include location="PZST.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -1123,7 +1123,11 @@ void MainWindow::replace()
 {
     SpinEditor *e = activeEditor();
     if (e) {
+        int sl, sc, el, ec;
+        e->getSelection(&sl, &sc, &el, &ec);
+        e->setCursorPosition(sl, sc);
         findDialog.on_replaceButton_clicked();
+        findDialog.on_findButton_clicked();
     }
 }
 
@@ -1364,7 +1368,7 @@ void MainWindow::searchFound(Searchable *target, int pos, int len, const SearchR
             searchTree->addTopLevelItem(parentItem);
         }
         QTreeWidgetItem *childItem = new QTreeWidgetItem();
-        childItem->setText(0, target->searchTargetText().mid(pos, len));
+        childItem->setText(0, target->searchTargetText().mid(pos, len).simplified());
         childItem->setData(0, Qt::UserRole, pos);
         childItem->setData(0, Qt::UserRole + 1, len);
         parentItem->addChild(childItem);
@@ -1377,6 +1381,7 @@ void MainWindow::quickSearch()
     SpinEditor *e = activeEditor();
     if (!e) return;
     SearchRequest req;
+    e->setCursorPosition(qsLine, qsCol);
     if (!SearchEngine::parseQuickSearch(qsText->text(), req)) {
         qsText->setStyleSheet("background-color: #FDD");
         return;
@@ -1385,6 +1390,8 @@ void MainWindow::quickSearch()
     findDialog.search(req);
     if ((req.getOptions() & SearchRequest::All) && (req.getOptions() & SearchRequest::Replace)) {
         e->setFocus();
+    } else {
+        e->getCursorPosition(&qsLine, &qsCol);
     }
 }
 

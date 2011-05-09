@@ -38,6 +38,7 @@ namespace PZST {
         void on_findAll_clicked();
         void on_closeButton_clicked();
         void on_replaceAllButton_clicked();
+        void on_re_clicked(bool);
     };
 }
 #endif // FINDDIALOG_H

@@ -20,6 +20,7 @@ namespace PZST {
             WholeWords      = 16,
             All             = 32,
             Wrap            = 64,
+            Ungreedy        = 128,
         };
 
         SearchRequest(QString q = QString());
@@ -65,7 +66,9 @@ namespace PZST {
     private:
         static SearchEngine &instance();
         void p_search(const SearchRequest &request);
-        int findIn(Searchable *target, const SearchRequest &request);
+        int findIn(Searchable *target, const SearchRequest &request, const QStringList &replacements);
+        QString buildReplacement(const QRegExp&, const QStringList &parts);
+        bool splitReplacement(const QString& pattern, QStringList *parts);
     };
 
 } // namespace PZST
