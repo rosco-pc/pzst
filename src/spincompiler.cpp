@@ -132,6 +132,7 @@ void SpinCompiler::run()
     if (!bstc) return;
     while (bstc->bytesAvailable()) bstcOutput.append(bstc->readLine());
     parseOutput();
+    qSort(errors);
     if (bstc->exitCode()) {
         status = CompileError;
         return;

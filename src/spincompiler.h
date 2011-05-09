@@ -21,6 +21,7 @@ namespace PZST {
         int line, col;
         Severity severity;
     };
+    inline bool operator<(SpinError a, SpinError b) {return a.severity > b.severity;};
 
     struct SpinCodeInfo
     {
