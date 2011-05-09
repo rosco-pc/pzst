@@ -23,47 +23,72 @@
         <translation type="obsolete">О программе</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="14"/>
+        <location filename="finddialog.ui" line="17"/>
         <source>Search/Replace</source>
         <translation>Поиск/Замена</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="36"/>
+        <location filename="finddialog.ui" line="39"/>
         <source>Search for</source>
         <translation>Искать</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="53"/>
+        <location filename="finddialog.ui" line="56"/>
         <source>Replace with</source>
         <translation>Заменить на</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="79"/>
+        <location filename="finddialog.ui" line="75"/>
+        <source>Search options</source>
+        <translation>Опции поиска</translation>
+    </message>
+    <message>
+        <location filename="finddialog.ui" line="95"/>
         <source>Regular expression</source>
         <translation>Регулярное выражение</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="222"/>
+        <location filename="finddialog.ui" line="119"/>
+        <source>&quot;Ungreedy&quot; regular expressions</source>
+        <translation>&quot;Нежадные регулярные выражения</translation>
+    </message>
+    <message>
+        <location filename="finddialog.ui" line="129"/>
+        <source>Search scope</source>
+        <translation>Область поиска</translation>
+    </message>
+    <message>
+        <location filename="finddialog.ui" line="135"/>
+        <source>Current file</source>
+        <translation>Текущий файл</translation>
+    </message>
+    <message>
+        <location filename="finddialog.ui" line="145"/>
+        <source>All open files</source>
+        <translation>Все открытые файлы</translation>
+    </message>
+    <message>
+        <location filename="finddialog.ui" line="237"/>
         <source>Find all</source>
         <translation>Найти все</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="72"/>
+        <location filename="finddialog.ui" line="81"/>
         <source>Case sensitive</source>
         <translation>Учет регистра</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="86"/>
+        <location filename="finddialog.ui" line="102"/>
         <source>Search backward</source>
         <translation>К началу документа</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="93"/>
+        <location filename="finddialog.ui" line="88"/>
         <source>Whole words</source>
         <translation>Слово целиком</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="126"/>
+        <location filename="finddialog.ui" line="109"/>
         <source>Wrap search</source>
         <translation>Поиск по всему документу</translation>
     </message>
@@ -72,27 +97,26 @@
         <translation type="obsolete">Слово целиком</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="158"/>
+        <location filename="finddialog.ui" line="173"/>
         <source>Find</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="191"/>
+        <location filename="finddialog.ui" line="206"/>
         <source>Replace</source>
         <translation>Заменить</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="178"/>
+        <location filename="finddialog.ui" line="193"/>
         <source>Replace all</source>
         <translation>Заменить все</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="133"/>
         <source>Search all open files</source>
-        <translation>Искать во всех открытых файлах</translation>
+        <translation type="obsolete">Искать во всех открытых файлах</translation>
     </message>
     <message>
-        <location filename="finddialog.ui" line="202"/>
+        <location filename="finddialog.ui" line="217"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -393,107 +417,107 @@
 <context>
     <name>PZST::MainWindow</name>
     <message>
-        <location filename="mainwindow.cpp" line="128"/>
+        <location filename="mainwindow.cpp" line="125"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="131"/>
+        <location filename="mainwindow.cpp" line="128"/>
         <source>Open ...</source>
         <translation>Открыть ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="134"/>
+        <location filename="mainwindow.cpp" line="131"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="134"/>
         <source>Close all</source>
         <translation>Закрыть все</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="140"/>
+        <location filename="mainwindow.cpp" line="137"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="143"/>
+        <location filename="mainwindow.cpp" line="140"/>
         <source>Save as ...</source>
         <translation>Сохранить как ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="146"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Print ...</source>
         <translation>Печать ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="152"/>
+        <location filename="mainwindow.cpp" line="149"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="152"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="158"/>
+        <location filename="mainwindow.cpp" line="155"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="161"/>
+        <location filename="mainwindow.cpp" line="158"/>
         <source>Undo</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="164"/>
+        <location filename="mainwindow.cpp" line="161"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="167"/>
+        <location filename="mainwindow.cpp" line="164"/>
         <source>Detect Propeller</source>
         <translation>Найти Пропеллер</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="170"/>
+        <location filename="mainwindow.cpp" line="167"/>
         <source>Compile</source>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="173"/>
+        <location filename="mainwindow.cpp" line="170"/>
         <source>Compile and load RAM</source>
         <translation>Скомпилировать и загрузить в ОЗУ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>Compile and load EEPROM</source>
         <translation>Скомпилировать и загрузить в ПЗУ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="179"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>Compile and save BINARY file</source>
         <translation>Скомпилировать и сохранить в файл BINARY</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>Compile and save EEPROM file</source>
         <translation>Скомпилировать и сохранить в файл EEPROM</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="185"/>
+        <location filename="mainwindow.cpp" line="182"/>
         <source>About PZST ...</source>
         <translation>О программе ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="188"/>
+        <location filename="mainwindow.cpp" line="185"/>
         <source>Preferences ...</source>
         <translation>Параметры ...</translation>
     </message>
@@ -502,236 +526,256 @@
         <translation type="obsolete">Терминал</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="191"/>
+        <location filename="mainwindow.cpp" line="188"/>
         <source>Search/Replace</source>
         <translation>Поиск/Замена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="194"/>
+        <location filename="mainwindow.cpp" line="191"/>
         <source>Find next</source>
         <translation>Повторить поиск</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="197"/>
+        <location filename="mainwindow.cpp" line="194"/>
         <source>Replace and find next</source>
         <translation>Заменить и продолжить поиск</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="201"/>
+        <location filename="mainwindow.cpp" line="197"/>
+        <source>Quick Search</source>
+        <translation>Быстрый поиск</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="202"/>
         <source>Autocomplete</source>
         <translation>Автозавершение</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="205"/>
+        <location filename="mainwindow.cpp" line="206"/>
         <source>Call tip</source>
         <translation>Показать аргументы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="209"/>
+        <location filename="mainwindow.cpp" line="210"/>
         <source>Fold</source>
         <translation>Свернуть</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="213"/>
+        <location filename="mainwindow.cpp" line="214"/>
         <source>Unfold</source>
         <translation>Развернуть</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="217"/>
+        <location filename="mainwindow.cpp" line="218"/>
         <source>Increase font size</source>
         <translation>Увеличить шрифт</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="221"/>
+        <location filename="mainwindow.cpp" line="222"/>
         <source>Decrease font size</source>
         <translation>Уменьшить шрифт</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="227"/>
+        <location filename="mainwindow.cpp" line="228"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="228"/>
+        <location filename="mainwindow.cpp" line="229"/>
         <source>&amp;Edit</source>
         <translation>&amp;Правка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="229"/>
+        <location filename="mainwindow.cpp" line="230"/>
         <source>&amp;View</source>
         <translation>&amp;Вид</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="230"/>
+        <location filename="mainwindow.cpp" line="231"/>
         <source>&amp;Compile</source>
         <translation>Компиляция</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="231"/>
+        <location filename="mainwindow.cpp" line="232"/>
         <source>&amp;Window</source>
         <translation>&amp;Окно</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="232"/>
+        <location filename="mainwindow.cpp" line="233"/>
         <source>&amp;Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="237"/>
+        <location filename="mainwindow.cpp" line="238"/>
         <source>Recent files</source>
         <translation>Недавно открытые файлы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="290"/>
+        <location filename="mainwindow.cpp" line="292"/>
         <source>Editor toolbar</source>
         <translation>Инструменты редактора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="306"/>
+        <location filename="mainwindow.cpp" line="308"/>
         <source> Method:</source>
         <translation> Метод:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="336"/>
+        <location filename="mainwindow.cpp" line="313"/>
+        <source> Quick search:</source>
+        <translation>Быстрый поиск:</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="344"/>
         <source>Errors</source>
         <translation>Ошибки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="344"/>
+        <location filename="mainwindow.cpp" line="352"/>
         <source>Compiler information</source>
         <translation>Информация компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="353"/>
+        <location filename="mainwindow.cpp" line="361"/>
         <source>Character table</source>
         <translation>Таблица символов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="366"/>
+        <location filename="mainwindow.cpp" line="374"/>
         <source>Search results</source>
         <translation>Результаты поиска</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="390"/>
+        <location filename="mainwindow.cpp" line="396"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="390"/>
+        <location filename="mainwindow.cpp" line="396"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="546"/>
+        <location filename="mainwindow.cpp" line="560"/>
         <source>No recent files</source>
         <translation>Нет файлов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="556"/>
-        <location filename="mainwindow.cpp" line="566"/>
+        <location filename="mainwindow.cpp" line="570"/>
+        <location filename="mainwindow.cpp" line="580"/>
         <source>File %1 saved</source>
         <translation>Файл %1 сохранен</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="777"/>
+        <location filename="mainwindow.cpp" line="791"/>
         <source>Propeller detected on port %1</source>
         <translation>Найден Пропеллер на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="779"/>
+        <location filename="mainwindow.cpp" line="793"/>
         <source>Propeller not found on port %1</source>
         <translation>Пропеллер не найден на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="783"/>
+        <location filename="mainwindow.cpp" line="797"/>
         <source>Propeller programmed!</source>
         <translation>Программирование завершено!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="785"/>
+        <location filename="mainwindow.cpp" line="799"/>
         <source>Propeller programming failed</source>
         <translation>Ошибка программирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="789"/>
+        <location filename="mainwindow.cpp" line="803"/>
         <source>Unable to open port %1</source>
         <translation>Не удалось открыть порт %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="907"/>
+        <location filename="mainwindow.cpp" line="921"/>
         <source>Failed to start compiler</source>
         <translation>Не удалось запустить компилятор</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="911"/>
+        <location filename="mainwindow.cpp" line="925"/>
         <source>Compile error</source>
         <translation>Ошибка компиляции</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="915"/>
+        <location filename="mainwindow.cpp" line="929"/>
         <source>Compile warning</source>
         <translation>Предупреждение компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="916"/>
+        <location filename="mainwindow.cpp" line="930"/>
         <source>Compile note</source>
         <translation>Замечание компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="926"/>
+        <location filename="mainwindow.cpp" line="940"/>
         <source>Compiled successfully</source>
         <translation>Скомпилировано</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="929"/>
+        <location filename="mainwindow.cpp" line="943"/>
         <source>Code size: %1 bytes, %2 longs</source>
         <translation>Размер кода: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="930"/>
+        <location filename="mainwindow.cpp" line="944"/>
         <source>Variables size: %1 bytes, %2 longs</source>
         <translation>Размер переменных: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="931"/>
+        <location filename="mainwindow.cpp" line="945"/>
         <source>Stack/free space: %1 bytes, %2 longs</source>
         <translation>Стэк/свободно: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="932"/>
+        <location filename="mainwindow.cpp" line="946"/>
         <source>Clock frequency: %1 Hz</source>
         <translation>Тактовая частота: %1 Гц</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933"/>
+        <location filename="mainwindow.cpp" line="947"/>
         <source>Clock mode: %1</source>
         <translation>Режим тактирования: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="942"/>
+        <location filename="mainwindow.cpp" line="956"/>
         <source>BINARY files (*.binary)</source>
         <translation>Файлы BINARY (*.binary)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="943"/>
+        <location filename="mainwindow.cpp" line="957"/>
         <source>EEPROM files (*.eeprom)</source>
         <translation>Файлы EEPROM (*.eeprom)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="944"/>
+        <location filename="mainwindow.cpp" line="958"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="955"/>
+        <location filename="mainwindow.cpp" line="969"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="956"/>
+        <location filename="mainwindow.cpp" line="970"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось сохранить %1 : %2.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1338"/>
+        <source>All open documents</source>
+        <translation>Все открытые файлы</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1417"/>
+        <source>No results</source>
+        <translation>Не найдено</translation>
     </message>
 </context>
 <context>
@@ -897,7 +941,7 @@
         <translation>Кодировка</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.cpp" line="172"/>
+        <location filename="preferencesdialog.cpp" line="141"/>
         <source>Add directory</source>
         <translation>Добавить путь</translation>
     </message>
@@ -936,47 +980,52 @@
 <context>
     <name>PZST::SpinEditor</name>
     <message>
-        <location filename="spineditor.cpp" line="57"/>
-        <location filename="spineditor.cpp" line="120"/>
+        <location filename="spineditor.cpp" line="59"/>
+        <location filename="spineditor.cpp" line="122"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="58"/>
+        <location filename="spineditor.cpp" line="60"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="106"/>
+        <location filename="spineditor.cpp" line="108"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="106"/>
+        <location filename="spineditor.cpp" line="108"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="121"/>
+        <location filename="spineditor.cpp" line="123"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="156"/>
+        <location filename="spineditor.cpp" line="159"/>
         <source>The document has been modified.</source>
         <translation>Документ изменен.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="157"/>
+        <location filename="spineditor.cpp" line="160"/>
         <source>Do you want to save changes to %1?</source>
         <translation>Вы хотите сохранить изменения в файл %1?</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="161"/>
+        <location filename="spineditor.cpp" line="164"/>
         <source>Continue without saving</source>
         <translation>Продолжить без сохранения</translation>
+    </message>
+    <message>
+        <location filename="spineditor.cpp" line="466"/>
+        <source>Current file</source>
+        <translation>Текущий файл</translation>
     </message>
 </context>
 <context>
