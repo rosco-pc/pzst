@@ -27,8 +27,6 @@ namespace PZST {
         QString getWordAtCursor() const;
         virtual QStringList apiContext(int pos, int &context_start, int &last_word_start);
         char getCharacter(int &pos) const;
-        QString getSeparator(int &pos) const;
-        QString getWord(int &pos) const;
         virtual QString searchTargetId() const;
         virtual QString searchTargetText() const;
         virtual QString searchScopeName() const;

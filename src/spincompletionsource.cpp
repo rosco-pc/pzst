@@ -268,7 +268,9 @@ void SpinCompletionSource::addObjectConstants(const QStringList &context, QStrin
     SpinCodeParser *parser = SpinSourceFactory::instance()->getParser(fileName);
     QStringList constants= parser->getConstants();
     for (int i = 0; i < constants.size(); i++) {
-        list << constants[i] + "?3";
+        if (constants[i].toLower().startsWith(part.toLower())) {
+            list << constants[i] + "?3";
+        }
     }
 }
 

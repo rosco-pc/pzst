@@ -38,6 +38,7 @@ void SpinEditor::initialize()
     setUtf8(true);
     setAutoIndent(true);
     setBackspaceUnindents(true);
+    setAutoCompletionReplaceWord(true);
     setTabIndents(true);
     connect(this, SIGNAL(modificationChanged(bool)), this, SLOT(updateModificationStatus(bool)));
     connect(this, SIGNAL(textChanged()), this, SLOT(documentModified()));
@@ -309,70 +310,124 @@ void SpinEditor::registerIcons()
 QStringList SpinEditor::apiContext(int pos, int &context_start,
         int &last_word_start)
 {
-
     enum {
-        Either,
-        Separator,
-        Word
+        Unknown = 0,
+        Identifier,
+        Dot,
+        Hash,
+        Bracket,
+        ObjIdentifier,
+        ObjMaybeHash,
     };
-
     QStringList words;
-    int good_pos = pos, expecting = Either;
-
-    last_word_start = -1;
-
-    while (pos > 0)
-    {
-        QString sep;
-        if (!(sep = getSeparator(pos)).isNull())
-        {
-            if (expecting != Word)
-                words.prepend(sep);
-            else break;
-
-            good_pos = pos;
-            expecting = Word;
+    SpinCodeParser* parser = SpinSourceFactory::instance()->getParser(fileName);
+    SpinHighlightList hl = parser->getHighlighting();
+    int n = 0;
+    bool found = false;
+    int curBlock;
+    for (curBlock = 0; curBlock < hl.size(); curBlock++) {
+        SpinHighlightInfo info = hl[curBlock];
+        if (pos <= n + info.len) {
+            found = true;
+            break;
         }
-        else
-        {
-            QString word = getWord(pos);
-
-            if (word.isEmpty() || expecting == Separator)
-                break;
-
-            words.prepend(word);
-
-            good_pos = pos;
-            expecting = Separator;
-
-            // Return the position of the start of the last word if required.
-            if (last_word_start < 0)
-                last_word_start = pos;
-        }
-
-        // Strip any preceding spaces (mainly around operators).
-        char ch;
-
-        while ((ch = getCharacter(pos)) != '\0')
-        {
-            // This is the same definition of space that Scintilla uses.
-            if (ch != ' ' && (ch < 0x09 || ch > 0x0d))
-            {
-                ++pos;
-                break;
-            }
-        }
+        n += info.len;
     }
-
-    context_start = good_pos;
-
-    if (!words.isEmpty()) {
-        if (words.last() == "." || words.last() == "#") words << "";
+    if (!found) {
+        return words;
+    }
+    n += hl[curBlock].len;
+    int state = Unknown;
+    int level;
+    QByteArray bytes = text().toUtf8();
+    SpinHighlightInfo info;
+    for (;curBlock >= 0; curBlock--, n-= info.len) {
+        info = hl[curBlock];
+        if (info.style == SpinCodeLexer::NL) {
+            break;
+        }
+        if (info.style == SpinCodeLexer::COMMENT || info.style == SpinCodeLexer::WHITESPACE) {
+            if (state == Unknown) break;
+            continue;
+        }
+        switch (state) {
+        case Unknown:
+        case Identifier:
+            if (state == Unknown && info.style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info.len;
+                int wordLen = info.len;
+                if (wordStart + wordLen > pos) wordLen = pos - wordStart;
+                words << QString::fromUtf8(bytes.mid(wordStart, wordLen));
+                state = Identifier;
+            } else if (info.style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+                if (chr == ".")  {
+                    if (words.isEmpty()) words << "";
+                    words.prepend(chr);
+                    state = Dot;
+                } else if (chr == "#")  {
+                    if (words.isEmpty()) words << "";
+                    words.prepend(chr);
+                    state = Hash;
+                } else {
+                    curBlock = -1;
+                    words.clear();
+                }
+            } else {
+                curBlock = -1;
+            }
+            break;
+        case Dot:
+        case Hash:
+            if (info.style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+                if (chr == "]") {
+                    state = Bracket;
+                    level = 1;
+                } else {
+                    curBlock = -1;
+                }
+            } else if (info.style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info.len;
+                int wordLen = info.len;
+                if (wordStart + wordLen > pos) wordLen = pos - wordStart;
+                words.prepend(QString::fromUtf8(bytes.mid(wordStart, wordLen)));
+                state = ObjMaybeHash;
+            }
+            break;
+        case Bracket:
+            if (info.style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+                if (chr == "]") {
+                    level++;
+                }
+                if (chr == "[") {
+                    level--;
+                    if (!level) {
+                        state = ObjIdentifier;
+                    }
+                }
+            }
+            break;
+        case ObjIdentifier:
+            if (info.style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info.len;
+                int wordLen = info.len;
+                if (wordStart + wordLen > pos) wordLen = pos - wordStart;
+                words.prepend(QString::fromUtf8(bytes.mid(wordStart, wordLen)));
+                state = ObjMaybeHash;
+            }
+            break;
+        case ObjMaybeHash:
+            if (info.style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+                if (chr == "#") words.prepend(chr);
+            }
+            curBlock = -1;
+            break;
+        }
     }
     return words;
-
-
-
 }
 
 
@@ -388,63 +443,7 @@ char SpinEditor::getCharacter(int &pos) const
     return ch;
 }
 
-QString SpinEditor::getSeparator(int &pos) const
-{
-    int opos = pos;
 
-    QStringList wseps = lexer()->autoCompletionWordSeparators();
-    // Go through each separator.
-    for (int i = 0; i < wseps.count(); ++i)
-    {
-        const QString &ws = wseps[i];
-
-        // Work backwards.
-        uint l;
-
-        for (l = ws.length(); l; --l)
-        {
-            char ch = getCharacter(pos);
-
-            if (ch == '\0' || ws.at(l - 1) != ch)
-                break;
-        }
-
-        if (!l)
-            return ws;
-
-        // Reset for the next separator.
-        pos = opos;
-    }
-
-    return QString();
-}
-
-QString SpinEditor::getWord(int &pos) const
-{
-    QString word;
-    bool numeric = true;
-    char ch;
-
-    while ((ch = getCharacter(pos)) != '\0')
-    {
-        if (!isWordCharacter(ch))
-        {
-            ++pos;
-            break;
-        }
-
-        if (ch < '0' || ch > '9')
-            numeric = false;
-
-        word.prepend(ch);
-    }
-
-    // We don't auto-complete numbers.
-    if (numeric)
-        word.truncate(0);
-
-    return word;
-}
 
 SpinCodeParser * SpinEditor::getParser()
 {

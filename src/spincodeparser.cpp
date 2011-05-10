@@ -389,7 +389,7 @@ bool SpinCodeParser::checkSectionSwitch(SpinCodeLexer::Retval token, char *text)
         case SpinCodeLexer::VAR : {state = Var; curVar.type = SpinVar::Unknown; ret = true; break;}
         default: break;
     }
-    if (old != state) {
+    if (ret) {
         if (lastSectionIndex >= 0) {
             contexts[lastSectionIndex].end = text - textStart;
             lastSectionIndex = -1;
