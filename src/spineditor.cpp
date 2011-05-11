@@ -49,6 +49,8 @@ void SpinEditor::initialize()
     readPreferences();
     registerIcons();
     addSearchable(this);
+    setAutoCompletionSource(AcsAPIs);
+    setAutoCompletionShowSingle(true);
 }
 
 
@@ -212,8 +214,6 @@ void SpinEditor::readPreferences()
         markerDeleteAll(0);
         disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
     }
-    setAutoCompletionSource(AcsAPIs);
-    setAutoCompletionShowSingle(true);
 }
 
 
@@ -427,6 +427,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             break;
         }
     }
+    context_start = n - info.len;
     return words;
 }
 

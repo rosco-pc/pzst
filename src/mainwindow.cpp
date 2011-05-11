@@ -1005,6 +1005,7 @@ void MainWindow::readPreferences()
         e->setLexer(0);
         lex = new SpinLexer();
         e->setLexer(lex);
+        new SpinCompletionSource(lex, e);
         e->readPreferences();
     }
     Preferences pref;
