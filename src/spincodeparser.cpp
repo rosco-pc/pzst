@@ -30,8 +30,8 @@ void SpinCodeParser::parseCode(QString code)
         SpinHighlightInfo hl;
         hl.style = token;
         hl.len = textNext - start;
-        highlighting << hl;
         if (token == SpinCodeLexer::EOI) break;
+        highlighting << hl;
         processToken(token, start, textNext - start);
         start = textNext;
     }
