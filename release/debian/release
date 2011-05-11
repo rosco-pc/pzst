@@ -1,0 +1,24 @@
+#!/bin/sh
+
+VERSION=$1
+
+echo $VERSION
+
+if [ "$VERSION"x = "x" ] ; then 
+	echo "Usage $0 version"
+	exit
+fi
+
+rm -rf build/*
+cd ../..
+svn export . release/debian/build/pzst-$VERSION
+cd release/debian/build/pzst-$VERSION
+qmake
+cd src
+qmake
+cd ../..
+#tar -c pzst-$VERSION | gzip > pzst-$VERSION.tar.gz
+cp -r ../templates/* pzst-$VERSION/
+cd pzst-$VERSION
+dpkg-buildpackage -b
+

@@ -77,3 +77,20 @@ make_spin_lexer.variable_out = SOURCES
 make_spin_lexer.name = make_spin_lexer
 QMAKE_EXTRA_COMPILERS += make_spin_lexer
 OTHER_FILES += spincodelexer.re
+
+
+target.path = /usr/bin
+INSTALLS += target
+
+translation.files = pzst_ru_RU.qm
+translation.path = /usr/share/pzst/lang
+INSTALLS += translation
+
+menu.files = pzst.desktop
+menu.path = /usr/share/applications
+INSTALLS += menu
+
+pixmap.files = icons/pzst.png
+pixmap.path = /usr/share/pixmaps
+INSTALLS += pixmap
+

@@ -1,0 +1,20 @@
+Source: pzst
+Section: electronics
+Priority: extra
+Maintainer: Andrey Demenev <demenev@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Homepage: http://code.google.com/p/pzst/
+
+Package: pzst
+Architecture: i386
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Development environment for Parallax Propeller
+ Propeller Zone Spin Tool (PZST) is a development environment for
+ Propeller microcontroller from Parallax, Inc. Includes code
+ editor and uploader. Features syntax highlighting, code completion,
+ call tips. Unlike other tools for Parallax Propeller, coorectly
+ works with string data in encodings different from Latin-1. PZST
+ uses bstc -  optimizing Spin compiler written by Brad Campbell
+ <http://www.fnarfbargle.com/bst.html>
+

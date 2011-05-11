@@ -1,0 +1,4 @@
+?package(pzst):needs="x11" \
+        section="Applications/Programming"\
+		title="PZST" command="/usr/bin/pzst"\
+		hints="Propeller Zone Spin Tool"

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Propeller Zone Spin Tool
+Comment=Development environment for Parallax Propeller
+Comment[ru]=Среда разработки для Parallax Propeller
+Exec=pzst
+Icon=pzst.png
+Terminal=false
+Type=Application
+Categories=Application;Development;
+StartupNotify=false
