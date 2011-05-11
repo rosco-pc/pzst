@@ -33,9 +33,18 @@ int main(int argc, char *argv[])
         QTranslator *systemTranslator, *appTranslator;
         systemTranslator = new QTranslator;
         appTranslator = new QTranslator;
+        QString baseName = "pzst_" + locale;
         QFileInfo fileInfo(QApplication::applicationFilePath());
-        QString fileName = fileInfo.dir().absolutePath() + QDir::separator() + QString("pzst_") + locale;
-        appTranslator->load(fileName);
+        QStringList paths;
+        paths << QDir::homePath() + QDir::separator() + ".pzst" + QDir::separator() + "lang";
+        paths << fileInfo.dir().absolutePath();
+        paths << "/usr/share/pzst/lang";
+        foreach (QString path, paths) {
+            QString fileName = path + QDir::separator() + baseName;
+            if (appTranslator->load(fileName)) {
+                break;
+            }
+        }
         a.installTranslator(appTranslator);
         systemTranslator->load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
         a.installTranslator(systemTranslator);
