@@ -12,3 +12,4 @@ Propeller Zone Spin Tool Manual
     intro
     install
     working
+    settings

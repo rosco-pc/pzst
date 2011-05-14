@@ -4,3 +4,6 @@ all :
 clean:
 	$(MAKE) -C ru clean
 
+man:
+	$(MAKE) -C ru man
+
