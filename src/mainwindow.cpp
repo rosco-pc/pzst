@@ -1383,7 +1383,6 @@ void MainWindow::quickSearch()
     SpinEditor *e = activeEditor();
     if (!e) return;
     SearchRequest req;
-    e->setCursorPosition(qsLine, qsCol);
     if (!SearchEngine::parseQuickSearch(qsText->text(), req)) {
         qsText->setStyleSheet("background-color: #FDD");
         return;
