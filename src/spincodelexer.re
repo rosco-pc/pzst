@@ -4,7 +4,7 @@
 #define YYCURSOR start
 #define	YYMARKER marker
 #define YYFILL(n) {if (n == 1) RET(EOI);}
-#define RET(x) {*next = YYCURSOR; return x;}
+#define RET(x) {if (YYCURSOR >= end) YYCURSOR = end-1; *next = YYCURSOR; return x;}
 #define YYCTXMARKER ctx
 
 #define YYDEBUG(state,  current) {qDebug("%d %c", state, current);}
@@ -57,10 +57,10 @@ SpinCodeLexer::Retval SpinCodeLexer::scan(char *start_, char *end_, char** next_
 
         "{" [^{}] ([^}\x00])* ("}"|"\x00") {RET(COMMENT);}
         "{}" {RET(COMMENT);}
-        "{{" [^}] ([^}\x00])* ("}}"|"\x00") {RET(COMMENT);}
+        "{{" [^}] ([^}\x00]|"}"[^}])* ("}}"|"\x00") {RET(COMMENT);}
         "{{}}" {RET(COMMENT);}
 
-        ["] ([^"])* ["] {RET(STRING);}
+        ["] ([^"\x00])* (["]|"\x00") {RET(STRING);}
 
         '#' ("ifdef"|"ifndef"|"endif"|"define"|"undef") {RET(PREPRO);}
 
