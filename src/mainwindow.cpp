@@ -1390,7 +1390,7 @@ void MainWindow::quickSearch()
     }
     qsText->setStyleSheet("");
     findDialog.search(req);
-    if ((req.getOptions() & SearchRequest::All) && (req.getOptions() & SearchRequest::Replace)) {
+    if ((req.getOptions() & SearchRequest::All)) {
         e->setFocus();
     } else {
         e->getCursorPosition(&qsLine, &qsCol);
