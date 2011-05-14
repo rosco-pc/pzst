@@ -98,6 +98,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     QApplication::instance()->installEventFilter(this);
     SearchEngine::connectInstance(SIGNAL(found(Searchable*,int,int,const SearchRequest*)), this, SLOT(searchFound(Searchable*,int,int,const SearchRequest*)));
     SearchEngine::connectInstance(SIGNAL(searchStarted(const SearchRequest*)), this, SLOT(searchStarted(const SearchRequest*)));
+    SearchEngine::connectInstance(SIGNAL(searchFinished(const SearchRequest*)), this, SLOT(searchFinished(const SearchRequest*)));
     SearchEngine::connectInstance(SIGNAL(noResults()), this, SLOT(noResults()));
     findDialog.setOpenFiles(this);
 }
@@ -1152,9 +1153,9 @@ void MainWindow::searchStarted(const SearchRequest *)
     searchTree->clear();
 }
 
-void MainWindow::searchFinished(bool allTargets)
+void MainWindow::searchFinished(const SearchRequest *req)
 {
-    if (allTargets) {
+    if (req->getOptions() & SearchRequest::All) {
         searchResultsDock->show();
         searchResultsDock->raise();
         searchTree->expandAll();

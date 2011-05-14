@@ -100,7 +100,7 @@ namespace PZST {
         void jumpToMethod();
         void editorClosed(SpinEditor *e);
         void searchStarted(const SearchRequest*);
-        void searchFinished(bool allTargets);
+        void searchFinished(const SearchRequest*);
         void searchTreeClicked(QModelIndex);
         void quickSearch();
         void quickSearch(QString);

@@ -121,7 +121,7 @@ void SearchEngine::p_search(const SearchRequest &request)
         }
     }
     if (!count) emit noResults();
-    emit searchFinished();
+    emit searchFinished(&request);
 }
 
 bool SearchEngine::parseQuickSearch(QString query, SearchRequest &request)
