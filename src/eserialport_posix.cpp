@@ -229,45 +229,71 @@ int ESerialPort::nativeBaudRate(BaudRate rate)
     case B_115200:
             r = B115200;
             break;
-    case B_230400:
+#ifdef B230400
+        case B_230400:
             r = B230400;
             break;
-    case B_460800:
+#endif
+#ifdef B460800
+        case B_460800:
             r = B460800;
             break;
-    case B_500000:
+#endif
+#ifdef B500000
+        case B_500000:
             r = B500000;
             break;
-    case B_576000:
+#endif
+#ifdef B576000
+        case B_576000:
             r = B576000;
             break;
-    case B_921600:
+#endif
+#ifdef B921600
+        case B_921600:
             r = B921600;
             break;
-    case B_1000000:
+#endif
+#ifdef B1000000
+        case B_1000000:
             r = B1000000;
             break;
-    case B_1152000:
+#endif
+#ifdef B1152000
+        case B_1152000:
             r = B1152000;
             break;
-    case B_1500000:
+#endif
+#ifdef B1500000
+        case B_1500000:
             r = B1500000;
             break;
-    case B_2000000:
+#endif
+#ifdef B2000000
+        case B_2000000:
             r = B2000000;
             break;
-    case B_2500000:
+#endif
+#ifdef B2500000
+        case B_2500000:
             r = B2500000;
             break;
-    case B_3000000:
+#endif
+#ifdef B3000000
+        case B_3000000:
             r = B3000000;
             break;
-    case B_3500000:
+#endif
+#ifdef B3500000
+        case B_3500000:
             r = B3500000;
             break;
-    case B_4000000:
+#endif
+#ifdef B4000000
+        case B_4000000:
             r = B4000000;
             break;
+#endif
     default:
             r = (speed_t)rate;
             break;
