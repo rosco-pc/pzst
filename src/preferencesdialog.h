@@ -22,6 +22,7 @@ namespace PZST {
         Ui::PreferencesDialog *ui;
 
     private slots:
+        void on_pageSelector_itemSelectionChanged();
         void on_moveDown_clicked();
         void on_moveUp_clicked();
         void on_searchPaths_currentRowChanged(int currentRow);

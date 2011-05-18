@@ -15,8 +15,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui(new Ui::PreferencesDialog)
 {
     ui->setupUi(this);
-    ui->tabWidget->setCurrentIndex(0);
-
+    ui->pages->setCurrentIndex(0);
+    ui->pageSelector->setCurrentItem(ui->pageSelector->itemAt(0, 0));
+    ui->pageSelector->expandAll();
 
     Preferences pref;
     ui->fontName->setCurrentFont(QFont(pref.getFontName()));
@@ -182,3 +183,37 @@ void PZST::PreferencesDialog::on_moveDown_clicked()
     ui->searchPaths->insertItem(idx + 1, text);
     ui->searchPaths->setCurrentRow(idx + 1);
 }
+
+
+void PZST::PreferencesDialog::on_pageSelector_itemSelectionChanged()
+{
+    int n = ui->pageSelector->currentIndex().row();
+    if (ui->pageSelector->currentIndex().parent().isValid()) {
+        n += ui->pageSelector->currentIndex().parent().row()*100 + 1;
+    } else {
+        n *= 100;
+    }
+    int page = 0;
+    switch (n) {
+    case 0:
+    case 1:
+        page = 0;
+        break;
+    case 100:
+    case 101:
+        page = 1;
+        break;
+    case 102:
+        page = 2;
+        break;
+    case 200:
+    case 201:
+        page = 3;
+        break;
+    case 202:
+        page = 4;
+        break;
+    }
+    ui->pages->setCurrentIndex(page);
+}
+
