@@ -21,9 +21,10 @@ void SpinCodeParser::parseCode(QString code)
     objects.clear();
     lastSectionIndex= -1;
     QByteArray bytes(code.toUtf8());
+    bytes.append((char)0);
     textStart = bytes.data();
     char * start = textStart;
-    textEnd = textStart + bytes.size() + 1;
+    textEnd = textStart + bytes.size();
     state = Initial;
     for (;start < textEnd;) {
         SpinCodeLexer::Retval token = SpinCodeLexer::scan(start, textEnd, &textNext);

@@ -46,7 +46,7 @@ SpinCodeLexer::Retval SpinCodeLexer::scan(char *start_, char *end_, char** next_
         ("CON")/[^a-zA-Z0-9_] {RET(CON);}
         ("FILE")/[^a-zA-Z0-9_] {RET(FILE);}
 
-	[a-zA-Z_] [a-zA-Z0-9_]* {RET(IDENTIFIER);}
+        ([a-zA-Z_] [a-zA-Z0-9_]*)/[^a-zA-Z0-9_] {RET(IDENTIFIER);}
 
 	'%'('_'*)[01][01_]* {RET(NUMBER);}
 	'%%'('_'*)[0123][0123_]* {RET(NUMBER);}
@@ -55,12 +55,17 @@ SpinCodeLexer::Retval SpinCodeLexer::scan(char *start_, char *end_, char** next_
 
         ("'" (.\"\x00")*)/[\n\x00] {RET(COMMENT);}
 
-        "{" [^{}] ([^}\x00])* ("}"|"\x00") {RET(COMMENT);}
-        "{}" {RET(COMMENT);}
-        "{{" [^}] ([^}\x00]|"}"[^}])* ("}}"|"\x00") {RET(COMMENT);}
+        "{{"/"\x00" {RET(COMMENT);}
+        "{{" [^}] ([^}\x00]|"}"[^}])* "}}" {RET(COMMENT);}
+        ("{{" [^}] ([^}\x00]|"}"[^}])*)/"\x00" {RET(COMMENT);}
         "{{}}" {RET(COMMENT);}
 
-        ["] ([^"\x00])* (["]|"\x00") {RET(STRING);}
+        "{" / "\x00" {RET(COMMENT);}
+        "{" [^}]* "}" {RET(COMMENT);}
+        ("{" [^}]*)/"\x00" {RET(COMMENT);}
+
+        ["] ([^"\x00])* ["] {RET(STRING);}
+        (["] ([^"\x00])*)/"\x00" {RET(STRING);}
 
         '#' ("ifdef"|"ifndef"|"endif"|"define"|"undef")/[^a-zA-Z0-9_] {RET(PREPRO);}
 
