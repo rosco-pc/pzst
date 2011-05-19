@@ -4,11 +4,20 @@ using namespace PZST;
 
 Preferences::Preferences()
 {
-    settings = new QSettings;
 }
 
 Preferences::~Preferences()
 {
-    delete settings;
+
 }
 
+QSettings &Preferences::instance()
+{
+    static QSettings instance;
+    return instance;
+}
+
+void Preferences::connectInstance(const char *sig, const QObject *obj, const char *slot)
+{
+    connect(&instance(), sig, obj, slot);
+}

@@ -2,18 +2,24 @@
 #define PZSTPREFERENCES_H
 #include <QSettings>
 #include <QStringList>
+#include <QVariant>
 
 #define SETTING(group, name, type, defaultValue, getter) \
 type get ## name() {\
-    settings->beginGroup(#group);\
-    type ret = settings->value(#name, defaultValue).getter(); \
-    settings->endGroup(); \
+    QSettings &s = instance();\
+    s.beginGroup(#group);\
+    type ret = s.value(#name, defaultValue).getter(); \
+    s.endGroup(); \
     return ret; \
 }\
-void set ## name(type value) {\
-    settings->beginGroup(#group);\
-    settings->setValue(#name, value); \
-    settings->endGroup(); \
+void set ## name(type value_) {\
+    QSettings &s = instance();\
+    s.beginGroup(#group);\
+    if (s.value(#name, defaultValue) != value_) {\
+        s.setValue(#name, value_); \
+        emit valueChanged(#group, #name, QVariant(value_));\
+    }\
+    s.endGroup(); \
 }
 
 #define SETTING_BOOL(group, name, defaultValue) SETTING(group, name, bool, defaultValue, toBool)
@@ -23,11 +29,15 @@ void set ## name(type value) {\
 
 
 namespace PZST {
-    class Preferences
+    class Preferences : public QObject
     {
+        Q_OBJECT
+    private:
+        static QSettings &instance();
     public:
         Preferences();
         ~Preferences();
+        static void connectInstance(const char *sig, const QObject *obj, const char * slot);
 
         SETTING_STRING      (Editor, FontName,  "Parallax");
         SETTING_INT         (Editor, FontSize,  12);
@@ -52,9 +62,8 @@ namespace PZST {
 
         SETTING_STRING      (Port, PortName,  "");
         SETTING_BOOL        (Port, DoubleSpeed,  true);
-
-    private:
-        QSettings *settings;
+    signals:
+        void valueChanged(QString, QString, QVariant);
     };
 }
 
