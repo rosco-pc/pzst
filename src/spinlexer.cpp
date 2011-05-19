@@ -59,7 +59,7 @@ QString SpinLexer::description(int style) const
     case  SpinCodeLexer::CHAR:
         break;
     }
-    return "";
+    return "Other";
 }
 
 void SpinLexer::styleText(int start, int end)

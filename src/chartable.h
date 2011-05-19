@@ -2,6 +2,7 @@
 #define CHARTABLE_H
 
 #include <QWidget>
+#include <QVariant>
 
 namespace PZST {
 
@@ -18,6 +19,7 @@ namespace PZST {
         void charHighlighted(QChar c);
 
     public slots:
+        void preferencesChanged(QString, QString, QVariant);
 
     protected:
         QString chars;

@@ -2,6 +2,7 @@
 #define SPINEDITOR_H
 
 #include <Qsci/qsciscintilla.h>
+#include <QVariant>
 #include "spincodeparser.h"
 #include "spincompletionsource.h"
 #include "searchscope.h"
@@ -52,6 +53,7 @@ namespace PZST {
         void documentModified();
         void beginUndoActionSlot();
         void endUndoActionSlot();
+        void preferencesChanged(QString, QString, QVariant);
     signals:
         void methodsListChanged(SpinContextList);
         // !!!!!!!!! e can be already deleted !!!!!!!!

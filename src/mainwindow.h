@@ -117,7 +117,6 @@ namespace PZST {
         void updateCaption();
         void enableUI(bool v);
         void doProgramming(int command, QByteArray code = QByteArray());
-        void readPreferences();
         void createActions();
         QAction* createAction(QString text, QString seq = QString(), QString iconFile = QString(), bool inMenu = false);
         QAction* createAction(QString text, QKeySequence seq, QString iconFile = QString(), bool inMenu = false);

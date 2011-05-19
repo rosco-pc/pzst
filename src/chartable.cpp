@@ -110,3 +110,11 @@ void CharTable::changeFont(QFont &font)
     repaint();
     resize(1,1);
 }
+
+void CharTable::preferencesChanged(QString section, QString name, QVariant value)
+{
+    if (section == "Editor" && name == "FontName") {
+        QFont f(value.toString());
+        changeFont(f);
+    }
+}

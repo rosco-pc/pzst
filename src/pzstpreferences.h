@@ -6,18 +6,19 @@
 
 #define SETTING(group, name, type, defaultValue, getter) \
 type get ## name() {\
-    QSettings &s = instance();\
+    QSettings &s = settings;\
     s.beginGroup(#group);\
     type ret = s.value(#name, defaultValue).getter(); \
     s.endGroup(); \
     return ret; \
 }\
 void set ## name(type value_) {\
-    QSettings &s = instance();\
+    QSettings &s = settings;\
     s.beginGroup(#group);\
     if (s.value(#name, defaultValue) != value_) {\
         s.setValue(#name, value_); \
-        emit valueChanged(#group, #name, QVariant(value_));\
+        s.sync();\
+        signaller().emitValueChanged(#group, #name, QVariant(value_));\
     }\
     s.endGroup(); \
 }
@@ -34,13 +35,16 @@ namespace PZST {
         Q_OBJECT
     private:
         static QSettings &instance();
+        QSettings settings;
+        static Preferences &signaller();
+        void emitValueChanged(QString, QString, QVariant);
     public:
         Preferences();
         ~Preferences();
         static void connectInstance(const char *sig, const QObject *obj, const char * slot);
 
         SETTING_STRING      (Editor, FontName,  "Parallax");
-        SETTING_INT         (Editor, FontSize,  12);
+        SETTING_INT         (Editor, FontSize,  13);
         SETTING_INT         (Editor, TabSize,  4);
         SETTING_BOOL        (Editor, TabsToSpaces, false);
         SETTING_BOOL        (Editor, TabsVisible, false);

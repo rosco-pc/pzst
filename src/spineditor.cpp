@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QFile>
+#include <QFont>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QCloseEvent>
@@ -204,7 +205,6 @@ void SpinEditor::readPreferences()
         setMarginWidth(1, "0");
         setMarginLineNumbers(1, false);
     }
-    //setFolding(QsciScintilla::BoxedTreeFoldStyle, 2);
     if (pref.getCurLineMarker()) {
         connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
         int l, c;
@@ -495,4 +495,49 @@ void SpinEditor::beginUndoActionSlot()
 void SpinEditor::endUndoActionSlot()
 {
     endUndoAction();
+}
+
+void SpinEditor::preferencesChanged(QString section, QString name, QVariant value)
+{
+    if (section == "Editor") {
+        Preferences p;
+        if (name == "FontName" || name == "FontSize") {
+            QFont f(p.getFontName(), p.getFontSize());
+            qDebug("%s %d", f.family().toUtf8().data(), f.pointSize());
+            lexer()->setFont(f, -1);
+            if (p.getLineNumbers()) setMarginWidth(1, "999999");
+        }
+        if (name == "LineNumbers") {
+            if (value.toBool()) {
+                setMarginType(1, QsciScintilla::NumberMargin);
+                setMarginLineNumbers(1, true);
+                setMarginWidth(1, "999999");
+            } else {
+                setMarginWidth(1, 0);
+                setMarginWidth(1, "0");
+                setMarginLineNumbers(1, false);
+            }
+        }
+        if (name == "TabSize") {
+            setTabWidth(value.toInt());
+        }
+        if (name == "TabsToSpaces") {
+            setTabIndents(value.toBool());
+            setIndentationsUseTabs(!value.toBool());
+        }
+        if (name == "TabsVisible") {
+            setIndentationGuides(value.toBool());
+        }
+        if (name == "CurLineMarker") {
+            if (value.toBool()) {
+                connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+                int l, c;
+                getCursorPosition(&l, &c);
+                cursorPositionChanged(l, c);
+            } else {
+                markerDeleteAll(0);
+                disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+            }
+        }
+    }
 }

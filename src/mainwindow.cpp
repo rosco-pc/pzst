@@ -101,6 +101,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     SearchEngine::connectInstance(SIGNAL(searchFinished(const SearchRequest*)), this, SLOT(searchFinished(const SearchRequest*)));
     SearchEngine::connectInstance(SIGNAL(noResults()), this, SLOT(noResults()));
     findDialog.setOpenFiles(this);
+
+    Preferences::connectInstance(SIGNAL(valueChanged(QString,QString,QVariant)), charTable, SLOT(preferencesChanged(QString,QString,QVariant)));
+
 }
 QAction* MainWindow::createAction(QString text, QString seq, QString iconFile, bool inMenu)
 {
@@ -513,6 +516,7 @@ void MainWindow::connectEditor(SpinEditor *e)
     connect(e, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
     SearchEngine::connectInstance(SIGNAL(searchStarted()), e, SLOT(beginUndoActionSlot()));
     SearchEngine::connectInstance(SIGNAL(searchFinished()), e, SLOT(endUndoActionSlot()));
+    Preferences::connectInstance(SIGNAL(valueChanged(QString,QString,QVariant)), e, SLOT(preferencesChanged(QString,QString,QVariant)));
 }
 void MainWindow::updateCursorPosition(int r, int c)
 {
@@ -991,28 +995,9 @@ void MainWindow::about()
 void MainWindow::preferences()
 {
     PreferencesDialog dlg(this);
-    if (dlg.exec() == QDialog::Accepted) {
-        readPreferences();
-    }
+    dlg.exec();
 }
-void MainWindow::readPreferences()
-{
-    QList<QMdiSubWindow*> windows = mdi->subWindowList();
-    for (int i = 0; i < windows.size(); i++) {
-        SpinEditor *e = qobject_cast<SpinEditor *>(windows.at(i)->widget());
-        if (!e) continue;
-        QsciLexer *lex = e->lexer();
-        delete lex;
-        e->setLexer(0);
-        lex = new SpinLexer();
-        e->setLexer(lex);
-        new SpinCompletionSource(lex, e);
-        e->readPreferences();
-    }
-    Preferences pref;
-    QFont f(pref.getFontName());
-    charTable->changeFont(f);
-}
+
 void MainWindow::charSelected(QChar c)
 {
     SpinEditor *e = activeEditor();
@@ -1322,7 +1307,6 @@ void MainWindow::increaseFontSize()
     fontSize = (fontSize >= 10) ? fontSize + 2 : fontSize + 1;
     if (fontSize > 48) fontSize = 48;
     pref.setFontSize(fontSize);
-    readPreferences();
 }
 
 void MainWindow::decreaseFontSize()
@@ -1332,7 +1316,6 @@ void MainWindow::decreaseFontSize()
     fontSize = (fontSize <= 10) ? fontSize - 1 : fontSize - 2;
     if (fontSize < 6) fontSize = 6;
     pref.setFontSize(fontSize);
-    readPreferences();
 }
 
 QString MainWindow::searchScopeName() const
