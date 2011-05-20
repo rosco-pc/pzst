@@ -376,7 +376,6 @@ void SpinCodeParser::stateSkipToEOL(SpinCodeLexer::Retval token, char *text, int
 
 bool SpinCodeParser::checkSectionSwitch(SpinCodeLexer::Retval token, char *text)
 {
-    State old = state;
     bool ret = false;
     switch (token) {
         case SpinCodeLexer::CON :
