@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QStringList>
 #include <QVariant>
+#include <QKeySequence>
 
 #define SETTING(group, name, type, defaultValue, getter) \
 type get ## name() {\
@@ -38,6 +39,7 @@ namespace PZST {
         QSettings settings;
         static Preferences &signaller();
         void emitValueChanged(QString, QString, QVariant);
+        void emitShortcutChanged(QString, QString);
     public:
         Preferences();
         ~Preferences();
@@ -66,8 +68,13 @@ namespace PZST {
 
         SETTING_STRING      (Port, PortName,  "");
         SETTING_BOOL        (Port, DoubleSpeed,  true);
+
+        QList<QKeySequence> getShortcuts(QString name);
+        void                setShortcut(QString name, QString value, QKeySequence::SequenceFormat = QKeySequence::NativeText);
+
     signals:
         void valueChanged(QString, QString, QVariant);
+        void shortcutChanged(QString, QString);
     };
 }
 

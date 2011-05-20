@@ -310,6 +310,7 @@ void SpinEditor::registerIcons()
 QStringList SpinEditor::apiContext(int pos, int &context_start,
         int &last_word_start)
 {
+    Q_UNUSED(last_word_start);
     enum {
         Unknown = 0,
         Identifier,

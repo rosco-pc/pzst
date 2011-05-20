@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>618</width>
-    <height>409</height>
+    <width>602</width>
+    <height>421</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,6 +32,12 @@
           <height>0</height>
          </size>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>180</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <attribute name="headerVisible">
          <bool>false</bool>
         </attribute>
@@ -40,7 +46,7 @@
         </attribute>
         <column>
          <property name="text">
-          <string>Section</string>
+          <string>Page</string>
          </property>
         </column>
         <item>
@@ -72,13 +78,18 @@
            <string>Language</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Key bindings</string>
+          </property>
+         </item>
         </item>
        </widget>
       </item>
       <item>
        <widget class="QStackedWidget" name="pages">
         <property name="currentIndex">
-         <number>3</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="pageEditor">
          <layout class="QGridLayout" name="gridLayout">
@@ -432,6 +443,96 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="page">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="margin">
+           <number>1</number>
+          </property>
+          <item>
+           <widget class="QTreeWidget" name="shortcuts">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="rootIsDecorated">
+             <bool>false</bool>
+            </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+            <attribute name="headerShowSortIndicator" stdset="0">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="headerShowSortIndicator" stdset="0">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Command</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Name</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Shortcut</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_4" native="true">
+            <layout class="QGridLayout" name="gridLayout_4">
+             <property name="margin">
+              <number>1</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="PZST::ShortcutEdit" name="first"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="PZST::ShortcutEdit" name="second"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="PZST::ShortcutEdit" name="third"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="QToolButton" name="revert">
+               <property name="toolTip">
+                <string>Revert</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="PZST.qrc">
+                 <normaloff>:/Icons/undo.png</normaloff>:/Icons/undo.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QToolButton" name="clear">
+               <property name="toolTip">
+                <string>Clear</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="PZST.qrc">
+                 <normaloff>:/Icons/clear.png</normaloff>:/Icons/clear.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -449,6 +550,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PZST::ShortcutEdit</class>
+   <extends>QLineEdit</extends>
+   <header>shortcutedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="PZST.qrc"/>
  </resources>

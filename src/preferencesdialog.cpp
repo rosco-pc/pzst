@@ -4,9 +4,11 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QList>
+#include <QTreeWidgetItem>
 #include <QTextCodec>
 #include  "pzstpreferences.h"
 #include  "eserialport.h"
+#include  "shortcuts.h"
 
 using namespace PZST;
 
@@ -44,6 +46,27 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->genWarnings->setChecked(pref.getWarnings());
     ui->genInfo->setChecked(pref.getInfo());
 
+    QStringList commands = Shortcuts::allNames();
+    ui->shortcuts->clear();
+    foreach (QString command, commands) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(ui->shortcuts);
+        item->setText(0, command);
+        item->setText(1, Shortcuts::title(command));
+        item->setTextAlignment(0, Qt::AlignTop | Qt::AlignLeft);
+        item->setTextAlignment(1, Qt::AlignTop | Qt::AlignLeft);
+        item->setTextAlignment(2, Qt::AlignTop | Qt::AlignLeft);
+        QString shortcuts;
+        foreach (QKeySequence seq, pref.getShortcuts(command)) {
+            QString shortcut = seq.toString(QKeySequence::NativeText);
+            if (!shortcut.isEmpty()) {
+                if (!shortcuts.isEmpty()) shortcuts += "\n";
+                shortcuts += shortcut;
+            }
+        }
+        item->setText(2, shortcuts);
+        item->setText(3, shortcuts);
+    }
+    ui->shortcuts->setColumnWidth(1, 240);
 
     QFont f;
     f = ui->fontName->currentFont();
@@ -133,8 +156,16 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setInfo(ui->genInfo->isChecked());
 
     pref.setPortName(ui->portName->currentText());
-
     pref.setEncoding(ui->encoding->currentText());
+
+
+    for (int i =0; i < ui->shortcuts->topLevelItemCount(); i++) {
+        QTreeWidgetItem *item = ui->shortcuts->topLevelItem(i);
+        QString name = item->text(0);
+        QString value = item->text(2);
+        pref.setShortcut(name, value);
+    }
+
 }
 
 void PreferencesDialog::on_pathAdd_clicked()
@@ -217,3 +248,69 @@ void PZST::PreferencesDialog::on_pageSelector_itemSelectionChanged()
     ui->pages->setCurrentIndex(page);
 }
 
+
+
+void PZST::PreferencesDialog::on_shortcuts_itemSelectionChanged()
+{
+    QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(2).split("\n");
+    ui->first->setText(shortcuts[0]);
+    if (shortcuts.size() > 1) {
+        ui->second->setText(shortcuts[1]);
+    } else {
+        ui->second->setText("");
+    }
+    if (shortcuts.size() > 2) {
+        ui->third->setText(shortcuts[2]);
+    } else {
+        ui->third->setText("");
+    }
+}
+
+
+void PZST::PreferencesDialog::on_clear_clicked()
+{
+    QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(3).split("\n");
+    if (ui->first->hasFocus()) {
+        ui->first->clear();
+    } else if (ui->second->hasFocus()) {
+        ui->second->clear();
+    } else if (ui->third->hasFocus()) {
+        ui->third->clear();
+    }
+}
+
+void PZST::PreferencesDialog::on_revert_clicked()
+{
+    QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(3).split("\n");
+    if (ui->first->hasFocus()) {
+        ui->first->setText(shortcuts[0]);
+    } else if (ui->second->hasFocus()) {
+        if (shortcuts.size() > 1) ui->second->setText(shortcuts[1]);
+        else ui->second->setText("");
+    } else if (ui->third->hasFocus()) {
+        if (shortcuts.size() > 2) ui->third->setText(shortcuts[2]);
+        else ui->third->setText("");
+    }
+}
+
+void PreferencesDialog::setShortcut(int n, QString s)
+{
+    QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(2).split("\n");
+    while (shortcuts.size()<= n) shortcuts << "";
+    shortcuts[n] = s;
+    while (!shortcuts.isEmpty() && shortcuts[shortcuts.size()-1].isEmpty()) shortcuts.removeAt(shortcuts.size()-1);
+    ui->shortcuts->selectedItems()[0]->setText(2, shortcuts.join("\n").trimmed());
+}
+
+void PZST::PreferencesDialog::on_first_textChanged(QString txt)
+{
+    setShortcut(0, txt);
+}
+void PZST::PreferencesDialog::on_second_textChanged(QString txt)
+{
+    setShortcut(1, txt);
+}
+void PZST::PreferencesDialog::on_third_textChanged(QString txt)
+{
+    setShortcut(2, txt);
+}

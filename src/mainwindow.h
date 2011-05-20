@@ -20,6 +20,7 @@
 #include <QComboBox>
 #include <QTreeWidget>
 #include <QLineEdit>
+#include <QMap>
 
 #include "spineditor.h"
 #include "chartable.h"
@@ -106,6 +107,7 @@ namespace PZST {
         void quickSearch(QString);
         void noResults();
         void qsEnter();
+        void shortcutChanged(QString, QString);
 
     private:
         void showStatusMessage(const QString& msg, int type = 0);
@@ -118,9 +120,7 @@ namespace PZST {
         void enableUI(bool v);
         void doProgramming(int command, QByteArray code = QByteArray());
         void createActions();
-        QAction* createAction(QString text, QString seq = QString(), QString iconFile = QString(), bool inMenu = false);
-        QAction* createAction(QString text, QKeySequence seq, QString iconFile = QString(), bool inMenu = false);
-        QAction* createAction(QString text, QKeySequence::StandardKey seq, QString iconFile = QString(), bool inMenu = false);
+        QAction* createAction(QString name, QString iconFile = QString(), bool inMenu = false);
 
         void createMenus();
         void createStatusBar();
@@ -196,8 +196,9 @@ namespace PZST {
         QLabel *uploadMessage;
         QProgressBar *uploadProgress;
 
-        QSignalMapper *mapper;
+        QSignalMapper *windowMapper;
         QSignalMapper *mruMapper;
+        QMap<QString, QAction*> actions;
 
         QToolBar *editToolBar;
         QComboBox *methodsListCombo;

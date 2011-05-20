@@ -21,7 +21,15 @@ namespace PZST {
     private:
         Ui::PreferencesDialog *ui;
 
+        void setShortcut(int , QString);
+
     private slots:
+        void on_first_textChanged(QString );
+        void on_second_textChanged(QString );
+        void on_third_textChanged(QString );
+        void on_revert_clicked();
+        void on_clear_clicked();
+        void on_shortcuts_itemSelectionChanged();
         void on_pageSelector_itemSelectionChanged();
         void on_moveDown_clicked();
         void on_moveUp_clicked();

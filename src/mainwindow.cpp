@@ -31,6 +31,7 @@
 #include "preferencesdialog.h"
 #include "pzstpreferences.h"
 #include "searchengine.h"
+#include "shortcuts.h"
 
 using namespace PZST;
 
@@ -56,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     windowSwitcher->hide();
 
     QFont::insertSubstitution("Parallax", "Courier New");
-    mapper = new QSignalMapper(this);
+    windowMapper = new QSignalMapper(this);
     mruMapper = new QSignalMapper(this);
     mdi = new QMdiArea(this);
     setCentralWidget(mdi);
@@ -65,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     mdi->setViewMode(QMdiArea::TabbedView);
     mdi->setTabShape(QTabWidget::Triangular);
     connect(mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(windowActivated(QMdiSubWindow*)));
-    connect(mapper, SIGNAL(mapped(QWidget*)), this, SLOT(windowActivated(QWidget*)));
+    connect(windowMapper, SIGNAL(mapped(QWidget*)), this, SLOT(windowActivated(QWidget*)));
     connect(mruMapper, SIGNAL(mapped(QString)), this, SLOT(openOrActivate(QString)));
 
     connect(QApplication::clipboard(), SIGNAL(changed (QClipboard::Mode)), this, SLOT(clipboardChanged(QClipboard::Mode)));
@@ -103,127 +104,124 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     findDialog.setOpenFiles(this);
 
     Preferences::connectInstance(SIGNAL(valueChanged(QString,QString,QVariant)), charTable, SLOT(preferencesChanged(QString,QString,QVariant)));
+    Preferences::connectInstance(SIGNAL(shortcutChanged(QString,QString)), this, SLOT(shortcutChanged(QString,QString)));
 
 }
-QAction* MainWindow::createAction(QString text, QString seq, QString iconFile, bool inMenu)
-{
-    return createAction(text, QKeySequence(seq), iconFile, inMenu);
-}
 
-QAction* MainWindow::createAction(QString text, QKeySequence seq, QString iconFile, bool inMenu)
+QAction* MainWindow::createAction(QString name, QString iconFile, bool inMenu)
 {
-    QAction *act = new QAction(text, this);
-    act->setShortcut(QKeySequence(seq));
+    Preferences p;
+    QAction *act = new QAction(Shortcuts::title(name), this);
+    act->setShortcuts(p.getShortcuts(name));
     act->setIcon(QIcon(iconFile));
     act->setIconVisibleInMenu(inMenu);
+    actions[name] = act;
+    Preferences::connectInstance(SIGNAL(shortcutChanged(QString,QString)), this, SLOT(shortcutChanged(QString,QString)));
     return act;
 }
 
-QAction* MainWindow::createAction(QString text, QKeySequence::StandardKey seq, QString iconFile, bool inMenu)
-{
-    return createAction(text, QKeySequence(seq), iconFile, inMenu);
-}
 
 void MainWindow::createActions()
 {
-    actNew = createAction(tr("New"), QKeySequence(QKeySequence::New), ":/Icons/new.png", true);
+    actNew = createAction("File.New", ":/Icons/new.png", true);
     connect(actNew, SIGNAL(triggered()), this, SLOT(newDocument()));
 
-    actOpen = createAction(tr("Open ..."), QKeySequence(QKeySequence::Open), ":/Icons/open.png", true);
+    actOpen = createAction("File.Open", ":/Icons/open.png", true);
     connect(actOpen, SIGNAL(triggered()), this, SLOT(openDocument()));
 
-    actClose = createAction(tr("Close"), QKeySequence(QKeySequence::Close), ":/Icons/close.png", true);
+    actClose = createAction("File.Close", ":/Icons/close.png", true);
     connect(actClose, SIGNAL(triggered()), this, SLOT(closeWindow()));
 
-    actCloseAll = createAction(tr("Close all"));
+    actCloseAll = createAction("File.CloseAll");
     connect(actCloseAll, SIGNAL(triggered()), this, SLOT(closeWindowAll()));
 
-    actSave = createAction(tr("Save"), QKeySequence(QKeySequence::Save), ":/Icons/save.png", true);
+    actSave = createAction("File.Save", ":/Icons/save.png", true);
     connect(actSave, SIGNAL(triggered()), this, SLOT(saveDocument()));
 
-    actSaveAs = createAction(tr("Save as ..."), QKeySequence(QKeySequence::SaveAs), ":/Icons/saveas.png", true);
+    actSaveAs = createAction("File.SaveAs", ":/Icons/saveas.png", true);
     connect(actSaveAs, SIGNAL(triggered()), this, SLOT(saveDocumentAs()));
 
-    actPrint = createAction(tr("Print ..."), QKeySequence(QKeySequence::Print), ":/Icons/print.png", true);
+    actPrint = createAction("File.Print", ":/Icons/print.png", true);
     connect(actPrint, SIGNAL(triggered()), this, SLOT(printDocument()));
 
-    actQuit = createAction(tr("Quit"), QKeySequence(QKeySequence::Quit), ":/Icons/exit.png", true);
+    actQuit = createAction("File.Quit", ":/Icons/exit.png", true);
     connect(actQuit, SIGNAL(triggered()), this, SLOT(close()));
 
-    actCut = createAction(tr("Cut"), QKeySequence(QKeySequence::Cut), ":/Icons/cut.png", true);
+    actCut = createAction("Editor.Cut", ":/Icons/cut.png", true);
     connect(actCut, SIGNAL(triggered()), this, SLOT(cutSelection()));
 
-    actCopy = createAction(tr("Copy"), QKeySequence(QKeySequence::Copy), ":/Icons/copy.png", true);
+    actCopy = createAction("Editor.Copy", ":/Icons/copy.png", true);
     connect(actCopy, SIGNAL(triggered()), this, SLOT(copySelection()));
 
-    actPaste = createAction(tr("Paste"), QKeySequence(QKeySequence::Paste), ":/Icons/paste.png", true);
+    actPaste = createAction("Editor.Paste", ":/Icons/paste.png", true);
     connect(actPaste, SIGNAL(triggered()), this, SLOT(pasteClipboard()));
 
-    actUndo = createAction(tr("Undo"), QKeySequence(QKeySequence::Undo), ":/Icons/undo.png", true);
+    actUndo = createAction("Editor.Undo", ":/Icons/undo.png", true);
     connect(actUndo, SIGNAL(triggered()), this, SLOT(undo()));
 
-    actRedo = createAction(tr("Redo"), QKeySequence(QKeySequence::Redo), ":/Icons/redo.png", true);
+    actRedo = createAction("Editor.Redo", ":/Icons/redo.png", true);
     connect(actRedo, SIGNAL(triggered()), this, SLOT(redo()));
 
-    actDetectProp = createAction(tr("Detect Propeller"), "F7");
+    actDetectProp = createAction("Compile.Detect");
     connect(actDetectProp, SIGNAL(triggered()), this, SLOT(detectProp()));
 
-    actCompile = createAction(tr("Compile"), "F9");
+    actCompile = createAction("Compile.Compile");
     connect(actCompile, SIGNAL(triggered()), this, SLOT(compile()));
 
-    actLoadRAM = createAction(tr("Compile and load RAM"), "F10");
+    actLoadRAM = createAction("Compile.LoadRAM");
     connect(actLoadRAM, SIGNAL(triggered()), this, SLOT(compileToRAM()));
 
-    actLoadEEPROM = createAction(tr("Compile and load EEPROM"), "F11");
+    actLoadEEPROM = createAction("Compile.LoadROM");
     connect(actLoadEEPROM, SIGNAL(triggered()), this, SLOT(compileToEEPROM()));
 
-    actSaveBIN = createAction(tr("Compile and save BINARY file"));
+    actSaveBIN = createAction("Compile.WriteBINARY");
     connect(actSaveBIN, SIGNAL(triggered()), this, SLOT(compileSaveBINARY()));
 
-    actSaveEEPROM = createAction(tr("Compile and save EEPROM file"));
+    actSaveEEPROM = createAction("Compile.WriteEEPROM");
     connect(actSaveEEPROM, SIGNAL(triggered()), this, SLOT(compileSaveEEPROM()));
 
-    actAbout = createAction(tr("About PZST ..."));
+    actAbout = createAction("Help.About");
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
 
-    actPreferences = createAction(tr("Preferences ..."), QKeySequence(QKeySequence::Preferences), ":/Icons/configure.png", true);
+    actPreferences = createAction("Environment.Preferences", ":/Icons/configure.png", true);
     connect(actPreferences, SIGNAL(triggered()), this, SLOT(preferences()));
 
-    actFind = createAction(tr("Search/Replace"), QKeySequence(QKeySequence::Find), ":/Icons/find.png", true);
+    actFind = createAction("Editor.Find", ":/Icons/find.png", true);
     connect(actFind, SIGNAL(triggered()), this, SLOT(find()));
 
-    actFindNext = createAction(tr("Find next"), QKeySequence(QKeySequence::FindNext), "", true);
+    actFindNext = createAction("Editor.FindNext", "", true);
     connect(actFindNext, SIGNAL(triggered()), &findDialog, SLOT(findNext()));
 
-    actReplace = createAction(tr("Replace and find next"), QKeySequence(QKeySequence::Replace), "", true);
+    actReplace = createAction("Editor.Replace", "", true);
     connect(actReplace, SIGNAL(triggered()), this, SLOT(replace()));
 
-    actQuickSearch = createAction(tr("Quick Search"), "Ctrl+/", ":/Icons/find.png", true);
+    actQuickSearch = createAction("Editor.QuickSearch", ":/Icons/find.png", true);
     connect(actQuickSearch, SIGNAL(triggered()), qsText, SLOT(setFocus()));
     connect(actQuickSearch, SIGNAL(triggered()), qsText, SLOT(selectAll()));
     connect(actQuickSearch, SIGNAL(triggered()), this, SLOT(qsEnter()));
 
-    actComplete= createAction(tr("Autocomplete"), "Ctrl+Space", "", true);
+    actComplete= createAction("Editor.Autocomplete", "", true);
     connect(actComplete, SIGNAL(triggered()), this, SLOT(autoComplete()));
     actComplete->setEnabled(false);
 
-    actCallTip = createAction(tr("Call tip"), "Ctrl+Shift+Space", "", true);
+    actCallTip = createAction("Editor.CallTip", "", true);
     connect(actCallTip, SIGNAL(triggered()), this, SLOT(callTip()));
     actCallTip->setEnabled(false);
 
-    actFold = createAction(tr("Fold"), "Ctrl+<", "", true);
+    actFold = createAction("Editor.Fold", "", true);
     connect(actFold, SIGNAL(triggered()), this, SLOT(fold()));
     actFold->setEnabled(false);
 
-    actUnfold = createAction(tr("Unfold"), "Ctrl+>", "", true);
+    actUnfold = createAction("Editor.Unfold", "", true);
     connect(actUnfold, SIGNAL(triggered()), this, SLOT(unfold()));
     actUnfold->setEnabled(false);
 
-    actFontLarger = createAction(tr("Increase font size"), QKeySequence::ZoomIn, ":/Icons/fontsizeup.png", true);
+    actFontLarger = createAction("Editor.ZoomIn", ":/Icons/fontsizeup.png", true);
     connect(actFontLarger, SIGNAL(triggered()), this, SLOT(increaseFontSize()));
     actFontLarger->setEnabled(false);
 
-    actFontSmaller = createAction(tr("Decrease font size"), QKeySequence::ZoomOut, ":/Icons/fontsizedown.png", true);
+
+    actFontSmaller = createAction("Editor.ZoomOut", ":/Icons/fontsizedown.png", true);
     connect(actFontSmaller, SIGNAL(triggered()), this, SLOT(decreaseFontSize()));
     actFontSmaller->setEnabled(false);
 }
@@ -541,8 +539,8 @@ void MainWindow::rebuildWindowMenu()
             QAction *a = g->addAction(windows[i]->windowTitle());
             a->setCheckable(true);
             a->setChecked(mdi->currentSubWindow() == windows.at(i));
-            connect(a, SIGNAL(triggered()), mapper, SLOT(map()));
-            mapper->setMapping(a, (QWidget*)windows.at(i));
+            connect(a, SIGNAL(triggered()), windowMapper, SLOT(map()));
+            windowMapper->setMapping(a, (QWidget*)windows.at(i));
             menuWindow->addAction(a);
         }
         menuWindow->addSeparator();
@@ -1408,4 +1406,16 @@ void MainWindow::qsEnter()
     if (!e) return;
     e->getCursorPosition(&qsLine, &qsCol);
     quickSearch(qsText->text());
+}
+
+void MainWindow::shortcutChanged(QString name, QString value)
+{
+    if (actions.contains(name)) {
+        QStringList shortcuts = value.split("\n");
+        QList<QKeySequence> seq;
+        foreach (QString shortcut, shortcuts) {
+            seq << QKeySequence::fromString(shortcut, QKeySequence::PortableText);
+        }
+        actions[name]->setShortcuts(seq);
+    }
 }
