@@ -492,16 +492,31 @@
               <number>1</number>
              </property>
              <item row="0" column="0">
-              <widget class="PZST::ShortcutEdit" name="first"/>
+              <widget class="PZST::ShortcutEdit" name="first">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0">
-              <widget class="PZST::ShortcutEdit" name="second"/>
+              <widget class="PZST::ShortcutEdit" name="second">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item row="2" column="0">
-              <widget class="PZST::ShortcutEdit" name="third"/>
+              <widget class="PZST::ShortcutEdit" name="third">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
              </item>
              <item row="0" column="1">
               <widget class="QToolButton" name="revert">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="toolTip">
                 <string>Revert</string>
                </property>
@@ -516,6 +531,9 @@
              </item>
              <item row="0" column="2">
               <widget class="QToolButton" name="clear">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="toolTip">
                 <string>Clear</string>
                </property>

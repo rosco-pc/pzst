@@ -252,6 +252,11 @@ void PZST::PreferencesDialog::on_pageSelector_itemSelectionChanged()
 
 void PZST::PreferencesDialog::on_shortcuts_itemSelectionChanged()
 {
+    ui->first->setEnabled(true);
+    ui->second->setEnabled(true);
+    ui->third->setEnabled(true);
+    ui->clear->setEnabled(true);
+    ui->revert->setEnabled(true);
     QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(2).split("\n");
     ui->first->setText(shortcuts[0]);
     if (shortcuts.size() > 1) {
