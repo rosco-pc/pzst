@@ -523,7 +523,6 @@ void SpinEditor::preferencesChanged(QString section, QString name, QVariant valu
         Preferences p;
         if (name == "FontName" || name == "FontSize") {
             QFont f(p.getFontName(), p.getFontSize());
-            qDebug("%s %d", f.family().toUtf8().data(), f.pointSize());
             lexer()->setFont(f, -1);
             if (p.getLineNumbers()) setMarginWidth(1, "999999");
         }
