@@ -287,11 +287,30 @@ void SpinEditor::keyPressEvent(QKeyEvent *e)
         QKeyEvent *e1 = new QKeyEvent(e->type(), Qt::Key_Tab, Qt::ShiftModifier, e->text(), e->isAutoRepeat(), e->count());
         QsciScintilla::keyPressEvent(e1);
         if (e1->isAccepted()) {
+            delete e1;
             e->accept();
             return;
         }
+        delete e1;
     }
-    QsciScintilla::keyPressEvent(e);
+    QKeyEvent *e2 = 0;
+    if (e->modifiers() & ~(Qt::ShiftModifier | Qt::KeypadModifier)) {
+        if (e->key() > 0x1F && e->key() < 0x80) {
+            e2 = new QKeyEvent(
+                e->type(),
+                e->key(),
+                e->modifiers(),
+                "",
+                e->isAutoRepeat(),
+                e->count()
+            );
+        }
+    }
+    QsciScintilla::keyPressEvent(e2 ? e2 : e);
+    if (e2) {
+        if (e2->isAccepted()) e->accept();
+        delete e2;
+    }
 }
 
 void SpinEditor::registerIcons()
