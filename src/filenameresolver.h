@@ -3,6 +3,7 @@
 
 #include "pzstpreferences.h"
 #include <QStringList>
+#include <QMap>
 
 namespace PZST {
 
@@ -15,6 +16,8 @@ private:
     static FilenameResolver * getInstance();
     QStringList additionalPaths;
     QString pResolve(const QString filename, const QString ext, const QString curDir = QString());
+    QStringList lastPaths;
+    QMap<QString, QString> cache;
 };
 
 } // namespace PZST

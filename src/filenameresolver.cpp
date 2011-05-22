@@ -32,6 +32,10 @@ QString FilenameResolver::pResolve(QString filename, QString ext, QString curDir
     if (!curDir.isEmpty()) paths << curDir;
     paths << additionalPaths;
     paths << pref.getSearchPath();
+    if (lastPaths == paths && cache.contains(search)) {
+        return cache[search];
+    }
+    lastPaths = paths;
     for (int i = 0; i < paths.size(); i++) {
         QString path = paths[i];
         QDir dir(path, "*", QDir::Name | QDir::IgnoreCase, QDir::Files);
@@ -39,11 +43,11 @@ QString FilenameResolver::pResolve(QString filename, QString ext, QString curDir
         for (int j = 0; j < entries.size(); j++) {
             QString dirEntry = entries.at(j);
             if (dirEntry.toLower() == search.toLower()) {
-                return QDir::toNativeSeparators(path + QDir::separator() + dirEntry);
+                return cache[search] = QDir::toNativeSeparators(path + QDir::separator() + dirEntry);
             }
         }
     }
-    return QDir::toNativeSeparators(search);
+    return cache[search] = QDir::toNativeSeparators(search);
 }
 
 
