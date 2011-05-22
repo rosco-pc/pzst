@@ -5,10 +5,12 @@
 #include <QVector>
 #include <QStringList>
 #include <QTextCodec>
+#include "spincodeparser.h"
 
 namespace PZST {
     class SpinLexer : public QsciLexerCustom
     {
+        Q_OBJECT
     public:
         SpinLexer();
         virtual const char *language() const;
@@ -20,6 +22,8 @@ namespace PZST {
         virtual int indentationGuideView() const;
         virtual QStringList autoCompletionWordSeparators() const;
         virtual bool caseSensitive() const {return false;};
+    signals:
+        void methodsListChanged(SpinContextList);
     };
 }
 

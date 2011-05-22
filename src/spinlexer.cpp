@@ -68,7 +68,10 @@ void SpinLexer::styleText(int start, int end)
     if (!e) return;
     int pos = 0;
     SpinCodeParser *parser = e->getParser();
-    if (!parser->isValid()) parser->parseCode(e->text());
+    if (!parser->isValid()) {
+        parser->parseCode(e->text());
+        emit methodsListChanged(parser->getMethods());
+    }
     const SpinHighlightList &highlights = parser->getHighlighting();
     startStyling(start);
     int n = highlights.size();

@@ -37,7 +37,8 @@ void SpinEditor::initialize()
 {
     static int c = 1;
     fileName = QString("Untitled%1.spin").arg(c++);
-    setLexer(new SpinLexer());
+    spinLexer = new SpinLexer();
+    setLexer(spinLexer);
     new SpinCompletionSource(lexer(), this);
     setUtf8(true);
     setAutoIndent(true);
@@ -48,6 +49,7 @@ void SpinEditor::initialize()
     connect(this, SIGNAL(textChanged()), this, SLOT(documentModified()));
     connect(this,SIGNAL(SCN_MODIFIED(int,int,const char*,int,int,int,int,int,int,int)),
             this, SLOT(handlePreModified(int,int,const char*,int,int,int,int,int,int,int)));
+    connect(spinLexer, SIGNAL(methodsListChanged(SpinContextList)), this, SLOT(updateMethods(SpinContextList)));
     updateCaption();
     setContextMenuPolicy(Qt::CustomContextMenu);
     markerDefine(Background, 0);
@@ -254,7 +256,6 @@ void SpinEditor::documentModified()
 {
     QString code = text();
     SpinSourceFactory::instance()->addSource(fileName, code);
-    emit methodsListChanged(SpinSourceFactory::instance()->getParser(fileName)->getMethods());
 }
 
 SpinContextList SpinEditor::getMethodDefs()
@@ -701,4 +702,9 @@ void SpinEditor::handlePreModified(int pos, int mtype, const char *text, int len
     if (mtype & (SC_MOD_BEFOREINSERT | SC_MOD_BEFOREDELETE)) {
         SpinSourceFactory::instance()->getParser(fileName)->invalidate();
     }
+}
+
+void SpinEditor::updateMethods(SpinContextList m)
+{
+    emit methodsListChanged(m);
 }
