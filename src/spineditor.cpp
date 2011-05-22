@@ -245,6 +245,7 @@ void SpinEditor::readPreferences()
             }
         }
         SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, convert(Qt::Key_Return), QsciScintillaBase::SCI_NEWLINE);
+        SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, convert(Qt::Key_Escape), QsciScintillaBase::SCI_CANCEL);
     }
 }
 
