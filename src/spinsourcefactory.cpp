@@ -16,7 +16,7 @@ void SpinSourceFactory::addSource(QString fileName, QString text)
     fileName = FilenameResolver::resolve(fileName, "spin");
     sourceTexts[fileName] = text;
     if (!parsers.contains(fileName)) parsers[fileName] = new SpinCodeParser;
-    parsers[fileName]->parseCode(text);
+    parsers[fileName]->invalidate();
 }
 
 void SpinSourceFactory::removeSource(QString fileName)

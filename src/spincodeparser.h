@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QList>
 #include <QMap>
+#include <QVarLengthArray>
 
 #include "spincodelexer.h"
 
@@ -64,11 +65,26 @@ namespace PZST {
 
     typedef QList<SpinCodeContext>  SpinContextList;
 
-    struct SpinHighlightInfo {
+    typedef struct {
         int len;
         SpinCodeLexer::Retval style;
+    } SpinHighlightInfo;
+
+    class SpinHighlightList
+    {
+    public:
+        SpinHighlightList();
+        ~SpinHighlightList();
+        int size() const {return sz;}
+        void append(int len, SpinCodeLexer::Retval style);
+        void clear();
+        const SpinHighlightInfo *get(int idx) const;
+        const SpinHighlightInfo * operator[](int idx) const {return get(idx);};
+    private:
+        int capacity;
+        int sz;
+        SpinHighlightInfo* data;
     };
-    typedef QList<SpinHighlightInfo>  SpinHighlightList;
 
     class SpinCodeParser
     {
@@ -82,6 +98,8 @@ namespace PZST {
         const SpinObjectsList &getObjects() {return objects;}
         const  SpinHighlightList &getHighlighting() {return highlighting;}
         SpinCodeContext getContext(int pos);
+        bool isValid() {return valid;}
+        void invalidate() {valid = false;}
     private:
         enum State {
             Initial = 0,
@@ -118,6 +136,7 @@ namespace PZST {
         int lastSectionIndex;
         QString objName;
         State skipState;
+        bool valid;
 
         void processToken(SpinCodeLexer::Retval token, char *text, int len);
         bool checkSectionSwitch(SpinCodeLexer::Retval token, char *text);

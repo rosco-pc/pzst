@@ -46,8 +46,12 @@ namespace PZST {
     protected:
         virtual void closeEvent ( QCloseEvent * event );
         virtual void keyPressEvent(QKeyEvent *e);
+
     private slots:
         void cursorPositionChanged(int,int);
+        void handlePreModified(int pos, int mtype, const char *text, int len,
+                int added, int line, int foldNow, int foldPrev, int token,
+                int annotationLinesAdded);
     public slots:
         void updateModificationStatus(bool m);
         void documentModified();

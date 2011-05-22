@@ -68,18 +68,19 @@ void SpinLexer::styleText(int start, int end)
     if (!e) return;
     int pos = 0;
     SpinCodeParser *parser = e->getParser();
-    SpinHighlightList highlights = parser->getHighlighting();
+    if (!parser->isValid()) parser->parseCode(e->text());
+    const SpinHighlightList &highlights = parser->getHighlighting();
     startStyling(start);
     int n = highlights.size();
     for (int i=0; i < n && pos < end; i++) {
-        SpinHighlightInfo chunk = highlights.at(i);
-        int len = chunk.len;
+        const SpinHighlightInfo* chunk = highlights[i];
+        int len = chunk->len;
         if (pos + len > start) {
             if (start > pos) len -= (start - pos);
             if (pos + len > end) len = end - pos;
-            setStyling(len, (int)chunk.style);
+            setStyling(len, (int)chunk->style);
         }
-        pos += len;
+        pos += chunk->len;
     }
 }
 

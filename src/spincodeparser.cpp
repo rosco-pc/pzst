@@ -28,11 +28,8 @@ void SpinCodeParser::parseCode(QString code)
     state = Initial;
     for (;start < textEnd;) {
         SpinCodeLexer::Retval token = SpinCodeLexer::scan(start, textEnd, &textNext);
-        SpinHighlightInfo hl;
-        hl.style = token;
-        hl.len = textNext - start;
         if (token == SpinCodeLexer::EOI) break;
-        highlighting << hl;
+        highlighting.append(textNext - start, token);
         processToken(token, start, textNext - start);
         start = textNext;
     }
@@ -40,6 +37,7 @@ void SpinCodeParser::parseCode(QString code)
         contexts[lastSectionIndex].end = textEnd - textStart;
         lastSectionIndex = -1;
     }
+    valid = true;
 }
 
 void SpinCodeParser::processToken(SpinCodeLexer::Retval token, char *text, int len)
@@ -463,7 +461,40 @@ QString SpinObjectsList::getFileName(QString objName)
     return QString();
 }
 
+SpinHighlightList::SpinHighlightList():
+        capacity(0), sz(0), data(0)
+{
+
+}
+
+SpinHighlightList::~SpinHighlightList()
+{
+    delete[] data;
+}
+
+const SpinHighlightInfo *SpinHighlightList::get(int idx) const
+{
+    Q_ASSERT(idx >= 0 && idx < sz);
+    return data + idx;
+}
+
+void SpinHighlightList::append(int len, SpinCodeLexer::Retval style)
+{
+    if (capacity <= sz) {
+        SpinHighlightInfo* newData = new SpinHighlightInfo[capacity + 1024];
+        memcpy(newData, data,  sizeof(SpinHighlightInfo) * sz);
+        capacity += 1024;
+        delete[] data;
+        data = newData;
+    }
+    data[sz].len = len;
+    data[sz].style = style;
+    sz++;
+}
+
+void SpinHighlightList::clear()
+{
+    sz = 0;
+}
+
 } // namespace PZST
-
-
-

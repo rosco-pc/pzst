@@ -46,6 +46,8 @@ void SpinEditor::initialize()
     setTabIndents(true);
     connect(this, SIGNAL(modificationChanged(bool)), this, SLOT(updateModificationStatus(bool)));
     connect(this, SIGNAL(textChanged()), this, SLOT(documentModified()));
+    connect(this,SIGNAL(SCN_MODIFIED(int,int,const char*,int,int,int,int,int,int,int)),
+            this, SLOT(handlePreModified(int,int,const char*,int,int,int,int,int,int,int)));
     updateCaption();
     setContextMenuPolicy(Qt::CustomContextMenu);
     markerDefine(Background, 0);
@@ -371,46 +373,46 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
     };
     QStringList words;
     SpinCodeParser* parser = SpinSourceFactory::instance()->getParser(fileName);
-    SpinHighlightList hl = parser->getHighlighting();
+    const SpinHighlightList &hl = parser->getHighlighting();
     int n = 0;
     bool found = false;
     int curBlock;
     for (curBlock = 0; curBlock < hl.size(); curBlock++) {
-        SpinHighlightInfo info = hl[curBlock];
-        if (pos <= n + info.len) {
+        const SpinHighlightInfo* info = hl[curBlock];
+        if (pos <= n + info->len) {
             found = true;
             break;
         }
-        n += info.len;
+        n += info->len;
     }
     if (!found) {
         return words;
     }
-    n += hl[curBlock].len;
+    n += hl[curBlock]->len;
     int state = Unknown;
     int level;
     QByteArray bytes = text().toUtf8();
-    SpinHighlightInfo info;
-    for (;curBlock >= 0; curBlock--, n-= info.len) {
+    const SpinHighlightInfo* info;
+    for (;curBlock >= 0; curBlock--, n-= info->len) {
         info = hl[curBlock];
-        if (info.style == SpinCodeLexer::NL) {
+        if (info->style == SpinCodeLexer::NL) {
             break;
         }
-        if (info.style == SpinCodeLexer::COMMENT || info.style == SpinCodeLexer::WHITESPACE) {
+        if (info->style == SpinCodeLexer::COMMENT || info->style == SpinCodeLexer::WHITESPACE) {
             if (state == Unknown) break;
             continue;
         }
         switch (state) {
         case Unknown:
         case Identifier:
-            if (state == Unknown && info.style == SpinCodeLexer::IDENTIFIER) {
-                int wordStart = n-info.len;
-                int wordLen = info.len;
+            if (state == Unknown && info->style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info->len;
+                int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
                 words << QString::fromUtf8(bytes.mid(wordStart, wordLen));
                 state = Identifier;
-            } else if (info.style == SpinCodeLexer::CHAR) {
-                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+            } else if (info->style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == ".")  {
                     if (words.isEmpty()) words << "";
                     words.prepend(chr);
@@ -429,25 +431,25 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             break;
         case Dot:
         case Hash:
-            if (info.style == SpinCodeLexer::CHAR) {
-                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+            if (info->style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "]") {
                     state = Bracket;
                     level = 1;
                 } else {
                     curBlock = -1;
                 }
-            } else if (info.style == SpinCodeLexer::IDENTIFIER) {
-                int wordStart = n-info.len;
-                int wordLen = info.len;
+            } else if (info->style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info->len;
+                int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
                 words.prepend(QString::fromUtf8(bytes.mid(wordStart, wordLen)));
                 state = ObjMaybeHash;
             }
             break;
         case Bracket:
-            if (info.style == SpinCodeLexer::CHAR) {
-                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+            if (info->style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "]") {
                     level++;
                 }
@@ -460,24 +462,24 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             }
             break;
         case ObjIdentifier:
-            if (info.style == SpinCodeLexer::IDENTIFIER) {
-                int wordStart = n-info.len;
-                int wordLen = info.len;
+            if (info->style == SpinCodeLexer::IDENTIFIER) {
+                int wordStart = n-info->len;
+                int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
                 words.prepend(QString::fromUtf8(bytes.mid(wordStart, wordLen)));
                 state = ObjMaybeHash;
             }
             break;
         case ObjMaybeHash:
-            if (info.style == SpinCodeLexer::CHAR) {
-                QString chr = QString::fromUtf8(bytes.mid(n-info.len, info.len));
+            if (info->style == SpinCodeLexer::CHAR) {
+                QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "#") words.prepend(chr);
             }
             curBlock = -1;
             break;
         }
     }
-    context_start = n - info.len;
+    context_start = n - info->len;
     return words;
 }
 
@@ -682,4 +684,20 @@ static int convert(int key)
         sci_key |= (sci_mod << 16);
 
     return sci_key;
+}
+
+void SpinEditor::handlePreModified(int pos, int mtype, const char *text, int len, int added, int line, int foldNow, int foldPrev, int token, int annotationLinesAdded)
+{
+    Q_UNUSED(pos);
+    Q_UNUSED(text);
+    Q_UNUSED(len);
+    Q_UNUSED(added);
+    Q_UNUSED(line);
+    Q_UNUSED(foldNow);
+    Q_UNUSED(foldPrev);
+    Q_UNUSED(token);
+    Q_UNUSED(annotationLinesAdded);
+    if (mtype & (SC_MOD_BEFOREINSERT | SC_MOD_BEFOREDELETE)) {
+        SpinSourceFactory::instance()->getParser(fileName)->invalidate();
+    }
 }
