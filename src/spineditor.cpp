@@ -16,8 +16,11 @@
 #include "pzstpreferences.h"
 #include "spincodeparser.h"
 #include "searchengine.h"
+#include "shortcuts.h"
 
 using namespace PZST;
+
+static int convert(int key);
 
 SpinEditor::SpinEditor(QWidget *p)
     :QsciScintilla(p), HasFilename(false)
@@ -52,6 +55,7 @@ void SpinEditor::initialize()
     addSearchable(this);
     setAutoCompletionSource(AcsAPIs);
     setAutoCompletionShowSingle(true);
+
 }
 
 
@@ -214,6 +218,32 @@ void SpinEditor::readPreferences()
         markerDeleteAll(0);
         disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
     }
+    SendScintilla(QsciScintillaBase::SCI_CLEARALLCMDKEYS);
+    QStringList commands = Shortcuts::allNames();
+    foreach (QString name, commands) {
+        int msg = Shortcuts::qsciCommand(name);
+        if (msg) {
+            QList<QKeySequence> list = pref.getShortcuts(name);
+            int k1 = 0, k2 = 0, k3 = 0;
+            if (list.size() > 0) k1 = list[0][0];
+            if (list.size() > 1) k2 = list[1][0];
+            if (list.size() > 2) k2 = list[1][0];
+            k1 = convert(k1);
+            if (k1) {
+                SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k1);
+                SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k1, msg);
+            }
+            if (k2) {
+                SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k2);
+                SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k2, msg);
+            }
+            if (k3) {
+                SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k3);
+                SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k3, msg);
+            }
+        }
+        SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, convert(Qt::Key_Return), QsciScintillaBase::SCI_NEWLINE);
+    }
 }
 
 
@@ -295,7 +325,7 @@ void SpinEditor::keyPressEvent(QKeyEvent *e)
     }
     QKeyEvent *e2 = 0;
     if (e->modifiers() & ~(Qt::ShiftModifier | Qt::KeypadModifier)) {
-        if (e->key() > 0x1F && e->key() < 0x80) {
+        if ((e->key() > 0x1F && e->key() < 0x80)) {
             e2 = new QKeyEvent(
                 e->type(),
                 e->key(),
@@ -559,4 +589,97 @@ void SpinEditor::preferencesChanged(QString section, QString name, QVariant valu
             }
         }
     }
+}
+
+static int convert(int key)
+{
+    // Convert the modifiers.
+    int sci_mod = 0;
+
+    if (key & Qt::SHIFT)
+        sci_mod |= QsciScintillaBase::SCMOD_SHIFT;
+
+    if (key & Qt::CTRL)
+        sci_mod |= QsciScintillaBase::SCMOD_CTRL;
+
+    if (key & Qt::ALT)
+        sci_mod |= QsciScintillaBase::SCMOD_ALT;
+
+    if (key & Qt::META)
+        sci_mod |= QsciScintillaBase::SCMOD_SUPER;
+
+    key &= ~Qt::MODIFIER_MASK;
+
+    // Convert the key.
+    int sci_key;
+
+    if (key > 0x7f)
+        switch (key)
+        {
+        case Qt::Key_Down:
+            sci_key = QsciScintillaBase::SCK_DOWN;
+            break;
+
+        case Qt::Key_Up:
+            sci_key = QsciScintillaBase::SCK_UP;
+            break;
+
+        case Qt::Key_Left:
+            sci_key = QsciScintillaBase::SCK_LEFT;
+            break;
+
+        case Qt::Key_Right:
+            sci_key = QsciScintillaBase::SCK_RIGHT;
+            break;
+
+        case Qt::Key_Home:
+            sci_key = QsciScintillaBase::SCK_HOME;
+            break;
+
+        case Qt::Key_End:
+            sci_key = QsciScintillaBase::SCK_END;
+            break;
+
+        case Qt::Key_PageUp:
+            sci_key = QsciScintillaBase::SCK_PRIOR;
+            break;
+
+        case Qt::Key_PageDown:
+            sci_key = QsciScintillaBase::SCK_NEXT;
+            break;
+
+        case Qt::Key_Delete:
+            sci_key = QsciScintillaBase::SCK_DELETE;
+            break;
+
+        case Qt::Key_Insert:
+            sci_key = QsciScintillaBase::SCK_INSERT;
+            break;
+
+        case Qt::Key_Escape:
+            sci_key = QsciScintillaBase::SCK_ESCAPE;
+            break;
+
+        case Qt::Key_Backspace:
+            sci_key = QsciScintillaBase::SCK_BACK;
+            break;
+
+        case Qt::Key_Tab:
+            sci_key = QsciScintillaBase::SCK_TAB;
+            break;
+
+        case Qt::Key_Return:
+            sci_key = QsciScintillaBase::SCK_RETURN;
+            break;
+
+        default:
+            sci_key = 0;
+        }
+    else
+        sci_key = key;
+
+    if (sci_key)
+        sci_key |= (sci_mod << 16);
+
+    return sci_key;
 }

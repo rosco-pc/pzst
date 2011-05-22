@@ -9,6 +9,15 @@
 
 namespace PZST {
 
+
+    typedef struct {
+        const char *name;
+        const char *title;
+        int std;
+        int key;
+        int sciMsg;
+    } COMMAND;
+
 class Shortcuts : public QObject
 {
     Q_OBJECT
@@ -16,11 +25,11 @@ public:
     static QList<QKeySequence> defaultSequence(QString);
     static QString  title(QString);
     static QStringList  allNames();
+    static int qsciCommand(QString name);
 private:
     Shortcuts();
-    static void initShortcuts(QMap<QString, QList<QKeySequence> >&);
-    static void initTitles(QMap<QString, QString>&);
-    static QMap<QString, QString>& titles();
+    static void initMap(QMap<QString, const COMMAND*>&);
+    static const QMap<QString, const COMMAND*> &map();
 };
 
 } // namespace PZST
