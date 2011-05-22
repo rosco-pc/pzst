@@ -64,36 +64,22 @@ QString SpinLexer::description(int style) const
 
 void SpinLexer::styleText(int start, int end)
 {
-    Q_UNUSED(start);
-    Q_UNUSED(end);
     SpinEditor *e = qobject_cast<SpinEditor *>(editor());
     if (!e) return;
     int pos = 0;
-    int lastLine = -1;
     SpinCodeParser *parser = e->getParser();
     SpinHighlightList highlights = parser->getHighlighting();
-    startStyling(0);
-    for (int i=0; i < highlights.size(); i++) {
+    startStyling(start);
+    int n = highlights.size();
+    for (int i=0; i < n && pos < end; i++) {
         SpinHighlightInfo chunk = highlights.at(i);
-        setStyling(chunk.len, (int)chunk.style);
-        int line, col;
-        editor()->lineIndexFromPosition(pos, &line, &col);
-        if (line != lastLine) {
-            switch (chunk.style) {
-            case SpinCodeLexer::PUB:
-            case SpinCodeLexer::PRI:
-            case SpinCodeLexer::CON:
-            case SpinCodeLexer::VAR:
-            case SpinCodeLexer::OBJ:
-            case SpinCodeLexer::DAT:
-                editor()->SendScintilla(QsciScintillaBase::SCI_SETFOLDLEVEL, (unsigned long)line, (long)0 | QsciScintillaBase::SC_FOLDLEVELHEADERFLAG);
-                break;
-            default:
-                editor()->SendScintilla(QsciScintillaBase::SCI_SETFOLDLEVEL, (unsigned long)line, (long)1);
-            }
-            lastLine = line;
+        int len = chunk.len;
+        if (pos + len > start) {
+            if (start > pos) len -= (start - pos);
+            if (pos + len > end) len = end - pos;
+            setStyling(len, (int)chunk.style);
         }
-        pos += chunk.len;
+        pos += len;
     }
 }
 
