@@ -55,6 +55,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
         item->setTextAlignment(0, Qt::AlignTop | Qt::AlignLeft);
         item->setTextAlignment(1, Qt::AlignTop | Qt::AlignLeft);
         item->setTextAlignment(2, Qt::AlignTop | Qt::AlignLeft);
+        item->setData(1, Qt::ToolTipRole, Shortcuts::title(command));
         QString shortcuts;
         foreach (QKeySequence seq, pref.getShortcuts(command)) {
             QString shortcut = seq.toString(QKeySequence::NativeText);
