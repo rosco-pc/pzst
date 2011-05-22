@@ -67,7 +67,7 @@ void PropellerLoader::sendLong(uint32_t num)
     device->write(buf, 32);
 }
 
-void PropellerLoader::sendBytes(char* data, uint16_t count)
+void PropellerLoader::sendBytes(char* data, int count)
 {
     int sent = 0;
     int time = 0;
@@ -269,14 +269,6 @@ void PropellerLoader::run()
     emit setLabelText(tr("Uploading program"));
     t.start();
     sendBytes(packed.data(), packed.size());
-    int time = t.elapsed();
-    while (t.elapsed() < packed.size()* 868 / 10000) {
-        int spent = t.elapsed() - time;
-        if (spent) {
-            advance(spent);
-            time += spent;
-        }
-    };
 
     char reply;
     if (!getReply(&reply, 1500)) {

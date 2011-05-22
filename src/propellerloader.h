@@ -49,7 +49,7 @@ namespace PZST {
         uint8_t iterateLFSR();
         void sendByte(uint8_t);
         void sendLong(uint32_t);
-        void sendBytes(char*, uint16_t);
+        void sendBytes(char*, int);
         bool getReply(char*c, int timeout);
         void advance(int);
 
