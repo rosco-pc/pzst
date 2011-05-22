@@ -624,6 +624,20 @@ static const COMMAND allCommands[] = {
         Qt::Key_U | Qt::CTRL | Qt::SHIFT,
         QsciScintillaBase::SCI_UPPERCASE,
     },
+    {
+        "Editor.Indent",
+        QT_TRANSLATE_NOOP("QsciCommand","Indent"),
+        0,
+        Qt::Key_Tab,
+        QsciScintillaBase::SCI_TAB,
+    },
+    {
+        "Editor.Unindent",
+        QT_TRANSLATE_NOOP("QsciCommand", "Unindent"),
+        0,
+        Qt::Key_Tab | Qt::SHIFT,
+        QsciScintillaBase::SCI_BACKTAB,
+    },
 
     {0, 0, 0, 0, 0},
 };
