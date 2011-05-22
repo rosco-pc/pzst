@@ -109,18 +109,15 @@ qint64 ESerialPort::readData(char *data, qint64 maxlen)
     FD_ZERO( &rfd );
     FD_SET(fd, &rfd );
     while (bytesRead < maxlen) {
-        n = ::select(1 + fd, &rfd, 0, 0, &tv);
+        while ((n = ::select(1 + fd, &rfd, 0, 0, &tv)) == -1 && errno == EINTR);
         if (n < 0) return -1;
         if (!n) return bytesRead;
         int toRead = qMin(maxlen, (qint64)512);
         n = ::read(fd, data + bytesRead, toRead);
         if (n < 0) {
-            if (errno != EAGAIN) {
-                return -1;
-            }
+            if (errno != EAGAIN) return -1;
             n = 0;
         }
-        if (n < 0) return -1;
         bytesRead += n;
         maxlen -= n;
     }
@@ -138,18 +135,15 @@ qint64 ESerialPort::writeData(const char *data, qint64 len)
     FD_SET(fd, &rfd);
     int n;
     while (bytesWritten < len) {
-        n = ::select(1 + fd, 0, &rfd, 0, &tv);
+        while ((n = ::select(1 + fd, 0, &rfd, 0, &tv)) == -1 && errno == EINTR);
         if (n < 0) return -1;
         if (!n) return bytesWritten;
         qint64 toWrite = qMin(len, (qint64)512);
         n = ::write(fd, (char*)data + bytesWritten, toWrite);
         if (n < 0) {
-            if (errno != EAGAIN) {
-                return -1;
-            }
+            if (errno != EAGAIN) return -1;
             n = 0;
         }
-        if (n < 0) return -1;
         bytesWritten += n;
         len -= n;
     }
