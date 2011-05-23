@@ -149,7 +149,6 @@ namespace PZST {
 
         QMdiArea *mdi;
         QVBoxLayout *layout;
-        QToolBar *toolbar;
 
         QMenu *menuFile;
         QMenu *menuEdit;

@@ -79,9 +79,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
 
     createDocks();
     createActions();
+    createToolbars();
     createMenus();
     createStatusBar();
-    createToolbars();
 
     QSettings *s = new QSettings();
     restoreGeometry(s->value("geometry").toByteArray());
@@ -277,6 +277,7 @@ void MainWindow::createMenus()
     menuView->addAction(infoDock->toggleViewAction());
     menuView->addAction(charTableDock->toggleViewAction());
     menuView->addAction(searchResultsDock->toggleViewAction());
+    menuView->addAction(editToolBar->toggleViewAction());
 
     menuCompile->addAction(actDetectProp);
     menuCompile->addSeparator();
