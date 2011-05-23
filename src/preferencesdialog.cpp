@@ -167,6 +167,8 @@ void PreferencesDialog::on_buttonBox_accepted()
         pref.setShortcut(name, value, QKeySequence::NativeText);
     }
 
+    emit shortcutsChanged();
+
 }
 
 void PreferencesDialog::on_pathAdd_clicked()

@@ -222,6 +222,12 @@ void SpinEditor::readPreferences()
         markerDeleteAll(0);
         disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
     }
+    readKeys();
+}
+
+void SpinEditor::readKeys()
+{
+    Preferences pref;
     SendScintilla(QsciScintillaBase::SCI_CLEARALLCMDKEYS);
     QStringList commands = Shortcuts::allNames();
     foreach (QString name, commands) {
@@ -252,7 +258,6 @@ void SpinEditor::readPreferences()
         SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, convert(Qt::Key_Escape), QsciScintillaBase::SCI_CANCEL);
     }
 }
-
 
 void SpinEditor::documentModified()
 {

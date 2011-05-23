@@ -108,6 +108,7 @@ namespace PZST {
         void noResults();
         void qsEnter();
         void shortcutChanged(QString, QString);
+        void readKeys();
 
     private:
         void showStatusMessage(const QString& msg, int type = 0);

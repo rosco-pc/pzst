@@ -993,7 +993,19 @@ void MainWindow::about()
 void MainWindow::preferences()
 {
     PreferencesDialog dlg(this);
+    connect(&dlg, SIGNAL(shortcutsChanged()), this, SLOT(readKeys()));
     dlg.exec();
+}
+
+void MainWindow::readKeys()
+{
+    QList<QMdiSubWindow*> windows = mdi->subWindowList();
+    for (int i = 0; i < windows.size(); i++) {
+        SpinEditor *e = qobject_cast<SpinEditor*>(windows.at(i)->widget());
+        if (e) {
+            e->readKeys();
+        }
+    }
 }
 
 void MainWindow::charSelected(QChar c)

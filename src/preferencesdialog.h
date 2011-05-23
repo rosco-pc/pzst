@@ -39,6 +39,8 @@ namespace PZST {
         void on_buttonBox_accepted();
         void on_fontName_currentIndexChanged(QString );
         void on_fontSize_valueChanged(int );
+    signals:
+        void shortcutsChanged();
     };
 }
 

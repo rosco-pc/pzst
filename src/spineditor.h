@@ -61,6 +61,7 @@ namespace PZST {
         void beginUndoActionSlot();
         void endUndoActionSlot();
         void preferencesChanged(QString, QString, QVariant);
+        void readKeys();
     signals:
         // !!!!!!!!! e can be already deleted !!!!!!!!
         void closed(SpinEditor*e);
