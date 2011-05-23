@@ -164,7 +164,7 @@ void PreferencesDialog::on_buttonBox_accepted()
         QTreeWidgetItem *item = ui->shortcuts->topLevelItem(i);
         QString name = item->text(0);
         QString value = item->text(2);
-        pref.setShortcut(name, value);
+        pref.setShortcut(name, value, QKeySequence::NativeText);
     }
 
 }

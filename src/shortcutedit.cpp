@@ -23,7 +23,7 @@ void ShortcutEdit::keyPressEvent(QKeyEvent *e)
         mods &= ~Qt::KeypadModifier;
         QKeySequence seq(key | mods);
         if (!current.isEmpty()) current.append(", ");
-        current.append(seq.toString());
+        current.append(seq.toString(QKeySequence::NativeText));
         setText(current);
     }
 }
