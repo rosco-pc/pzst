@@ -231,16 +231,18 @@ void SpinEditor::readPreferences()
             int k1 = 0, k2 = 0, k3 = 0;
             if (list.size() > 0) k1 = list[0][0];
             if (list.size() > 1) k2 = list[1][0];
-            if (list.size() > 2) k2 = list[1][0];
+            if (list.size() > 2) k3 = list[2][0];
             k1 = convert(k1);
             if (k1) {
                 SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k1);
                 SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k1, msg);
             }
+            k2 = convert(k2);
             if (k2) {
                 SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k2);
                 SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k2, msg);
             }
+            k3 = convert(k3);
             if (k3) {
                 SendScintilla(QsciScintillaBase::SCI_CLEARCMDKEY, k3);
                 SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY, k3, msg);
