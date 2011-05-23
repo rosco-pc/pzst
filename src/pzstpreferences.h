@@ -40,7 +40,7 @@ namespace PZST {
         static Preferences &signaller();
         void emitValueChanged(QString, QString, QVariant);
         void emitShortcutChanged(QString, QString);
-        void emitShortcutChanged(int, int, int);
+        void emitShortcutChanged(int, int, int, int);
     public:
         Preferences();
         ~Preferences();
@@ -76,7 +76,7 @@ namespace PZST {
     signals:
         void valueChanged(QString, QString, QVariant);
         void shortcutChanged(QString, QString);
-        void shortcutChanged(int, int, int);
+        void shortcutChanged(int, int, int, int);
     };
 }
 

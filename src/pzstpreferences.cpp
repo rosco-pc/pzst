@@ -38,9 +38,9 @@ void Preferences::emitShortcutChanged(QString name, QString value)
     emit shortcutChanged(name, value);
 }
 
-void Preferences::emitShortcutChanged(int cmd, int k1, int k2)
+void Preferences::emitShortcutChanged(int cmd, int k1, int k2, int k3)
 {
-    emit shortcutChanged(cmd, k1, k2);
+    emit shortcutChanged(cmd, k1, k2, k3);
 }
 
 QList<QKeySequence> Preferences::getShortcuts(QString name)
@@ -78,10 +78,11 @@ void Preferences::setShortcut(QString name, QString value, QKeySequence::Sequenc
         s.setValue(name, value);
         int cmd;
         if ((cmd = Shortcuts::qsciCommand(name))) {
-            int k1 = 0, k2 = 0;
+            int k1 = 0, k2 = 0, k3 = 0;
             if (seqs.size() > 0) k1 = seqs[0][0];
             if (seqs.size() > 1) k2 = seqs[0][1];
-            signaller().emitShortcutChanged(cmd, k1, k2);
+            if (seqs.size() > 2) k2 = seqs[0][2];
+            signaller().emitShortcutChanged(cmd, k1, k2, k3);
         } else {
             signaller().emitShortcutChanged(name, value);
         }
