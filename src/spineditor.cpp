@@ -432,7 +432,6 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
                     state = Hash;
                 } else {
                     curBlock = -1;
-                    words.clear();
                 }
             } else {
                 curBlock = -1;
