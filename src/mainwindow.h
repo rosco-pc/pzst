@@ -96,7 +96,7 @@ namespace PZST {
 
     private slots:
         void searchFound(Searchable*, int pos, int len, const SearchRequest*);
-        void methodsListChanged(SpinContextList);
+        void methodsListChanged(SpinEditor *, SpinContextList);
         void methodChosen(int);
         void jumpToMethod();
         void editorClosed(SpinEditor *e);

@@ -22,8 +22,6 @@ namespace PZST {
         virtual int indentationGuideView() const;
         virtual QStringList autoCompletionWordSeparators() const;
         virtual bool caseSensitive() const {return false;};
-    signals:
-        void methodsListChanged(SpinContextList);
     };
 }
 

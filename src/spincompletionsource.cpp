@@ -42,6 +42,7 @@ QStringList SpinCompletionSource::callTips(const QStringList &context, int comma
         SpinObjectsList objects = editor->getParser()->getObjects();
         QString fileName = FilenameResolver::resolve(objects.getFileName(objName), "spin", topDir);
         SpinCodeParser *parser = SpinSourceFactory::instance()->getParser(fileName);
+        if (!parser->isValid()) parser->parseCode(SpinSourceFactory::instance()->getSource(fileName));
         methods = parser->getMethods(SpinCodeContext::Pub);
     }
     for (int i = 0; i < methods.size(); i++) {
@@ -236,6 +237,7 @@ void SpinCompletionSource::addObjectMethods(const QStringList &context, QStringL
     SpinObjectsList objects = editor->getParser()->getObjects();
     QString fileName = FilenameResolver::resolve(objects.getFileName(objName), "spin", topDir);
     SpinCodeParser *parser = SpinSourceFactory::instance()->getParser(fileName);
+    if (!parser->isValid()) parser->parseCode(SpinSourceFactory::instance()->getSource(fileName));
     SpinContextList methods = parser->getMethods(SpinCodeContext::Pub);
     for (int i = 0; i < methods.size(); i++) {
         QString name = methods[i].name  +"?1";
@@ -266,6 +268,7 @@ void SpinCompletionSource::addObjectConstants(const QStringList &context, QStrin
     SpinObjectsList objects = editor->getParser()->getObjects();
     QString fileName = FilenameResolver::resolve(objects.getFileName(objName), "spin", topDir);
     SpinCodeParser *parser = SpinSourceFactory::instance()->getParser(fileName);
+    if (!parser->isValid()) parser->parseCode(SpinSourceFactory::instance()->getSource(fileName));
     QStringList constants= parser->getConstants();
     for (int i = 0; i < constants.size(); i++) {
         if (constants[i].toLower().startsWith(part.toLower())) {

@@ -267,7 +267,7 @@ void SpinEditor::documentModified()
 
 SpinContextList SpinEditor::getMethodDefs()
 {
-    return SpinSourceFactory::instance()->getParser(fileName)->getMethods();
+    return getParser()->getMethods();
 }
 
 QString SpinEditor::getWordAtCursor() const
@@ -381,7 +381,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
         ObjMaybeHash,
     };
     QStringList words;
-    SpinCodeParser* parser = SpinSourceFactory::instance()->getParser(fileName);
+    SpinCodeParser* parser = getParser();
     const SpinHighlightList &hl = parser->getHighlighting();
     int n = 0;
     bool found = false;
@@ -508,7 +508,12 @@ char SpinEditor::getCharacter(int &pos) const
 
 SpinCodeParser * SpinEditor::getParser()
 {
-    return SpinSourceFactory::instance()->getParser(fileName);
+    SpinCodeParser* parser = SpinSourceFactory::instance()->getParser(fileName);
+    if (!parser->isValid()) {
+        parser->parseCode(text());
+        emit methodsListChanged(this, parser->getMethods());
+    }
+    return parser;
 }
 
 QString SpinEditor::searchTargetId() const
@@ -708,9 +713,4 @@ void SpinEditor::handlePreModified(int pos, int mtype, const char *text, int len
     if (mtype & (SC_MOD_BEFOREINSERT | SC_MOD_BEFOREDELETE)) {
         SpinSourceFactory::instance()->getParser(fileName)->invalidate();
     }
-}
-
-void SpinEditor::updateMethods(SpinContextList m)
-{
-    emit methodsListChanged(m);
 }

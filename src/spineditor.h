@@ -54,7 +54,6 @@ namespace PZST {
         void handlePreModified(int pos, int mtype, const char *text, int len,
                 int added, int line, int foldNow, int foldPrev, int token,
                 int annotationLinesAdded);
-        void updateMethods(SpinContextList);
     public slots:
         void updateModificationStatus(bool m);
         void documentModified();
@@ -65,7 +64,7 @@ namespace PZST {
     signals:
         // !!!!!!!!! e can be already deleted !!!!!!!!
         void closed(SpinEditor*e);
-        void methodsListChanged(SpinContextList);
+        void methodsListChanged(SpinEditor*, SpinContextList);
     };
 }
 

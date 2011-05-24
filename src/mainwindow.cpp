@@ -460,7 +460,7 @@ void MainWindow::windowActivated(QWidget *w)
             actFontLarger->setEnabled(true);
             actFontSmaller->setEnabled(true);
             actFindNext->setEnabled(true);
-            methodsListChanged(e->getMethodDefs());
+            methodsListChanged(e, e->getMethodDefs());
             methodsListCombo->setEnabled(true);
             updateCursorPosition(line, col);
             qsText->setEnabled(true);
@@ -511,7 +511,7 @@ void MainWindow::connectEditor(SpinEditor *e)
     connect(e, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(updateCursorPosition(int,int)));
     connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(documentModified(bool)));
     connect(e, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-    connect(e, SIGNAL(methodsListChanged(SpinContextList)), this, SLOT(methodsListChanged(SpinContextList)));
+    connect(e, SIGNAL(methodsListChanged(SpinEditor*,SpinContextList)), this, SLOT(methodsListChanged(SpinContextList)));
     connect(e, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
     SearchEngine::connectInstance(SIGNAL(searchStarted()), e, SLOT(beginUndoActionSlot()));
     SearchEngine::connectInstance(SIGNAL(searchFinished(const SearchRequest*)), e, SLOT(endUndoActionSlot()));
@@ -1036,8 +1036,10 @@ void MainWindow::closeWindowAll()
     mdi->closeAllSubWindows();
 }
 
-void MainWindow::methodsListChanged(SpinContextList l)
+void MainWindow::methodsListChanged(SpinEditor *source, SpinContextList l)
 {
+    SpinEditor *e = activeEditor();
+    if (e != source) return;
     methodsListCombo->clear();
     qSort(l);
     for (int i = 0; i < l.size(); i++) {
