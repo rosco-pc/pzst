@@ -49,7 +49,6 @@ void SpinEditor::initialize()
     connect(this, SIGNAL(textChanged()), this, SLOT(documentModified()));
     connect(this,SIGNAL(SCN_MODIFIED(int,int,const char*,int,int,int,int,int,int,int)),
             this, SLOT(handlePreModified(int,int,const char*,int,int,int,int,int,int,int)));
-    connect(spinLexer, SIGNAL(methodsListChanged(SpinContextList)), this, SLOT(updateMethods(SpinContextList)));
     updateCaption();
     setContextMenuPolicy(Qt::CustomContextMenu);
     markerDefine(Background, 0);
