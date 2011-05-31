@@ -511,7 +511,7 @@ void MainWindow::connectEditor(SpinEditor *e)
     connect(e, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(updateCursorPosition(int,int)));
     connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(documentModified(bool)));
     connect(e, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
-    connect(e, SIGNAL(methodsListChanged(SpinEditor*,SpinContextList)), this, SLOT(methodsListChanged(SpinContextList)));
+    connect(e, SIGNAL(methodsListChanged(SpinEditor*,SpinContextList)), this, SLOT(methodsListChanged(SpinEditor*,SpinContextList)));
     connect(e, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
     SearchEngine::connectInstance(SIGNAL(searchStarted()), e, SLOT(beginUndoActionSlot()));
     SearchEngine::connectInstance(SIGNAL(searchFinished(const SearchRequest*)), e, SLOT(endUndoActionSlot()));
