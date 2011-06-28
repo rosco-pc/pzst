@@ -92,3 +92,4 @@ INSTALLS += menu
 pixmap.files = icons/pzst.png
 pixmap.path = /usr/share/pixmaps
 INSTALLS += pixmap
+RC_FILE = pzst.rc
