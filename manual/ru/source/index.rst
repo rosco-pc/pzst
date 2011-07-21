@@ -7,7 +7,6 @@ Propeller Zone Spin Tool Manual
 ===============================
 
 .. toctree::
-    :maxdepth: 3
 
     intro
     install
