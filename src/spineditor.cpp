@@ -369,7 +369,7 @@ void SpinEditor::registerIcons()
 QStringList SpinEditor::apiContext(int pos, int &context_start,
         int &last_word_start)
 {
-    Q_UNUSED(last_word_start);
+    last_word_start = pos;
     enum {
         Unknown = 0,
         Identifier,
@@ -415,6 +415,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
         case Identifier:
             if (state == Unknown && info->style == SpinCodeLexer::IDENTIFIER) {
                 int wordStart = n-info->len;
+                last_word_start = wordStart;
                 int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
                 words << QString::fromUtf8(bytes.mid(wordStart, wordLen));
