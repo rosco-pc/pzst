@@ -32,6 +32,8 @@
 #include "pzstpreferences.h"
 #include "searchengine.h"
 #include "shortcuts.h"
+#include "spinsourcefactory.h"
+#include "groupactiondialog.h"
 
 using namespace PZST;
 
@@ -41,10 +43,18 @@ SpinError::SpinError(QString msg, QString f, int l, int c) :message(msg), filena
 SpinError::SpinError() :message(""), filename(""), line(-1), col(-1)
 {
 }
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
+
+MainWindow::~MainWindow()
+{
+    SpinSourceFactory::shutdown();
+    delete modifiedFiles;
+}
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this), modifiedFiles(0)
 {
     lastActiveWindow = 0;
-
+    modifiedFiles = new QStringList();
+    setFocusPolicy(Qt::StrongFocus);
     windowSwitcher = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(windowSwitcher);
     layout->setContentsMargins(5, 5, 5, 5);
@@ -106,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), findDialog(this)
     Preferences::connectInstance(SIGNAL(valueChanged(QString,QString,QVariant)), charTable, SLOT(preferencesChanged(QString,QString,QVariant)));
     Preferences::connectInstance(SIGNAL(shortcutChanged(QString,QString)), this, SLOT(shortcutChanged(QString,QString)));
 
+    connect(SpinSourceFactory::instance(), SIGNAL(extrnallyModified(QString)), this, SLOT(externallyModified(QString)));
 }
 
 QAction* MainWindow::createAction(QString name, QString iconFile, bool inMenu)
@@ -587,7 +598,7 @@ void MainWindow::saveDocumentAs()
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (askForSave()) {
+    if (askForSave(0, true)) {
         event->accept();
         QSettings settings;
         settings.setValue("geometry", saveGeometry());
@@ -671,8 +682,12 @@ void MainWindow::closeTab(int n)
 {
     QList<QMdiSubWindow*> windows = mdi->subWindowList();
     if (n < 0 || n >= windows.length()) return;
-    windows[n]->close();
+    QMdiSubWindow* wnd = windows[n];
+    QWidget *w = wnd->widget();
+    SpinEditor *e = qobject_cast<SpinEditor *>(w);
+    if (askForSave(e, true)) windows[n]->close();
 }
+
 void MainWindow::addToMRU(QString fileName)
 {
     QStringList mru;
@@ -858,29 +873,41 @@ void MainWindow::showStatusMessage(const QString &msg, int type)
         break;
     }
 }
-bool MainWindow::askForSave(bool forClose)
+bool MainWindow::askForSave(SpinEditor *which, bool forClose)
 {
+
     QList<QMdiSubWindow*> windows = mdi->subWindowList();
-    bool saveAll = false;
+    GroupActionDialog dlg(forClose ? GroupActionDialog::Close : GroupActionDialog::Other,  this);
+    QStringList files;
+    bool haveUnsaved = false;
     for (int i = 0; i < windows.size(); i++) {
         SpinEditor *e = qobject_cast<SpinEditor*>(windows.at(i)->widget());
         if (e) {
-            if (e->isModified()) {
-                int result;
-                if (saveAll) result = e->save();
-                else result = e->maybeSave(this, forClose);
-                if (!result) {
-                    return false;
-                }
-                if (result == 2) saveAll = true;
+            if (e->isModified() && (which == 0 || which == e)) {
+                dlg.addFile(e->getFileName());
+                haveUnsaved = true;
             }
         }
     }
-    return true;
+    if (!haveUnsaved) return true;
+    if (dlg.run(files)) {
+        for (int i = 0; i < windows.size(); i++) {
+            SpinEditor *e = qobject_cast<SpinEditor*>(windows.at(i)->widget());
+            if (e) {
+                if (e->isModified()) {
+                    if (files.contains(e->getFileName())) {
+                        if (!e->save()) return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    return false;
 }
 void MainWindow::doCompilation(int command)
 {
-    if (!askForSave(false)) return;
+    if (!askForSave(0, false)) return;
     SpinEditor *e = activeEditor();
     if (!e) return;
     enableUI(false);
@@ -1029,11 +1056,17 @@ void MainWindow::charHighlighted(QChar c)
 }
 void MainWindow::closeWindow()
 {
-    mdi->closeActiveSubWindow();
+    if (askForSave(activeEditor(), true)) mdi->closeActiveSubWindow();
 }
 void MainWindow::closeWindowAll()
 {
-    mdi->closeAllSubWindows();
+    if (askForSave(0, true)) mdi->closeAllSubWindows();
+}
+
+void SpinEditor::closeEvent(QCloseEvent *event)
+{
+    emit closed(this);
+    QsciScintilla::closeEvent(event);
 }
 
 void MainWindow::methodsListChanged(SpinEditor *source, SpinContextList l)
@@ -1433,4 +1466,52 @@ void MainWindow::shortcutChanged(QString name, QString value)
         }
         actions[name]->setShortcuts(seq);
     }
+}
+
+void MainWindow::externallyModified(QString fileName)
+{
+    if (!modifiedFiles->contains(fileName)) {
+        modifiedFiles->append(fileName);
+    }
+    if (QApplication::activePopupWidget() || QApplication::activeModalWidget() || QApplication::activeWindow() != this)
+        return;
+    reloadExternallyModified();
+}
+
+bool MainWindow::event(QEvent *event)
+{
+    bool result = QMainWindow::event(event);
+    if (!modifiedFiles) return result;
+    if (event->type() == QEvent::WindowActivate) {
+        if (QApplication::activePopupWidget() || QApplication::activeModalWidget() || QApplication::activeWindow() != this)
+            return result;
+        if (modifiedFiles->empty()) return result;
+        reloadExternallyModified();
+    }
+    return result;
+}
+
+void MainWindow::reloadExternallyModified()
+{
+    GroupActionDialog dlg(GroupActionDialog::Reload,  this);
+    foreach (QString fileName, *modifiedFiles) {
+        dlg.addFile(fileName);
+    }
+    QStringList reloadFiles;
+    bool result = dlg.run(reloadFiles);
+    if (!result) reloadFiles.clear();
+    QList<QMdiSubWindow*> windows = mdi->subWindowList();
+    for (int i = 0; i < windows.size(); i++) {
+        SpinEditor *e = qobject_cast<SpinEditor*>(windows.at(i)->widget());
+        if (e) {
+            QString fName = e->getFileName();
+            if (reloadFiles.contains(fName)) {
+                e->loadFile(fName);
+            } else if (modifiedFiles->contains(fName)) {
+                SpinSourceFactory::instance()->removeSource(fName);
+                SpinSourceFactory::instance()->addSource(fName, e->text());
+            }
+        }
+    }
+    modifiedFiles->clear();
 }

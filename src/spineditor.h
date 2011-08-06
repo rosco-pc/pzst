@@ -16,12 +16,12 @@ namespace PZST {
     public:
         SpinEditor(QWidget *p = 0);
         ~SpinEditor();
-        static SpinEditor *loadFile(QString fName, QWidget *parent = 0);
+        static SpinEditor *loadFile(QString fName, QWidget *parent);
+        bool loadFile(QString fName);
         void setFileName(QString fName);
         QString getFileName() const {return fileName;};
         bool save();
         bool save(QString fName);
-        int maybeSave(QWidget *parent = 0, bool forClose = true);
         void readPreferences();
         bool hasFilename() {return HasFilename;};
         SpinContextList getMethodDefs();

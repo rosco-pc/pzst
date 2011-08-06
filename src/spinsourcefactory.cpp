@@ -9,6 +9,8 @@ using namespace PZST;
 SpinSourceFactory::SpinSourceFactory(QObject *parent) :
     QObject(parent)
 {
+    watcher = new QFileSystemWatcher(this);
+    connect(watcher, SIGNAL(fileChanged(QString)), this, SLOT(fileChanged(QString)));
 }
 
 void SpinSourceFactory::addSource(QString fileName, QString text)
@@ -17,11 +19,13 @@ void SpinSourceFactory::addSource(QString fileName, QString text)
     sourceTexts[fileName] = text;
     if (!parsers.contains(fileName)) parsers[fileName] = new SpinCodeParser;
     parsers[fileName]->invalidate();
+    if (watcher) watcher->addPath(fileName);
 }
 
 void SpinSourceFactory::removeSource(QString fileName)
 {
     fileName = FilenameResolver::resolve(fileName, "spin");
+    if (watcher) watcher->removePath(fileName);
     sourceTexts.remove(fileName);
     if (parsers.contains(fileName)) {
         delete parsers[fileName];
@@ -39,14 +43,15 @@ QString SpinSourceFactory::getSource(QString fileName)
 {
     fileName = FilenameResolver::resolve(fileName, "spin");
     if (sourceTexts.contains(fileName)) return sourceTexts[fileName];
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) return "";
-    QTextStream in(&file);
-    QTextCodec *codec = QTextCodec::codecForName("UTF8");
-    in.setCodec(codec);
-    QString ret = in.readAll().replace("\r\n", "\n").replace("\r", "\n");
-    sourceTexts[fileName] = ret;
+    QString ret = reload(fileName);
+    if (watcher) watcher->addPath(fileName);
     return ret;
+}
+
+void SpinSourceFactory::shutdown()
+{
+    delete instance()->watcher;
+    instance()->watcher = 0;
 }
 
 SpinCodeParser* SpinSourceFactory::getParser(QString fileName)
@@ -60,3 +65,25 @@ SpinCodeParser* SpinSourceFactory::getParser(QString fileName)
     }
     return parsers[fileName];
 }
+
+QString SpinSourceFactory::reload(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) return "";
+    QTextStream in(&file);
+    QTextCodec *codec = QTextCodec::codecForName("UTF8");
+    in.setCodec(codec);
+    QString ret = in.readAll().replace("\r\n", "\n").replace("\r", "\n");
+    sourceTexts[fileName] = ret;
+    return ret;
+}
+
+void SpinSourceFactory::fileChanged(QString fileName)
+{
+    emit extrnallyModified(fileName);
+    if (watcher) {
+        watcher->removePath(fileName);
+        watcher->addPath(fileName);
+    }
+}
+

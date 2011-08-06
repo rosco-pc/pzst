@@ -4,6 +4,7 @@
 #include <QRegExp>
 #include <QTextCodec>
 #include <QTextStream>
+#include <QApplication>
 
 #include "spincompiler.h"
 #include "spinpreprocessor.h"
@@ -315,30 +316,32 @@ SpinCodeInfo SpinCompiler::parseListFile()
 
 QProcess* SpinCompiler::runCompiler(const QString &workingDir, const QStringList &args)
 {
-    QProcess* compiler = new QProcess();
-    compiler->setWorkingDirectory(workingDir);
-    compiler->start("bstc", args);
-    if (!compiler->waitForStarted(5000)) {
+    QStringList executables;
+    executables << QApplication::applicationDirPath() + QDir::separator() + "bstc.pzst";
+    executables << "bstc";
 #ifndef Q_OS_WIN32
 #ifndef Q_OS_MAC
-        QString altExe = "bstc.linux";
+    executables << "bstc.linux";
 #else
-        QString altExe = "bstc.osx";
+    executables << "bstc.osx";
 #endif
-        compiler->terminate();
-        delete compiler;
+#endif
+    QProcess* compiler = 0;
+    for (int i = 0; i < executables.size(); i++) {
         compiler = new QProcess();
         compiler->setWorkingDirectory(workingDir);
-        compiler->start(altExe, args);
-        if (!compiler->waitForStarted(5000)) {
-#endif
+        compiler->start(executables[i], args);
+        if (compiler->waitForStarted(5000)) {
+            qDebug("%s", executables[i].toUtf8().data());
+            break;
+        }
         compiler->terminate();
         delete compiler;
+        compiler = 0;
+    }
+    if (!compiler) {
         status = StartError;
         return 0;
-#ifndef Q_OS_WIN32
-    }
-#endif
     }
     if (!compiler->waitForFinished(10000)) {
         compiler->terminate();

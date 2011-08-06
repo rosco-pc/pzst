@@ -58,34 +58,41 @@ void SpinEditor::initialize()
     addSearchable(this);
     setAutoCompletionSource(AcsAPIs);
     setAutoCompletionShowSingle(true);
-
 }
 
 
 SpinEditor *SpinEditor::loadFile(QString fName, QWidget *parent)
 {
+    SpinEditor *e = new SpinEditor(parent);
+    if (!e->loadFile(fName)) {
+        delete e;
+        e = 0;
+    }
+    return e;
+}
+
+bool SpinEditor::loadFile(QString fName)
+{
     fName = QDir::toNativeSeparators(fName);
     QFile file(fName);
     if (!file.open(QFile::ReadOnly)) {
-        QMessageBox::warning(parent, tr("Application"),
+        QMessageBox::warning(parentWidget(), tr("Application"),
                              tr("Cannot read file %1:\n%2.")
                              .arg(fName)
                              .arg(file.errorString()));
-        return 0;
+        return false;
     }
-
-    SpinEditor *e = new SpinEditor(parent);
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QTextCodec *utf8 = QTextCodec::codecForName("UTF8");
     QTextStream in(&file);
     in.setCodec(utf8);
-    e->setText(in.readAll().replace("\r\n", "\n").replace("\r", "\n"));
-    e->setFileName(fName);
-    e->setModified(false);
-    e->updateModificationStatus(false);
-    SpinSourceFactory::instance()->addSource(e->fileName, e->text());
+    setText(in.readAll().replace("\r\n", "\n").replace("\r", "\n"));
+    setFileName(fName);
+    setModified(false);
+    updateModificationStatus(false);
+    SpinSourceFactory::instance()->addSource(fileName, text());
     QApplication::restoreOverrideCursor();
-    return e;
+    return true;
 }
 
 void SpinEditor::setFileName(QString fName)
@@ -151,47 +158,6 @@ bool SpinEditor::save(QString fName)
     HasFilename = true;
     setModified(false);
     return true;
-}
-
-void SpinEditor::closeEvent(QCloseEvent *event)
-{
-    if (maybeSave(this)) {
-        // FIXME SearchEngine::removeScope(this);
-        emit closed(this);
-        event->accept();
-    }
-    else event->ignore();
-}
-
-int SpinEditor::maybeSave(QWidget *parent, bool forClose)
-{
-    if (!isModified()) return true;
-    QMessageBox msgBox(parent);
-    msgBox.setText(tr("The document has been modified."));
-    msgBox.setInformativeText(tr("Do you want to save changes to %1?").arg(fileName));
-    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::SaveAll | QMessageBox::Discard | QMessageBox::Cancel);
-    if (!forClose) {
-        QAbstractButton *b = msgBox.button(QMessageBox::Discard);
-        b->setText(tr("Continue without saving"));
-    }
-    msgBox.setDefaultButton(QMessageBox::Save);
-    int ret = msgBox.exec();
-    switch (ret) {
-        case QMessageBox::Save:
-         return save() ? 1 : 0;
-            break;
-        case QMessageBox::SaveAll:
-            return save() ? 2 : 0;
-            break;
-       case QMessageBox::Discard:
-           return 1;
-           break;
-       case QMessageBox::Cancel:
-       default:
-           return 0;
-           break;
-     }
-    return false;
 }
 
 

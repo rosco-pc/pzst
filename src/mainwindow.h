@@ -46,6 +46,7 @@ namespace PZST {
     public:
         explicit MainWindow(QWidget *parent = 0);
         virtual QString searchScopeName() const;
+        ~MainWindow();
 
     signals:
 
@@ -109,10 +110,11 @@ namespace PZST {
         void qsEnter();
         void shortcutChanged(QString, QString);
         void readKeys();
+        void externallyModified(QString);
 
     private:
         void showStatusMessage(const QString& msg, int type = 0);
-        bool askForSave(bool forClose = true);
+        bool askForSave(SpinEditor *which, bool forClose);
         void connectEditor(SpinEditor *e);
         SpinEditor *activeEditor();
         void checkClipboard();
@@ -128,6 +130,8 @@ namespace PZST {
         void createToolbars();
         void createDocks();
         void rebuildWindowSwitcher();
+
+        void reloadExternallyModified();
 
         // -1 - compile
         // 0 - to RAM
@@ -214,6 +218,7 @@ namespace PZST {
         QListWidget *windowsList;
 
         QLineEdit *qsText;
+        QStringList *modifiedFiles;
 
         int qsLine, qsCol;
 
@@ -221,6 +226,7 @@ namespace PZST {
         void closeEvent(QCloseEvent *event);
         void keyPressEvent(QKeyEvent *e);
         bool eventFilter(QObject *obj, QEvent *ev);
+        bool event(QEvent *event);
     };
 }
 #endif // MAINWINDOW_H

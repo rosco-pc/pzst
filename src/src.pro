@@ -25,7 +25,8 @@ SOURCES += mainwindow.cpp \
     searchscope.cpp \
     searchable.cpp \
     shortcutedit.cpp \
-    shortcuts.cpp
+    shortcuts.cpp \
+    groupactiondialog.cpp
 HEADERS += mainwindow.h \
     spineditor.h \
     spinlexer.h \
@@ -48,10 +49,12 @@ HEADERS += mainwindow.h \
     searchscope.h \
     searchable.h \
     shortcutedit.h \
-    shortcuts.h
+    shortcuts.h \
+    groupactiondialog.h
 FORMS += aboutdialog.ui \
     preferencesdialog.ui \
-    finddialog.ui
+    finddialog.ui \
+    groupactiondialog.ui
 LIBS += -lqscintilla2
 RESOURCES += PZST.qrc
 unix:SOURCES += eserialport_posix.cpp
@@ -86,6 +89,9 @@ INSTALLS += target
 translation.files = pzst_ru_RU.qm
 translation.path = /usr/share/pzst/lang
 INSTALLS += translation
+bstc.files = bstc.pzst
+bstc.path = /usr/bin
+INSTALLS += bstc
 menu.files = pzst.desktop
 menu.path = /usr/share/applications
 INSTALLS += menu
