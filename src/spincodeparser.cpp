@@ -6,6 +6,38 @@
 
 namespace PZST {
 
+static inline int tokenToColorGroup(int token)
+{
+    switch (token) {
+    case SpinCodeLexer::CONDITION:
+        return SpinCodeLexer::CG_CONDITION;
+    case SpinCodeLexer::TYPE:
+        return SpinCodeLexer::CG_TYPE;
+    case SpinCodeLexer::STRING:
+        return SpinCodeLexer::CG_STRING;
+    case SpinCodeLexer::IDENTIFIER:
+        return SpinCodeLexer::CG_IDENTIFIER;
+    case SpinCodeLexer::NUMBER:
+        return SpinCodeLexer::CG_IDENTIFIER;
+    case SpinCodeLexer::COMMENT:
+        return SpinCodeLexer::CG_COMMENT;
+
+    case SpinCodeLexer::PUB:
+    case SpinCodeLexer::PRI:
+    case SpinCodeLexer::DAT:
+    case SpinCodeLexer::OBJ:
+    case SpinCodeLexer::CON:
+    case SpinCodeLexer::VAR:
+    case SpinCodeLexer::FILE:
+    case SpinCodeLexer::RESERVED:
+        return SpinCodeLexer::CG_RESERVED;
+
+    case SpinCodeLexer::PREPRO:
+        return SpinCodeLexer::CG_PREPRO;
+    }
+    return SpinCodeLexer::CG_OTHER;
+}
+
 SpinCodeParser::SpinCodeParser()
 {
 }
@@ -26,10 +58,28 @@ void SpinCodeParser::parseCode(QString code)
     char * start = textStart;
     textEnd = textStart + bytes.size();
     state = Initial;
+    int background = SpinCodeLexer::CON;
+    int zebra = 0;
     for (;start < textEnd;) {
-        SpinCodeLexer::Retval token = SpinCodeLexer::scan(start, textEnd, &textNext);
+        int token = SpinCodeLexer::scan(start, textEnd, &textNext);
         if (token == SpinCodeLexer::EOI) break;
-        highlighting.append(textNext - start, token);
+        switch (token) {
+        case SpinCodeLexer::PUB:
+        case SpinCodeLexer::PRI:
+        case SpinCodeLexer::DAT:
+        case SpinCodeLexer::VAR:
+        case SpinCodeLexer::CON:
+        case SpinCodeLexer::OBJ:
+            if (token != background) zebra = 0;
+            else zebra ^= 1;
+            background = token;
+        }
+
+        int style = tokenToColorGroup(token);
+        style += background * 10;
+        style += zebra * 60;
+        style += 40;
+        highlighting.append(textNext - start, style, token);
         processToken(token, start, textNext - start);
         start = textNext;
     }
@@ -40,7 +90,7 @@ void SpinCodeParser::parseCode(QString code)
     valid = true;
 }
 
-void SpinCodeParser::processToken(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::processToken(int token, char *text, int len)
 {
     if (token == SpinCodeLexer::PREPRO) {
         skipState = state;
@@ -87,13 +137,13 @@ void SpinCodeParser::processToken(SpinCodeLexer::Retval token, char *text, int l
     }
 }
 
-void SpinCodeParser::stateInitial(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateInitial(int token, char *text, int len)
 {
     Q_UNUSED(len);
     checkSectionSwitch(token, text);
 }
 
-void SpinCodeParser::stateCon(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateCon(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -115,7 +165,7 @@ void SpinCodeParser::stateCon(SpinCodeLexer::Retval token, char *text, int len)
     }
 }
 
-void SpinCodeParser::stateConValue(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateConValue(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -130,7 +180,7 @@ void SpinCodeParser::stateConValue(SpinCodeLexer::Retval token, char *text, int 
     }
 }
 
-void SpinCodeParser::stateVar(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateVar(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -148,7 +198,7 @@ void SpinCodeParser::stateVar(SpinCodeLexer::Retval token, char *text, int len)
     }
 }
 
-void SpinCodeParser::stateVarName(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateVarName(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -162,7 +212,7 @@ void SpinCodeParser::stateVarName(SpinCodeLexer::Retval token, char *text, int l
     }
 }
 
-void SpinCodeParser::stateVarSeparator(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateVarSeparator(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -180,7 +230,7 @@ void SpinCodeParser::stateVarSeparator(SpinCodeLexer::Retval token, char *text, 
     }
 }
 
-void SpinCodeParser::stateObj(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateObj(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -193,7 +243,7 @@ void SpinCodeParser::stateObj(SpinCodeLexer::Retval token, char *text, int len)
     }
 }
 
-void SpinCodeParser::stateObjFile(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateObjFile(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -207,17 +257,17 @@ void SpinCodeParser::stateObjFile(SpinCodeLexer::Retval token, char *text, int l
     }
 }
 
-void SpinCodeParser::statePub(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::statePub(int token, char *text, int len)
 {
     statePubPri(token, text, len, false);
 }
 
-void SpinCodeParser::statePri(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::statePri(int token, char *text, int len)
 {
     statePubPri(token, text, len, true);
 }
 
-void SpinCodeParser::statePubPri(SpinCodeLexer::Retval token, char *text, int len, bool pri)
+void SpinCodeParser::statePubPri(int token, char *text, int len, bool pri)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -236,7 +286,7 @@ void SpinCodeParser::statePubPri(SpinCodeLexer::Retval token, char *text, int le
 
 }
 
-void SpinCodeParser::stateDat(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateDat(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -252,7 +302,7 @@ void SpinCodeParser::stateDat(SpinCodeLexer::Retval token, char *text, int len)
     }
 }
 
-void SpinCodeParser::stateDatCode(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateDatCode(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -265,7 +315,7 @@ void SpinCodeParser::stateDatCode(SpinCodeLexer::Retval token, char *text, int l
     }
 }
 
-void SpinCodeParser::stateParamsStart(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateParamsStart(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -284,7 +334,7 @@ void SpinCodeParser::stateParamsStart(SpinCodeLexer::Retval token, char *text, i
     }
 }
 
-void SpinCodeParser::stateParam(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateParam(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -304,7 +354,7 @@ void SpinCodeParser::stateParam(SpinCodeLexer::Retval token, char *text, int len
     }
 }
 
-void SpinCodeParser::stateParamNext(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateParamNext(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -321,7 +371,7 @@ void SpinCodeParser::stateParamNext(SpinCodeLexer::Retval token, char *text, int
     default:break;
     }
 }
-void SpinCodeParser::stateLocal(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateLocal(int token, char *text, int len)
 {
     if (checkSectionSwitch(token, text)) return;
     switch (token) {
@@ -341,7 +391,7 @@ void SpinCodeParser::stateLocal(SpinCodeLexer::Retval token, char *text, int len
     }
 }
 
-void SpinCodeParser::stateLocalNext(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateLocalNext(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -359,7 +409,7 @@ void SpinCodeParser::stateLocalNext(SpinCodeLexer::Retval token, char *text, int
     }
 }
 
-void SpinCodeParser::stateSkipToEOL(SpinCodeLexer::Retval token, char *text, int len)
+void SpinCodeParser::stateSkipToEOL(int token, char *text, int len)
 {
     Q_UNUSED(len);
     if (checkSectionSwitch(token, text)) return;
@@ -372,7 +422,7 @@ void SpinCodeParser::stateSkipToEOL(SpinCodeLexer::Retval token, char *text, int
     }
 }
 
-bool SpinCodeParser::checkSectionSwitch(SpinCodeLexer::Retval token, char *text)
+bool SpinCodeParser::checkSectionSwitch(int token, char *text)
 {
     bool ret = false;
     switch (token) {
@@ -478,7 +528,7 @@ const SpinHighlightInfo *SpinHighlightList::get(int idx) const
     return data + idx;
 }
 
-void SpinHighlightList::append(int len, SpinCodeLexer::Retval style)
+void SpinHighlightList::append(int len, int style, int token)
 {
     if (capacity <= sz) {
         SpinHighlightInfo* newData = new SpinHighlightInfo[capacity + 1024];
@@ -489,6 +539,7 @@ void SpinHighlightList::append(int len, SpinCodeLexer::Retval style)
     }
     data[sz].len = len;
     data[sz].style = style;
+    data[sz].token = token;
     sz++;
 }
 

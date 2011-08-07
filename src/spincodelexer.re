@@ -14,7 +14,7 @@
 #include "spincodelexer.h"
 
 namespace PZST {
-SpinCodeLexer::Retval SpinCodeLexer::scan(char *start_, char *end_, char** next_)
+int SpinCodeLexer::scan(char *start_, char *end_, char** next_)
 {
         unsigned char *start = (unsigned char *)start_;
         unsigned char *end = (unsigned char *)end_;

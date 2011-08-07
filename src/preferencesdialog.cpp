@@ -31,6 +31,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->UTF16->setChecked(pref.getUTF16());
     ui->lineNumbers->setChecked(pref.getLineNumbers());
     ui->curLine->setChecked(pref.getCurLineMarker());
+    ui->zebra->setChecked(pref.getZebra());
 
     QStringList paths = pref.getSearchPath();
     for (int i = 0; i < paths.size(); i++) {
@@ -141,6 +142,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setUTF16(ui->UTF16->isChecked());
     pref.setLineNumbers(ui->lineNumbers->isChecked());
     pref.setCurLineMarker(ui->curLine->isChecked());
+    pref.setZebra(ui->zebra->isChecked());
 
     QStringList paths;
     for (int i = 0; i < ui->searchPaths->count(); i++) {

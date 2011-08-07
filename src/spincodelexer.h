@@ -4,29 +4,42 @@
 namespace PZST {
 	class SpinCodeLexer {
 		public:
-		typedef enum {
-                        CHAR = 0,
-                        CONDITION,
-			EOI,
-			RESERVED,
-			TYPE,
-			STRING,
-			IDENTIFIER,
-			NUMBER,
-			COMMENT,
-			PUB,
-			PRI,
-			DAT,
-			OBJ,
-			CON,
-			VAR,
-			WHITESPACE,
-                        NL,
-                        PREPRO,
-                        FILE,
-                } Retval;
+                enum {
+                    CON = 0,
+                    PUB,
+                    PRI,
+                    DAT,
+                    OBJ,
+                    VAR,
+                    CHAR,
+                    CONDITION,
+                    EOI,
+                    RESERVED,
+                    TYPE,
+                    STRING,
+                    IDENTIFIER,
+                    NUMBER,
+                    COMMENT,
+                    WHITESPACE,
+                    NL,
+                    PREPRO,
+                    FILE,
+                };
 
-                static Retval scan(char *start, char *end, char** next);
+                enum {
+                    CG_CONDITION = 0,
+                    CG_COMMENT,
+                    CG_RESERVED,
+                    CG_IDENTIFIER,
+                    CG_NUMBER,
+                    CG_TYPE,
+                    CG_STRING,
+                    CG_PREPRO,
+                    CG_OTHER,
+                };
+
+
+                static int scan(char *start, char *end, char** next);
 	};
 }
 

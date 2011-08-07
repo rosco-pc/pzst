@@ -82,7 +82,7 @@ QByteArray SpinPreprocessor::findObjects(QString fileName, QStringList existing,
     char *end = start + bytes.size();
     while (start < end) {
         char *next;
-        SpinCodeLexer::Retval token = SpinCodeLexer::scan(start, end, &next);
+        int token = SpinCodeLexer::scan(start, end, &next);
         if (token == SpinCodeLexer::EOI) break;
         if (state == Initial) {
             switch (token) {

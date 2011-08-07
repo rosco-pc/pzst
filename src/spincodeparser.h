@@ -67,7 +67,8 @@ namespace PZST {
 
     typedef struct {
         int len;
-        SpinCodeLexer::Retval style;
+        int style;
+        int token;
     } SpinHighlightInfo;
 
     class SpinHighlightList
@@ -76,7 +77,7 @@ namespace PZST {
         SpinHighlightList();
         ~SpinHighlightList();
         int size() const {return sz;}
-        void append(int len, SpinCodeLexer::Retval style);
+        void append(int len, int style, int token);
         void clear();
         const SpinHighlightInfo *get(int idx) const;
         const SpinHighlightInfo * operator[](int idx) const {return get(idx);};
@@ -138,29 +139,29 @@ namespace PZST {
         State skipState;
         bool valid;
 
-        void processToken(SpinCodeLexer::Retval token, char *text, int len);
-        bool checkSectionSwitch(SpinCodeLexer::Retval token, char *text);
+        void processToken(int token, char *text, int len);
+        bool checkSectionSwitch(int token, char *text);
 
-        void stateInitial(SpinCodeLexer::Retval token, char *text, int len);
-        void stateCon(SpinCodeLexer::Retval token, char *text, int len);
-        void stateConValue(SpinCodeLexer::Retval token, char *text, int len);
-        void stateVar(SpinCodeLexer::Retval token, char *text, int len);
-        void stateVarName(SpinCodeLexer::Retval token, char *text, int len);
-        void stateVarSeparator(SpinCodeLexer::Retval token, char *text, int len);
-        void stateObj(SpinCodeLexer::Retval token, char *text, int len);
-        void stateObjFile(SpinCodeLexer::Retval token, char *text, int len);
-        void statePub(SpinCodeLexer::Retval token, char *text, int len);
-        void statePri(SpinCodeLexer::Retval token, char *text, int len);
-        void stateDat(SpinCodeLexer::Retval token, char *text, int len);
-        void stateDatCode(SpinCodeLexer::Retval token, char *text, int len);
-        void stateParamsStart(SpinCodeLexer::Retval token, char *text, int len);
-        void stateParam(SpinCodeLexer::Retval token, char *text, int len);
-        void stateParamNext(SpinCodeLexer::Retval token, char *text, int len);
-        void stateLocal(SpinCodeLexer::Retval token, char *text, int len);
-        void stateLocalNext(SpinCodeLexer::Retval token, char *text, int len);
-        void stateSkipToEOL(SpinCodeLexer::Retval token, char *text, int len);
+        void stateInitial(int token, char *text, int len);
+        void stateCon(int token, char *text, int len);
+        void stateConValue(int token, char *text, int len);
+        void stateVar(int token, char *text, int len);
+        void stateVarName(int token, char *text, int len);
+        void stateVarSeparator(int token, char *text, int len);
+        void stateObj(int token, char *text, int len);
+        void stateObjFile(int token, char *text, int len);
+        void statePub(int token, char *text, int len);
+        void statePri(int token, char *text, int len);
+        void stateDat(int token, char *text, int len);
+        void stateDatCode(int token, char *text, int len);
+        void stateParamsStart(int token, char *text, int len);
+        void stateParam(int token, char *text, int len);
+        void stateParamNext(int token, char *text, int len);
+        void stateLocal(int token, char *text, int len);
+        void stateLocalNext(int token, char *text, int len);
+        void stateSkipToEOL(int token, char *text, int len);
 
-        void statePubPri(SpinCodeLexer::Retval token, char *text, int len, bool pri);
+        void statePubPri(int token, char *text, int len, bool pri);
     };
 
 } // namespace PZST

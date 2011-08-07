@@ -9,9 +9,13 @@
 
 using namespace PZST;
 
+
+
 SpinLexer::SpinLexer()
     : QsciLexerCustom()
 {
+    setEolFill(true, -1);
+    setEolFill(true, 128);
 }
 
 const char *SpinLexer::language() const
@@ -21,42 +25,33 @@ const char *SpinLexer::language() const
 
 QString SpinLexer::description(int style) const
 {
-    switch ((SpinCodeLexer::Retval)style) {
-    case  SpinCodeLexer::COMMENT:
+    switch ((style - 40) % 10) {
+    case SpinCodeLexer::CG_COMMENT:
         return "Comment";
         break;
-    case  SpinCodeLexer::PUB:
-    case  SpinCodeLexer::PRI:
-    case  SpinCodeLexer::DAT:
-    case  SpinCodeLexer::OBJ:
-    case  SpinCodeLexer::CON:
-    case  SpinCodeLexer::VAR:
-    case  SpinCodeLexer::RESERVED:
-    case  SpinCodeLexer::FILE:
+    case  SpinCodeLexer::CG_RESERVED:
         return "Reserved";
         break;
-    case  SpinCodeLexer::CONDITION:
+    case  SpinCodeLexer::CG_CONDITION:
         return "Condition";
         break;
-    case  SpinCodeLexer::IDENTIFIER:
+    case  SpinCodeLexer::CG_IDENTIFIER:
         return "Identifier";
         break;
-    case  SpinCodeLexer::NUMBER:
+    case  SpinCodeLexer::CG_NUMBER:
         return "Number";
         break;
-    case  SpinCodeLexer::TYPE:
+    case  SpinCodeLexer::CG_TYPE:
         return "Type";
         break;
-    case  SpinCodeLexer::STRING:
+    case  SpinCodeLexer::CG_STRING:
         return "String";
         break;
-    case  SpinCodeLexer::PREPRO:
+    case  SpinCodeLexer::CG_PREPRO:
         return "Preprocessor";
         break;
-    case  SpinCodeLexer::EOI:
-    case  SpinCodeLexer::WHITESPACE:
-    case  SpinCodeLexer::NL:
-    case  SpinCodeLexer::CHAR:
+    case  SpinCodeLexer::CG_OTHER:
+    default:
         break;
     }
     return "Other";
@@ -77,50 +72,80 @@ void SpinLexer::styleText(int start, int end)
         if (pos + len > start) {
             if (start > pos) len -= (start - pos);
             if (pos + len > end) len = end - pos;
-            setStyling(len, (int)chunk->style);
+            int style = chunk->style;
+            if (!zebraOn) {
+                style = style % 10 +170;
+            }
+            setStyling(len, style);
         }
         pos += chunk->len;
     }
 }
 
+QColor SpinLexer::defaultPaper(int style) const
+{
+    if (style == 33) return QColor(240, 240, 240);
+    if (style - 40 > 119) return QsciLexer::defaultPaper();
+    if (style < 40) return QsciLexer::defaultPaper();
+    QColor paper;
+    switch (((style - 40) / 10) % 6) {
+    case SpinCodeLexer::CON:
+        paper = QColor(0xfd, 0xf3, 0xa8); break;
+    case SpinCodeLexer::OBJ:
+        paper = QColor(0xff, 0xbf, 0xbf); break;
+    case SpinCodeLexer::VAR:
+        paper = QColor(0xff, 0xdf, 0xbf); break;
+    case SpinCodeLexer::PUB:
+        paper = QColor(0xbf, 0xdf, 0xff); break;
+    case SpinCodeLexer::PRI:
+        paper = QColor(0xbf, 0xf8, 0xff); break;
+    case SpinCodeLexer::DAT:
+        paper = QColor(0xbf, 0xff, 0xc8); break;
+    default:
+        return QsciLexer::defaultPaper();
+    }
+
+    if (style - 40 > 59) return paper.darker(105);
+    return paper;
+
+    /*
+      CON: fdf3a8, efe9b4
+      OBJ: ffbfbf, ffbfbf
+      VAR: ffdfbf, efd1b3
+      PUB: bfdfff, b3d1ef
+      PRI: bff8ff, b3e9ef
+      DAT: bfffc8, b3efbb
+      */
+}
+
 QColor SpinLexer::defaultColor(int style) const
 {
-    switch ((SpinCodeLexer::Retval)style) {
-    case SpinCodeLexer::CONDITION:
+    switch ((style - 40) % 10) {
+    case SpinCodeLexer::CG_CONDITION:
         return QColor(255, 0, 0, 0);
         break;
-    case SpinCodeLexer::COMMENT:
+    case SpinCodeLexer::CG_COMMENT:
         return QColor(128, 128, 128, 0);
         break;
-    case SpinCodeLexer::RESERVED:
-    case SpinCodeLexer::PUB:
-    case SpinCodeLexer::PRI:
-    case SpinCodeLexer::DAT:
-    case SpinCodeLexer::CON:
-    case SpinCodeLexer::VAR:
-    case SpinCodeLexer::OBJ:
-    case SpinCodeLexer::FILE:
+    case SpinCodeLexer::CG_RESERVED:
         return QColor(0, 128, 0, 0);
         break;
-    case SpinCodeLexer::IDENTIFIER:
+    case SpinCodeLexer::CG_IDENTIFIER:
         return QColor(0, 0, 255, 0);
         break;
-    case SpinCodeLexer::NUMBER:
+    case SpinCodeLexer::CG_NUMBER:
         return QColor(255, 0, 255);
         break;
-    case SpinCodeLexer::TYPE:
+    case SpinCodeLexer::CG_TYPE:
         return QColor(128, 128, 0);
         break;
-    case SpinCodeLexer::STRING:
+    case SpinCodeLexer::CG_STRING:
         return QColor(128, 64, 0);
         break;
-    case SpinCodeLexer::PREPRO:
+    case SpinCodeLexer::CG_PREPRO:
         return QColor(128, 0, 128);
         break;
-    case SpinCodeLexer::CHAR:
-    case SpinCodeLexer::EOI:
-    case SpinCodeLexer::WHITESPACE:
-    case SpinCodeLexer::NL:
+    case SpinCodeLexer::CG_OTHER:
         return QColor(0, 0, 0);
     }
     return QColor(0, 0, 0, 0);
@@ -150,4 +175,9 @@ int SpinLexer::indentationGuideView() const
 QStringList  SpinLexer::autoCompletionWordSeparators() const
 {
     return QStringList() << "." << "#";
+}
+
+int SpinLexer::styleBitsNeeded() const
+{
+    return 8;
 }

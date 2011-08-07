@@ -188,6 +188,8 @@ void SpinEditor::readPreferences()
         disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
     }
     readKeys();
+    SpinLexer *l = qobject_cast<SpinLexer*>(lexer());
+    l->setZebra(pref.getZebra());
 }
 
 void SpinEditor::readKeys()
@@ -369,24 +371,24 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
     const SpinHighlightInfo* info;
     for (;curBlock >= 0; curBlock--, n-= info->len) {
         info = hl[curBlock];
-        if (info->style == SpinCodeLexer::NL) {
+        if (info->token == SpinCodeLexer::NL) {
             break;
         }
-        if (info->style == SpinCodeLexer::COMMENT || info->style == SpinCodeLexer::WHITESPACE) {
+        if (info->token == SpinCodeLexer::COMMENT || info->token == SpinCodeLexer::WHITESPACE) {
             if (state == Unknown) break;
             continue;
         }
         switch (state) {
         case Unknown:
         case Identifier:
-            if (state == Unknown && info->style == SpinCodeLexer::IDENTIFIER) {
+            if (state == Unknown && info->token == SpinCodeLexer::IDENTIFIER) {
                 int wordStart = n-info->len;
                 last_word_start = wordStart;
                 int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
                 words << QString::fromUtf8(bytes.mid(wordStart, wordLen));
                 state = Identifier;
-            } else if (info->style == SpinCodeLexer::CHAR) {
+            } else if (info->token == SpinCodeLexer::CHAR) {
                 QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == ".")  {
                     if (words.isEmpty()) words << "";
@@ -405,7 +407,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             break;
         case Dot:
         case Hash:
-            if (info->style == SpinCodeLexer::CHAR) {
+            if (info->token == SpinCodeLexer::CHAR) {
                 QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "]") {
                     state = Bracket;
@@ -413,7 +415,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
                 } else {
                     curBlock = -1;
                 }
-            } else if (info->style == SpinCodeLexer::IDENTIFIER) {
+            } else if (info->token == SpinCodeLexer::IDENTIFIER) {
                 int wordStart = n-info->len;
                 int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
@@ -422,7 +424,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             }
             break;
         case Bracket:
-            if (info->style == SpinCodeLexer::CHAR) {
+            if (info->token == SpinCodeLexer::CHAR) {
                 QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "]") {
                     level++;
@@ -436,7 +438,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             }
             break;
         case ObjIdentifier:
-            if (info->style == SpinCodeLexer::IDENTIFIER) {
+            if (info->token == SpinCodeLexer::IDENTIFIER) {
                 int wordStart = n-info->len;
                 int wordLen = info->len;
                 if (wordStart + wordLen > pos) wordLen = pos - wordStart;
@@ -445,7 +447,7 @@ QStringList SpinEditor::apiContext(int pos, int &context_start,
             }
             break;
         case ObjMaybeHash:
-            if (info->style == SpinCodeLexer::CHAR) {
+            if (info->token == SpinCodeLexer::CHAR) {
                 QString chr = QString::fromUtf8(bytes.mid(n-info->len, info->len));
                 if (chr == "#") words.prepend(chr);
             }
@@ -568,6 +570,11 @@ void SpinEditor::preferencesChanged(QString section, QString name, QVariant valu
                 markerDeleteAll(0);
                 disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
             }
+        }
+        if (name == "Zebra") {
+            SpinLexer *l = qobject_cast<SpinLexer*>(lexer());
+            l->setZebra(value.toBool());
+            l->styleText(0, text().toUtf8().size());
         }
     }
 }
