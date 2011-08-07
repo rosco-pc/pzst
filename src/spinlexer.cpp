@@ -15,7 +15,7 @@ SpinLexer::SpinLexer()
     : QsciLexerCustom()
 {
     setEolFill(true, -1);
-    setEolFill(true, 128);
+    setEolFill(false, 0);
 }
 
 const char *SpinLexer::language() const
@@ -73,8 +73,12 @@ void SpinLexer::styleText(int start, int end)
             if (start > pos) len -= (start - pos);
             if (pos + len > end) len = end - pos;
             int style = chunk->style;
-            if (!zebraOn) {
-                style = style % 10 +170;
+            if (style < 32 || style > 39) {
+                if (style > 39) style -= 8;
+                if (!zebraOn) {
+                    style = style % 10 + 128;
+                }
+                if (style > 31) style += 8;
             }
             setStyling(len, style);
         }
@@ -84,11 +88,13 @@ void SpinLexer::styleText(int start, int end)
 
 QColor SpinLexer::defaultPaper(int style) const
 {
+    if (!style) QsciLexer::defaultPaper();
     if (style == 33) return QColor(240, 240, 240);
-    if (style - 40 > 119) return QsciLexer::defaultPaper();
-    if (style < 40) return QsciLexer::defaultPaper();
+    if (style > 31 && style < 40) return QsciLexer::defaultPaper();
+    if (style > 39) style -= 8;
+    if (style > 127) return QsciLexer::defaultPaper();
     QColor paper;
-    switch (((style - 40) / 10) % 6) {
+    switch ((style / 10) % 6) {
     case SpinCodeLexer::CON:
         paper = QColor(0xfd, 0xf3, 0xa8); break;
     case SpinCodeLexer::OBJ:
@@ -105,7 +111,7 @@ QColor SpinLexer::defaultPaper(int style) const
         return QsciLexer::defaultPaper();
     }
 
-    if (style - 40 > 59) return paper.darker(105);
+    if (style > 59) return paper.darker(105);
     return paper;
 
     /*
@@ -120,7 +126,11 @@ QColor SpinLexer::defaultPaper(int style) const
 
 QColor SpinLexer::defaultColor(int style) const
 {
-    switch ((style - 40) % 10) {
+    if (style > 31 && style < 40) return QsciLexerCustom::defaultColor();
+    if (style > 39) style -= 8;
+    if (style > 127) style -= 128;
+
+    switch (style  % 10) {
     case SpinCodeLexer::CG_CONDITION:
         return QColor(255, 0, 0, 0);
         break;

@@ -78,7 +78,7 @@ void SpinCodeParser::parseCode(QString code)
         int style = tokenToColorGroup(token);
         style += background * 10;
         style += zebra * 60;
-        style += 40;
+        if (style > 31) style += 8;
         highlighting.append(textNext - start, style, token);
         processToken(token, start, textNext - start);
         start = textNext;
