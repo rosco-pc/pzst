@@ -122,6 +122,48 @@
     </message>
 </context>
 <context>
+    <name>GroupActionDialog</name>
+    <message>
+        <location filename="groupactiondialog.ui" line="20"/>
+        <source>The following files have unsaved changes:</source>
+        <translation>Эти файлы были изменены после последнего сохранения:</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="19"/>
+        <source>Save selected</source>
+        <translation>Сохранить выбранные</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="23"/>
+        <source>Close without Saving</source>
+        <translation>Закрыть без сохранения</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="24"/>
+        <source>Continue without saving</source>
+        <translation>Продолжить без сохранения</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="26"/>
+        <source>Unsaved files</source>
+        <translation>Несохраненные файлы</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="28"/>
+        <source>The following files have changed outside PZST.
+Do you want to reload them?
+Reloaded files will loose undo history</source>
+        <translation>Эти файлы были изменены вне PZST.
+Хотите перезагрузить их?
+История отмен будет утеряна при перезагрузке</translation>
+    </message>
+    <message>
+        <location filename="groupactiondialog.cpp" line="32"/>
+        <source>Modified files</source>
+        <translation>Измененные файлы</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -545,204 +587,204 @@
         <translation type="obsolete">Уменьшить шрифт</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="230"/>
+        <location filename="mainwindow.cpp" line="241"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="231"/>
+        <location filename="mainwindow.cpp" line="242"/>
         <source>&amp;Edit</source>
         <translation>&amp;Правка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="232"/>
+        <location filename="mainwindow.cpp" line="243"/>
         <source>&amp;View</source>
         <translation>&amp;Вид</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="233"/>
+        <location filename="mainwindow.cpp" line="244"/>
         <source>&amp;Compile</source>
         <translation>Компиляция</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="mainwindow.cpp" line="245"/>
         <source>&amp;Window</source>
         <translation>&amp;Окно</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="235"/>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>&amp;Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="240"/>
+        <location filename="mainwindow.cpp" line="251"/>
         <source>Recent files</source>
         <translation>Недавно открытые файлы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="294"/>
+        <location filename="mainwindow.cpp" line="306"/>
         <source>Editor toolbar</source>
         <translation>Инструменты редактора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="310"/>
+        <location filename="mainwindow.cpp" line="322"/>
         <source> Method:</source>
         <translation> Метод:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="315"/>
+        <location filename="mainwindow.cpp" line="327"/>
         <source> Quick search:</source>
         <translation>Быстрый поиск:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="346"/>
+        <location filename="mainwindow.cpp" line="358"/>
         <source>Errors</source>
         <translation>Ошибки</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="354"/>
+        <location filename="mainwindow.cpp" line="366"/>
         <source>Compiler information</source>
         <translation>Информация компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="363"/>
+        <location filename="mainwindow.cpp" line="375"/>
         <source>Character table</source>
         <translation>Таблица символов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="376"/>
+        <location filename="mainwindow.cpp" line="388"/>
         <source>Search results</source>
         <translation>Результаты поиска</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="398"/>
+        <location filename="mainwindow.cpp" line="410"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="398"/>
+        <location filename="mainwindow.cpp" line="410"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="563"/>
+        <location filename="mainwindow.cpp" line="575"/>
         <source>No recent files</source>
         <translation>Нет файлов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="573"/>
-        <location filename="mainwindow.cpp" line="583"/>
+        <location filename="mainwindow.cpp" line="585"/>
+        <location filename="mainwindow.cpp" line="595"/>
         <source>File %1 saved</source>
         <translation>Файл %1 сохранен</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="794"/>
+        <location filename="mainwindow.cpp" line="810"/>
         <source>Propeller detected on port %1</source>
         <translation>Найден Пропеллер на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="796"/>
+        <location filename="mainwindow.cpp" line="812"/>
         <source>Propeller not found on port %1</source>
         <translation>Пропеллер не найден на порте %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="800"/>
+        <location filename="mainwindow.cpp" line="816"/>
         <source>Propeller programmed!</source>
         <translation>Программирование завершено!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="802"/>
+        <location filename="mainwindow.cpp" line="818"/>
         <source>Propeller programming failed</source>
         <translation>Ошибка программирования</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="806"/>
+        <location filename="mainwindow.cpp" line="822"/>
         <source>Unable to open port %1</source>
         <translation>Не удалось открыть порт %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="924"/>
+        <location filename="mainwindow.cpp" line="952"/>
         <source>Failed to start compiler</source>
         <translation>Не удалось запустить компилятор</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="928"/>
+        <location filename="mainwindow.cpp" line="956"/>
         <source>Compile error</source>
         <translation>Ошибка компиляции</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="932"/>
+        <location filename="mainwindow.cpp" line="960"/>
         <source>Compile warning</source>
         <translation>Предупреждение компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933"/>
+        <location filename="mainwindow.cpp" line="961"/>
         <source>Compile note</source>
         <translation>Замечание компилятора</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="943"/>
+        <location filename="mainwindow.cpp" line="971"/>
         <source>Compiled successfully</source>
         <translation>Скомпилировано</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="946"/>
+        <location filename="mainwindow.cpp" line="974"/>
         <source>Code size: %1 bytes, %2 longs</source>
         <translation>Размер кода: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="947"/>
+        <location filename="mainwindow.cpp" line="975"/>
         <source>Variables size: %1 bytes, %2 longs</source>
         <translation>Размер переменных: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="948"/>
+        <location filename="mainwindow.cpp" line="976"/>
         <source>Stack/free space: %1 bytes, %2 longs</source>
         <translation>Стэк/свободно: %1 байт (%2 LONG)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="949"/>
+        <location filename="mainwindow.cpp" line="977"/>
         <source>Clock frequency: %1 Hz</source>
         <translation>Тактовая частота: %1 Гц</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="950"/>
+        <location filename="mainwindow.cpp" line="978"/>
         <source>Clock mode: %1</source>
         <translation>Режим тактирования: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="959"/>
+        <location filename="mainwindow.cpp" line="987"/>
         <source>BINARY files (*.binary)</source>
         <translation>Файлы BINARY (*.binary)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="960"/>
+        <location filename="mainwindow.cpp" line="988"/>
         <source>EEPROM files (*.eeprom)</source>
         <translation>Файлы EEPROM (*.eeprom)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="961"/>
+        <location filename="mainwindow.cpp" line="989"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="972"/>
+        <location filename="mainwindow.cpp" line="1000"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="973"/>
+        <location filename="mainwindow.cpp" line="1001"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось сохранить %1 : %2.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1321"/>
+        <location filename="mainwindow.cpp" line="1369"/>
         <source>All open documents</source>
         <translation>Все открытые файлы</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1399"/>
+        <location filename="mainwindow.cpp" line="1447"/>
         <source>No results</source>
         <translation>Не найдено</translation>
     </message>
@@ -820,54 +862,59 @@
         <translation>Показывать отступы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="414"/>
+        <location filename="preferencesdialog.ui" line="239"/>
+        <source>Highlight Spin blocks</source>
+        <translation>Подсветка блоков кода</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="421"/>
         <source>English</source>
         <translation>Английский</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="419"/>
+        <location filename="preferencesdialog.ui" line="426"/>
         <source>Russian</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="473"/>
+        <location filename="preferencesdialog.ui" line="480"/>
         <source>Command</source>
         <translation>Команда</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="478"/>
+        <location filename="preferencesdialog.ui" line="485"/>
         <source>Name</source>
         <translation>Действие</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="483"/>
+        <location filename="preferencesdialog.ui" line="490"/>
         <source>Shortcut</source>
         <translation>Клавиши</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="521"/>
+        <location filename="preferencesdialog.ui" line="528"/>
         <source>Revert</source>
         <translation>Восстановить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="524"/>
-        <location filename="preferencesdialog.ui" line="541"/>
+        <location filename="preferencesdialog.ui" line="531"/>
+        <location filename="preferencesdialog.ui" line="548"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="538"/>
+        <location filename="preferencesdialog.ui" line="545"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
         <location filename="preferencesdialog.ui" line="78"/>
-        <location filename="preferencesdialog.ui" line="403"/>
+        <location filename="preferencesdialog.ui" line="410"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="427"/>
+        <location filename="preferencesdialog.ui" line="434"/>
         <source>Changing the language requires program restart</source>
         <translation>После изменения языка нужно перезапустить программу</translation>
     </message>
@@ -892,22 +939,22 @@
         <translation>Пути поиска</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="349"/>
+        <location filename="preferencesdialog.ui" line="356"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="356"/>
+        <location filename="preferencesdialog.ui" line="363"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="366"/>
+        <location filename="preferencesdialog.ui" line="373"/>
         <source>Move up</source>
         <translation>Вверх</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="376"/>
+        <location filename="preferencesdialog.ui" line="383"/>
         <source>Move down</source>
         <translation>Вниз</translation>
     </message>
@@ -916,57 +963,57 @@
         <translation type="obsolete">Опции компилятора</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="256"/>
+        <location filename="preferencesdialog.ui" line="263"/>
         <source>Generate Info messages</source>
         <translation>Показывать информационные сообщения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="263"/>
+        <location filename="preferencesdialog.ui" line="270"/>
         <source>Generate Warning messages</source>
         <translation>Показывать предупреждения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="270"/>
+        <location filename="preferencesdialog.ui" line="277"/>
         <source>Non-Parallax compatible extensions</source>
         <translation>Расширения несовместимые с компилятором Parallax</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="277"/>
+        <location filename="preferencesdialog.ui" line="284"/>
         <source>Fast Constants</source>
         <translation>&quot;Быстрые&quot; константы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="284"/>
+        <location filename="preferencesdialog.ui" line="291"/>
         <source>Generic &quot;Safe&quot; optimizations</source>
         <translation>Общие &quot;безопасные&quot; оптимизации</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="291"/>
+        <location filename="preferencesdialog.ui" line="298"/>
         <source>Fold Constant/Unary pairs</source>
         <translation>Упрощение пар константа/унарный оператор</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="298"/>
+        <location filename="preferencesdialog.ui" line="305"/>
         <source>Eliminate unused SPIN methods</source>
         <translation>Удаление неиспользуемых методов</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="305"/>
+        <location filename="preferencesdialog.ui" line="312"/>
         <source>Fold constants</source>
         <translation>Упрощение констант</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="312"/>
+        <location filename="preferencesdialog.ui" line="319"/>
         <source>Port</source>
         <translation>Порт</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="329"/>
+        <location filename="preferencesdialog.ui" line="336"/>
         <source>Encoding</source>
         <translation>Кодировка</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.cpp" line="173"/>
+        <location filename="preferencesdialog.cpp" line="178"/>
         <source>Add directory</source>
         <translation>Добавить путь</translation>
     </message>
@@ -992,455 +1039,455 @@
 <context>
     <name>PZST::Shortcuts</name>
     <message>
-        <location filename="shortcuts.cpp" line="11"/>
+        <location filename="shortcuts.cpp" line="12"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="18"/>
+        <location filename="shortcuts.cpp" line="19"/>
         <source>Close all</source>
         <translation>Закрыть все</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="25"/>
+        <location filename="shortcuts.cpp" line="26"/>
         <source>Open ...</source>
         <oldsource>Open</oldsource>
         <translation>Открыть ...</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="32"/>
+        <location filename="shortcuts.cpp" line="33"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="39"/>
+        <location filename="shortcuts.cpp" line="40"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="46"/>
+        <location filename="shortcuts.cpp" line="47"/>
         <source>Save as ...</source>
         <translation>Сохранить как ...</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="53"/>
+        <location filename="shortcuts.cpp" line="54"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="60"/>
+        <location filename="shortcuts.cpp" line="61"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="67"/>
+        <location filename="shortcuts.cpp" line="68"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="74"/>
+        <location filename="shortcuts.cpp" line="75"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="102"/>
+        <location filename="shortcuts.cpp" line="103"/>
         <source>Compile and load EEPROM</source>
         <oldsource>Compile and load ROM</oldsource>
         <translation>Скомпилировать и загрузить в ПЗУ</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="137"/>
+        <location filename="shortcuts.cpp" line="138"/>
         <source>Undo</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="144"/>
+        <location filename="shortcuts.cpp" line="145"/>
         <source>Redo</source>
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="81"/>
+        <location filename="shortcuts.cpp" line="82"/>
         <source>Detect Propeller</source>
         <translation>Найти Пропеллер</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="88"/>
+        <location filename="shortcuts.cpp" line="89"/>
         <source>Compile</source>
         <translation>Скомпилировать</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="95"/>
+        <location filename="shortcuts.cpp" line="96"/>
         <source>Compile and load RAM</source>
         <translation>Скомпилировать и загрузить в ОЗУ</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="109"/>
+        <location filename="shortcuts.cpp" line="110"/>
         <source>Compile and save EEPROM file</source>
         <translation>Скомпилировать и сохранить в файл EEPROM</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="116"/>
+        <location filename="shortcuts.cpp" line="117"/>
         <source>Compile and save BINARY file</source>
         <translation>Скомпилировать и сохранить в файл BINARY</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="123"/>
+        <location filename="shortcuts.cpp" line="124"/>
         <source>About PZST ...</source>
         <translation>О программе ...</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="130"/>
+        <location filename="shortcuts.cpp" line="131"/>
         <source>Preferences ...</source>
         <translation>Параметры ...</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="151"/>
+        <location filename="shortcuts.cpp" line="152"/>
         <source>Search/Replace</source>
         <translation>Поиск/Замена</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="158"/>
+        <location filename="shortcuts.cpp" line="159"/>
         <source>Find next</source>
         <translation>Повторить поиск</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="165"/>
+        <location filename="shortcuts.cpp" line="166"/>
         <source>Quick Search</source>
         <translation>Быстрый поиск</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="172"/>
+        <location filename="shortcuts.cpp" line="173"/>
         <source>Replace and find next</source>
         <translation>Заменить и продолжить поиск</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="179"/>
+        <location filename="shortcuts.cpp" line="180"/>
         <source>Autocomplete</source>
         <translation>Автозавершение</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="186"/>
+        <location filename="shortcuts.cpp" line="187"/>
         <source>Call tip</source>
         <translation>Показать аргументы</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="193"/>
+        <location filename="shortcuts.cpp" line="194"/>
         <source>Fold</source>
         <translation>Свернуть</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="200"/>
+        <location filename="shortcuts.cpp" line="201"/>
         <source>Unfold</source>
         <translation>Развернуть</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="207"/>
+        <location filename="shortcuts.cpp" line="208"/>
         <source>Print ...</source>
         <oldsource>Print</oldsource>
         <translation>Печать ...</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="214"/>
+        <location filename="shortcuts.cpp" line="215"/>
         <source>Increase font size</source>
         <translation>Увеличить шрифт</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="221"/>
+        <location filename="shortcuts.cpp" line="222"/>
         <source>Decrease font size</source>
         <translation>Уменьшить шрифт</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="229"/>
+        <location filename="shortcuts.cpp" line="230"/>
         <source>Move down one line</source>
         <translation>Вниз на строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="236"/>
+        <location filename="shortcuts.cpp" line="237"/>
         <source>Extend selection down one line</source>
         <translation>Расширить выделение на строку вниз</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="243"/>
+        <location filename="shortcuts.cpp" line="244"/>
         <source>Scroll view down one line</source>
         <translation>Прокрутить вниз на строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="250"/>
+        <location filename="shortcuts.cpp" line="251"/>
         <source>Extend rectangular selection down one line</source>
         <translation>Расширить прямоугольное выделение на строку вниз</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="257"/>
+        <location filename="shortcuts.cpp" line="258"/>
         <source>Move up one line</source>
         <translation>ВВерх на строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="264"/>
+        <location filename="shortcuts.cpp" line="265"/>
         <source>Extend selection up one line</source>
         <translation>Расширить выделение на строку вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="271"/>
+        <location filename="shortcuts.cpp" line="272"/>
         <source>Scroll view up one line</source>
         <translation>Прокрутить вверх на строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="278"/>
+        <location filename="shortcuts.cpp" line="279"/>
         <source>Extend rectangular selection up one line</source>
         <translation>Расширить прямоугольное выделение на строку вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="286"/>
+        <location filename="shortcuts.cpp" line="287"/>
         <source>Move up one paragraph</source>
         <translation>Вверх на параграф</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="293"/>
+        <location filename="shortcuts.cpp" line="294"/>
         <source>Extend selection up one paragraph</source>
         <translation>Расширить выделение на параграф вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="300"/>
+        <location filename="shortcuts.cpp" line="301"/>
         <source>Move down one paragraph</source>
         <translation>Вниз на параграф</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="307"/>
+        <location filename="shortcuts.cpp" line="308"/>
         <source>Extend selection down one paragraph</source>
         <translation>Расширить выделение на параграф вниз</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="314"/>
+        <location filename="shortcuts.cpp" line="315"/>
         <source>Move left one character</source>
         <translation>На символ влево</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="321"/>
+        <location filename="shortcuts.cpp" line="322"/>
         <source>Extend selection left one character</source>
         <translation>Расширить выделение на символ влево</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="328"/>
+        <location filename="shortcuts.cpp" line="329"/>
         <source>Move left one word</source>
         <translation>Влево на слово</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="335"/>
+        <location filename="shortcuts.cpp" line="336"/>
         <source>Extend selection left one word</source>
         <translation>Расширить выделение на слово влево</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="342"/>
+        <location filename="shortcuts.cpp" line="343"/>
         <source>Extend rectangular selection left one character</source>
         <translation>Расширить прямоугольное выделение на символ влево</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="349"/>
+        <location filename="shortcuts.cpp" line="350"/>
         <source>Move right one character</source>
         <translation>На символ вправо</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="356"/>
+        <location filename="shortcuts.cpp" line="357"/>
         <source>Extend selection right one character</source>
         <translation>Расширить выделение на символ вправо</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="363"/>
+        <location filename="shortcuts.cpp" line="364"/>
         <source>Move right one word</source>
         <translation>На слово вправо</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="370"/>
+        <location filename="shortcuts.cpp" line="371"/>
         <source>Extend selection right one word</source>
         <translation>Расширить выделение на слово вправо</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="377"/>
+        <location filename="shortcuts.cpp" line="378"/>
         <source>Extend rectangular selection right one character</source>
         <translation>Расширить прямоугольное выделение на символ вправо</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="384"/>
+        <location filename="shortcuts.cpp" line="385"/>
         <source>Move to first visible character in line</source>
         <translation>Перейти к первому символу в строке</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="391"/>
+        <location filename="shortcuts.cpp" line="392"/>
         <source>Extend selection to first visible character in line</source>
         <translation>Расширить выденеие к первому символу в строке</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="398"/>
+        <location filename="shortcuts.cpp" line="399"/>
         <source>Move to start of text</source>
         <translation>В начало текста</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="405"/>
+        <location filename="shortcuts.cpp" line="406"/>
         <source>Extend selection to start of text</source>
         <translation>Расширить выделение к началу текста</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="412"/>
+        <location filename="shortcuts.cpp" line="413"/>
         <source>Move to start of displayed line</source>
         <translation>В начало строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="419"/>
+        <location filename="shortcuts.cpp" line="420"/>
         <source>Extend selection to start of line</source>
         <translation>Расширить выделение к началу строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="426"/>
+        <location filename="shortcuts.cpp" line="427"/>
         <source>Extend rectangular selection to first visible character in line</source>
         <translation>Расширить прямоугольное выделение к первому символу в строке</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="433"/>
+        <location filename="shortcuts.cpp" line="434"/>
         <source>Move to end of line</source>
         <translation>В конец строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="440"/>
+        <location filename="shortcuts.cpp" line="441"/>
         <source>Extend selection to end of line</source>
         <translation>Расширить выделение до конца строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="447"/>
+        <location filename="shortcuts.cpp" line="448"/>
         <source>Move to end of text</source>
         <translation>В конец текста</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="454"/>
+        <location filename="shortcuts.cpp" line="455"/>
         <source>Extend selection to end of text</source>
         <translation>Расширить выделение до конца текста</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="461"/>
+        <location filename="shortcuts.cpp" line="462"/>
         <source>Move to end of displayed line</source>
         <translation>В конец отображаемой строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="468"/>
+        <location filename="shortcuts.cpp" line="469"/>
         <source>Extend selection to end of displayed line</source>
         <translation>Расширить выделение до конца отображаемой строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="475"/>
+        <location filename="shortcuts.cpp" line="476"/>
         <source>Extend rectangular selection to end of line</source>
         <translation>Расширить прямоугольное выделение до конца строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="482"/>
+        <location filename="shortcuts.cpp" line="483"/>
         <source>Move up one page</source>
         <translation>На страницу вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="489"/>
+        <location filename="shortcuts.cpp" line="490"/>
         <source>Extend selection up one page</source>
         <translation>Расширить выделение на страницу вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="496"/>
+        <location filename="shortcuts.cpp" line="497"/>
         <source>Extend rectangular selection up one page</source>
         <translation>Расширить прямоугольное выделение на страницу вверх</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="503"/>
+        <location filename="shortcuts.cpp" line="504"/>
         <source>Move down one page</source>
         <translation>Вниз на страницу</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="510"/>
+        <location filename="shortcuts.cpp" line="511"/>
         <source>Extend selection down one page</source>
         <translation>Расширить выделение на страницу вниз</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="517"/>
+        <location filename="shortcuts.cpp" line="518"/>
         <source>Extend rectangular selection down one page</source>
         <translation>Расширить прямоугольное выделение на страницу вниз</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="524"/>
+        <location filename="shortcuts.cpp" line="525"/>
         <source>Delete current character</source>
         <translation>Удалить текущий символ</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="531"/>
+        <location filename="shortcuts.cpp" line="532"/>
         <source>Delete word to right</source>
         <translation>Удалить слово справа</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="538"/>
+        <location filename="shortcuts.cpp" line="539"/>
         <source>Delete line to right</source>
         <translation>Удалить до конца строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="545"/>
+        <location filename="shortcuts.cpp" line="546"/>
         <source>Toggle insert/overtype</source>
         <translation>Переключить режим вставки/замены</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="552"/>
+        <location filename="shortcuts.cpp" line="553"/>
         <source>Delete previous character</source>
         <translation>Удалить предыдущий символ</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="559"/>
+        <location filename="shortcuts.cpp" line="560"/>
         <source>Delete word to left</source>
         <translation>Удалить слово слева</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="566"/>
+        <location filename="shortcuts.cpp" line="567"/>
         <source>Delete line to left</source>
         <translation>Удалить до начала строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="573"/>
+        <location filename="shortcuts.cpp" line="574"/>
         <source>Select all text</source>
         <translation>Выбрать весь текст</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="580"/>
+        <location filename="shortcuts.cpp" line="581"/>
         <source>Cut current line</source>
         <translation>Вырезать текущую строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="587"/>
+        <location filename="shortcuts.cpp" line="588"/>
         <source>Delete current line</source>
         <translation>Удалить текущую строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="594"/>
+        <location filename="shortcuts.cpp" line="595"/>
         <source>Copy current line</source>
         <translation>Скопировать текущую строку</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="601"/>
+        <location filename="shortcuts.cpp" line="602"/>
         <source>Swap current and previous lines</source>
         <translation>Переставить местами текущую и предыдущую строки</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="608"/>
+        <location filename="shortcuts.cpp" line="609"/>
         <source>Duplicate selection</source>
         <translation>Дублировать выделенное</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="615"/>
+        <location filename="shortcuts.cpp" line="616"/>
         <source>Convert selection to lower case</source>
         <translation>Преебразовать выделение в нижний регистр</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="622"/>
+        <location filename="shortcuts.cpp" line="623"/>
         <source>Convert selection to upper case</source>
         <translation>Преебразовать выделение в верхний регистр</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="629"/>
+        <location filename="shortcuts.cpp" line="630"/>
         <source>Indent</source>
         <translation>Увеличить отступ</translation>
     </message>
     <message>
-        <location filename="shortcuts.cpp" line="636"/>
+        <location filename="shortcuts.cpp" line="637"/>
         <source>Unindent</source>
         <translation>Уменьшить отступ</translation>
     </message>
@@ -1448,12 +1495,12 @@
 <context>
     <name>PZST::SpinCompiler</name>
     <message>
-        <location filename="spincompiler.cpp" line="74"/>
+        <location filename="spincompiler.cpp" line="75"/>
         <source>Cannot create temp directory %1</source>
         <translation>Не удалось создать временный каталог %1</translation>
     </message>
     <message>
-        <location filename="spincompiler.cpp" line="166"/>
+        <location filename="spincompiler.cpp" line="167"/>
         <source>bstc compiler bug</source>
         <translation>баг компилятора bstc</translation>
     </message>
@@ -1461,50 +1508,47 @@
 <context>
     <name>PZST::SpinEditor</name>
     <message>
-        <location filename="spineditor.cpp" line="69"/>
-        <location filename="spineditor.cpp" line="132"/>
+        <location filename="spineditor.cpp" line="79"/>
+        <location filename="spineditor.cpp" line="141"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="70"/>
+        <location filename="spineditor.cpp" line="80"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="118"/>
+        <location filename="spineditor.cpp" line="126"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="118"/>
+        <location filename="spineditor.cpp" line="126"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="133"/>
+        <location filename="spineditor.cpp" line="142"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="169"/>
         <source>The document has been modified.</source>
-        <translation>Документ изменен.</translation>
+        <translation type="obsolete">Документ изменен.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="170"/>
         <source>Do you want to save changes to %1?</source>
-        <translation>Вы хотите сохранить изменения в файл %1?</translation>
+        <translation type="obsolete">Вы хотите сохранить изменения в файл %1?</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="174"/>
         <source>Continue without saving</source>
-        <translation>Продолжить без сохранения</translation>
+        <translation type="obsolete">Продолжить без сохранения</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="518"/>
+        <location filename="spineditor.cpp" line="501"/>
         <source>Current file</source>
         <translation>Текущий файл</translation>
     </message>
