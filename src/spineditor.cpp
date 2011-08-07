@@ -135,12 +135,14 @@ bool SpinEditor::save(QString fName)
         fName = fileName;
     }
     fName = QDir::toNativeSeparators(fName);
+    SpinSourceFactory::instance()->removeSource(fileName);
     QFile file(fName);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("Application"),
                              tr("Cannot write %1:\n%2.")
                              .arg(fName)
                              .arg(file.errorString()));
+        SpinSourceFactory::instance()->addSource(fileName, text());
         return false;
     }
     QTextStream out(&file);
@@ -152,7 +154,7 @@ bool SpinEditor::save(QString fName)
         out.setCodec(QTextCodec::codecForName("UTF8"));
     }
     out << text();
-    SpinSourceFactory::instance()->removeSource(fileName);
+    file.close();
     fileName = fName;
     SpinSourceFactory::instance()->addSource(fileName, text());
     HasFilename = true;
