@@ -98,4 +98,13 @@ INSTALLS += menu
 pixmap.files = icons/pzst.png
 pixmap.path = /usr/share/pixmaps
 INSTALLS += pixmap
+
+manru.files = ../manual/ru/build/man/pzst.1
+manru.path = /usr/share/man/ru/man1
+INSTALLS += manru
+
+manen.files = ../manual/en/build/man/pzst.1
+manen.path = /usr/share/man/man1
+INSTALLS += manen
+
 RC_FILE = pzst.rc
