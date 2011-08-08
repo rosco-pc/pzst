@@ -1494,7 +1494,9 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::reloadExternallyModified()
 {
     GroupActionDialog dlg(GroupActionDialog::Reload,  this);
-    foreach (QString fileName, *modifiedFiles) {
+    QStringList modFiles(*modifiedFiles);
+    modifiedFiles->clear();
+    foreach (QString fileName, modFiles) {
         dlg.addFile(fileName);
     }
     QStringList reloadFiles;
@@ -1507,11 +1509,10 @@ void MainWindow::reloadExternallyModified()
             QString fName = e->getFileName();
             if (reloadFiles.contains(fName)) {
                 e->loadFile(fName);
-            } else if (modifiedFiles->contains(fName)) {
+            } else if (modFiles.contains(fName)) {
                 SpinSourceFactory::instance()->removeSource(fName);
                 SpinSourceFactory::instance()->addSource(fName, e->text());
             }
         }
     }
-    modifiedFiles->clear();
 }
