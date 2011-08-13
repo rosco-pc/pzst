@@ -14,8 +14,11 @@ cd ../..
 svn export . release/debian/build/pzst-$VERSION
 cd release/debian/build/pzst-$VERSION
 qmake
-cd src
+cd manual
+make man
+cd ../src
 qmake
+cp ../../../bstc ./bstc.pzst
 cd ../..
 #tar -c pzst-$VERSION | gzip > pzst-$VERSION.tar.gz
 cp -r ../templates/* pzst-$VERSION/
