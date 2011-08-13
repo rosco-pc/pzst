@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextCodec>
 #include <QTextStream>
+#include <QFileInfo>
 
 using namespace PZST;
 
@@ -17,9 +18,16 @@ void SpinSourceFactory::addSource(QString fileName, QString text)
 {
     fileName = FilenameResolver::resolve(fileName, "spin");
     sourceTexts[fileName] = text;
-    if (!parsers.contains(fileName)) parsers[fileName] = new SpinCodeParser;
+    if (!parsers.contains(fileName)) {
+        parsers[fileName] = new SpinCodeParser;
+        if (watcher) {
+            QFileInfo info(fileName);
+            if (info.exists()) {
+                watcher->addPath(fileName);
+            }
+        }
+    }
     parsers[fileName]->invalidate();
-    if (watcher) watcher->addPath(fileName);
 }
 
 void SpinSourceFactory::removeSource(QString fileName)
@@ -44,7 +52,12 @@ QString SpinSourceFactory::getSource(QString fileName)
     fileName = FilenameResolver::resolve(fileName, "spin");
     if (sourceTexts.contains(fileName)) return sourceTexts[fileName];
     QString ret = reload(fileName);
-    if (watcher) watcher->addPath(fileName);
+    if (watcher) {
+        QFileInfo info(fileName);
+        if (info.exists()) {
+            watcher->addPath(fileName);
+        }
+    }
     return ret;
 }
 
