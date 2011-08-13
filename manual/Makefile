@@ -1,6 +1,4 @@
-all :
-	$(MAKE) -C en
-	$(MAKE) -C ru
+all : man latexpdf
 
 clean:
 	$(MAKE) -C en clean
@@ -9,4 +7,8 @@ clean:
 man:
 	$(MAKE) -C en man
 	$(MAKE) -C ru man
+
+latexpdf:
+	$(MAKE) -C en latexpdf
+	$(MAKE) -C ru latexpdf
 
