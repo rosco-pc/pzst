@@ -50,7 +50,7 @@ binary:
 	dh_link
 	dh_compress
 	dh_fixperms
-	dh_strip
+	dh_strip --exclude=bstc.pzst
 	dh_makeshlibs
 	dh_shlibdeps
 	dh_installdeb
