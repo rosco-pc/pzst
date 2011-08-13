@@ -27,7 +27,7 @@ namespace PZST {
                 };
 
                 enum {
-                    CG_CONDITION = 0,
+                    CG_CONDITION = 1,
                     CG_COMMENT,
                     CG_RESERVED,
                     CG_IDENTIFIER,

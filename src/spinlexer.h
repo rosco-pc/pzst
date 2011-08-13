@@ -17,15 +17,12 @@ namespace PZST {
         virtual QString description(int style) const;
         virtual int styleBitsNeeded() const;
         virtual void styleText(int start, int end);
-        virtual QColor defaultColor(int style) const;
-        virtual QColor defaultPaper(int style) const;
         virtual QFont defaultFont() const;
         virtual QFont defaultFont(int style) const;
         virtual int indentationGuideView() const;
         virtual QStringList autoCompletionWordSeparators() const;
         virtual bool caseSensitive() const {return false;};
-
-        void setZebra(bool state) {zebraOn = state;}
+        void setZebra(bool value) {zebraOn = value;};
     private:
         bool zebraOn;
     };

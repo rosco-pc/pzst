@@ -2,6 +2,7 @@
 #define PREFERENCESDIALOG_H
 
 #include <QDialog>
+#include  "pzstpreferences.h"
 
 namespace PZST {
 
@@ -20,10 +21,17 @@ namespace PZST {
 
     private:
         Ui::PreferencesDialog *ui;
+        Preferences pref;
 
         void setShortcut(int , QString);
+        void setListBackground(int index, const QColor &color);
+        void setListForeground(int index, const QColor &color);
 
     private slots:
+        void on_backSample_clicked();
+        void on_foreSample_clicked();
+        void on_backList_currentRowChanged(int currentRow);
+        void on_foreList_currentRowChanged(int currentRow);
         void on_first_textChanged(QString );
         void on_second_textChanged(QString );
         void on_third_textChanged(QString );

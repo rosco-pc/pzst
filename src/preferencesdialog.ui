@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>602</width>
-    <height>421</height>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,13 +83,18 @@
            <string>Key bindings</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Color scheme</string>
+          </property>
+         </item>
         </item>
        </widget>
       </item>
       <item>
        <widget class="QStackedWidget" name="pages">
         <property name="currentIndex">
-         <number>0</number>
+         <number>5</number>
         </property>
         <widget class="QWidget" name="pageEditor">
          <layout class="QGridLayout" name="gridLayout">
@@ -558,6 +563,228 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="page_2">
+         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="40,10,50,0">
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="widget_6" native="true">
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>Foreground</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>Background</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QListWidget" name="foreList">
+               <item>
+                <property name="text">
+                 <string>Condition</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Comment</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Reserved word</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Identifier</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Number</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Type</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>String</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Preprocessor directive</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Operator</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Line numbers</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Selection</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QListWidget" name="backList">
+               <item>
+                <property name="text">
+                 <string notr="true">CON</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">PUB</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">PRI</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">OBJ</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">DAT</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">VAR</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Line numbers</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Current line</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Selection</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_5" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="foreSample">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="backSample">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="PZST::SpinEditor" name="editorSample" native="true"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="blockHighlight">
+            <property name="text">
+             <string>Highlight blocks of code</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -581,6 +808,15 @@
    <extends>QLineEdit</extends>
    <header>shortcutedit.h</header>
   </customwidget>
+  <customwidget>
+   <class>PZST::SpinEditor</class>
+   <extends>QWidget</extends>
+   <header>spineditor.h</header>
+   <container>1</container>
+   <slots>
+    <slot>setZebra(bool)</slot>
+   </slots>
+  </customwidget>
  </customwidgets>
  <resources>
   <include location="PZST.qrc"/>
@@ -593,8 +829,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>411</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -609,12 +845,28 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>411</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>blockHighlight</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editorSample</receiver>
+   <slot>setZebra(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>294</x>
+     <y>360</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>

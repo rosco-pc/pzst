@@ -35,6 +35,13 @@ namespace PZST {
         virtual bool supportsReplace() const;
         virtual int getStartPosition() const;
         virtual void replaceInTarget(QString);
+        void setHighlightColor(int colorGroup, const QColor &c);
+        void setHighlightBackground(int token, const QColor &c);
+        void setCurLineBackground(const QColor &c);
+        void setNumbersBackground(const QColor &c);
+        void setNumbersForeground(const QColor &c);
+        void setLineNumbers(bool on);
+        void setCurLineMarker(bool on);
 
     private:
         void initialize();
@@ -45,6 +52,8 @@ namespace PZST {
         SpinCompletionSource *completion;
         SpinLexer *spinLexer;
         void registerIcons();
+        void applyColorChange(QString id, QColor color);
+        void applyPaperChange(QString id, QColor color);
     protected:
         virtual void closeEvent ( QCloseEvent * event );
         virtual void keyPressEvent(QKeyEvent *e);
@@ -61,6 +70,7 @@ namespace PZST {
         void endUndoActionSlot();
         void preferencesChanged(QString, QString, QVariant);
         void readKeys();
+        void setZebra(bool value);
     signals:
         // !!!!!!!!! e can be already deleted !!!!!!!!
         void closed(SpinEditor*e);

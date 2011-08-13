@@ -827,109 +827,187 @@ Reloaded files will loose undo history</source>
         <translation>Комбинации клавиш</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="99"/>
+        <location filename="preferencesdialog.ui" line="88"/>
+        <source>Color scheme</source>
+        <translation>Цветовая схема</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="104"/>
         <source>Font</source>
         <translation>Шрифт</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="132"/>
+        <location filename="preferencesdialog.ui" line="137"/>
         <source>Font size</source>
         <translation>Размер шрифта</translation>
     </message>
     <message utf8="true">
-        <location filename="preferencesdialog.ui" line="155"/>
+        <location filename="preferencesdialog.ui" line="160"/>
         <source>012345 abcdefg фывапро</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="162"/>
+        <location filename="preferencesdialog.ui" line="167"/>
         <source>Font sample</source>
         <translation>Пример шрифта</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="185"/>
+        <location filename="preferencesdialog.ui" line="190"/>
         <source>Tab size</source>
         <translation>Размер табуляции</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="195"/>
+        <location filename="preferencesdialog.ui" line="200"/>
         <source>Convert tabs to spaces</source>
         <translation>Преобразовывать табуляцию в пробелы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="202"/>
+        <location filename="preferencesdialog.ui" line="207"/>
         <source>Visible tabs</source>
         <translation>Показывать отступы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="239"/>
+        <location filename="preferencesdialog.ui" line="244"/>
         <source>Highlight Spin blocks</source>
         <translation>Подсветка блоков кода</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="421"/>
+        <location filename="preferencesdialog.ui" line="426"/>
         <source>English</source>
         <translation>Английский</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="426"/>
+        <location filename="preferencesdialog.ui" line="431"/>
         <source>Russian</source>
         <translation>Русский</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="480"/>
+        <location filename="preferencesdialog.ui" line="485"/>
         <source>Command</source>
         <translation>Команда</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="485"/>
+        <location filename="preferencesdialog.ui" line="490"/>
         <source>Name</source>
         <translation>Действие</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="490"/>
+        <location filename="preferencesdialog.ui" line="495"/>
         <source>Shortcut</source>
         <translation>Клавиши</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="528"/>
+        <location filename="preferencesdialog.ui" line="533"/>
         <source>Revert</source>
         <translation>Восстановить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="531"/>
-        <location filename="preferencesdialog.ui" line="548"/>
+        <location filename="preferencesdialog.ui" line="536"/>
+        <location filename="preferencesdialog.ui" line="553"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="545"/>
+        <location filename="preferencesdialog.ui" line="550"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
+        <location filename="preferencesdialog.ui" line="580"/>
+        <source>Foreground</source>
+        <translation>Текст</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="587"/>
+        <source>Background</source>
+        <translation>Фон</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="595"/>
+        <source>Condition</source>
+        <translation>Условие</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="600"/>
+        <source>Comment</source>
+        <translation>Комментарий</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="605"/>
+        <source>Reserved word</source>
+        <translation>Зарезервированное слово</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="610"/>
+        <source>Identifier</source>
+        <translation>Идентификатор</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="615"/>
+        <source>Number</source>
+        <translation>Число</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="620"/>
+        <source>Type</source>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="625"/>
+        <source>String</source>
+        <translation>Строка</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="630"/>
+        <source>Preprocessor directive</source>
+        <translation>Директива препроцессора</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="635"/>
+        <source>Operator</source>
+        <translation>Оператор</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="645"/>
+        <location filename="preferencesdialog.ui" line="694"/>
+        <source>Selection</source>
+        <translation>Выделение</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="689"/>
+        <source>Current line</source>
+        <translation>Текущая строка</translation>
+    </message>
+    <message>
+        <location filename="preferencesdialog.ui" line="782"/>
+        <source>Highlight blocks of code</source>
+        <translation>Подсветка блоков кода</translation>
+    </message>
+    <message>
         <location filename="preferencesdialog.ui" line="78"/>
-        <location filename="preferencesdialog.ui" line="410"/>
+        <location filename="preferencesdialog.ui" line="415"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="434"/>
+        <location filename="preferencesdialog.ui" line="439"/>
         <source>Changing the language requires program restart</source>
         <translation>После изменения языка нужно перезапустить программу</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="209"/>
+        <location filename="preferencesdialog.ui" line="214"/>
         <source>Save as UTF-16</source>
         <translation>Сохранять UTF-16</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="216"/>
+        <location filename="preferencesdialog.ui" line="221"/>
+        <location filename="preferencesdialog.ui" line="640"/>
+        <location filename="preferencesdialog.ui" line="684"/>
         <source>Line numbers</source>
         <translation>Номера строк</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="223"/>
+        <location filename="preferencesdialog.ui" line="228"/>
         <source>Highlight current line</source>
         <translation>Подсветка текущей строки</translation>
     </message>
@@ -939,22 +1017,22 @@ Reloaded files will loose undo history</source>
         <translation>Пути поиска</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="356"/>
+        <location filename="preferencesdialog.ui" line="361"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="363"/>
+        <location filename="preferencesdialog.ui" line="368"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="373"/>
+        <location filename="preferencesdialog.ui" line="378"/>
         <source>Move up</source>
         <translation>Вверх</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="383"/>
+        <location filename="preferencesdialog.ui" line="388"/>
         <source>Move down</source>
         <translation>Вниз</translation>
     </message>
@@ -963,57 +1041,57 @@ Reloaded files will loose undo history</source>
         <translation type="obsolete">Опции компилятора</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="263"/>
+        <location filename="preferencesdialog.ui" line="268"/>
         <source>Generate Info messages</source>
         <translation>Показывать информационные сообщения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="270"/>
+        <location filename="preferencesdialog.ui" line="275"/>
         <source>Generate Warning messages</source>
         <translation>Показывать предупреждения</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="277"/>
+        <location filename="preferencesdialog.ui" line="282"/>
         <source>Non-Parallax compatible extensions</source>
         <translation>Расширения несовместимые с компилятором Parallax</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="284"/>
+        <location filename="preferencesdialog.ui" line="289"/>
         <source>Fast Constants</source>
         <translation>&quot;Быстрые&quot; константы</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="291"/>
+        <location filename="preferencesdialog.ui" line="296"/>
         <source>Generic &quot;Safe&quot; optimizations</source>
         <translation>Общие &quot;безопасные&quot; оптимизации</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="298"/>
+        <location filename="preferencesdialog.ui" line="303"/>
         <source>Fold Constant/Unary pairs</source>
         <translation>Упрощение пар константа/унарный оператор</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="305"/>
+        <location filename="preferencesdialog.ui" line="310"/>
         <source>Eliminate unused SPIN methods</source>
         <translation>Удаление неиспользуемых методов</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="312"/>
+        <location filename="preferencesdialog.ui" line="317"/>
         <source>Fold constants</source>
         <translation>Упрощение констант</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="319"/>
+        <location filename="preferencesdialog.ui" line="324"/>
         <source>Port</source>
         <translation>Порт</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.ui" line="336"/>
+        <location filename="preferencesdialog.ui" line="341"/>
         <source>Encoding</source>
         <translation>Кодировка</translation>
     </message>
     <message>
-        <location filename="preferencesdialog.cpp" line="178"/>
+        <location filename="preferencesdialog.cpp" line="231"/>
         <source>Add directory</source>
         <translation>Добавить путь</translation>
     </message>
@@ -1508,29 +1586,29 @@ Reloaded files will loose undo history</source>
 <context>
     <name>PZST::SpinEditor</name>
     <message>
-        <location filename="spineditor.cpp" line="79"/>
-        <location filename="spineditor.cpp" line="141"/>
+        <location filename="spineditor.cpp" line="80"/>
+        <location filename="spineditor.cpp" line="142"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="80"/>
+        <location filename="spineditor.cpp" line="81"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="126"/>
+        <location filename="spineditor.cpp" line="127"/>
         <source>Save file</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="126"/>
+        <location filename="spineditor.cpp" line="127"/>
         <source>SPIN source (*.spin)</source>
         <translation>Программа на языке SPIN (*.spin)</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="142"/>
+        <location filename="spineditor.cpp" line="143"/>
         <source>Cannot write %1:
 %2.</source>
         <translation>Не удалось прочитать файл %1:%2.</translation>
@@ -1548,7 +1626,7 @@ Reloaded files will loose undo history</source>
         <translation type="obsolete">Продолжить без сохранения</translation>
     </message>
     <message>
-        <location filename="spineditor.cpp" line="501"/>
+        <location filename="spineditor.cpp" line="511"/>
         <source>Current file</source>
         <translation>Текущий файл</translation>
     </message>

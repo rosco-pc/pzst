@@ -2,6 +2,7 @@
     <qresource prefix="/Files">
         <file>appicon.ico</file>
         <file>logo.png</file>
+        <file>sample.spin</file>
     </qresource>
     <qresource prefix="/Icons">
         <file alias="copy.png">icons/editcopy.png</file>

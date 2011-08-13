@@ -83,7 +83,8 @@ make_spin_lexer.output = spincodelexer.cpp
 make_spin_lexer.variable_out = SOURCES
 make_spin_lexer.name = make_spin_lexer
 QMAKE_EXTRA_COMPILERS += make_spin_lexer
-OTHER_FILES += spincodelexer.re
+OTHER_FILES += spincodelexer.re \
+    sample.spin
 target.path = /usr/bin
 INSTALLS += target
 translation.files = pzst_ru_RU.qm
@@ -98,13 +99,10 @@ INSTALLS += menu
 pixmap.files = icons/pzst.png
 pixmap.path = /usr/share/pixmaps
 INSTALLS += pixmap
-
 manru.files = ../manual/ru/build/man/pzst.1
 manru.path = /usr/share/man/ru/man1
 INSTALLS += manru
-
 manen.files = ../manual/en/build/man/pzst.1
 manen.path = /usr/share/man/man1
 INSTALLS += manen
-
 RC_FILE = pzst.rc

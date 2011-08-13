@@ -6,9 +6,10 @@
 #include <QList>
 #include <QTreeWidgetItem>
 #include <QTextCodec>
-#include  "pzstpreferences.h"
+#include <QColorDialog>
 #include  "eserialport.h"
 #include  "shortcuts.h"
+#include  "spincodelexer.h"
 
 using namespace PZST;
 
@@ -21,7 +22,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->pageSelector->setCurrentItem(ui->pageSelector->itemAt(0, 0));
     ui->pageSelector->expandAll();
 
-    Preferences pref;
     ui->fontName->setCurrentFont(QFont(pref.getFontName()));
     ui->fontSize->setValue(pref.getFontSize());
     ui->tabSize->setValue(pref.getTabSize());
@@ -93,6 +93,39 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     codecs.sort();
     ui->encoding->addItems(codecs);
     ui->encoding->setCurrentIndex(codecs.indexOf(pref.getEncoding()));
+
+    setListForeground(0, pref.getColorCondition());
+    setListForeground(1, pref.getColorComment());
+    setListForeground(2, pref.getColorReserved());
+    setListForeground(3, pref.getColorIdentifier());
+    setListForeground(4, pref.getColorNumber());
+    setListForeground(5, pref.getColorType());
+    setListForeground(6, pref.getColorString());
+    setListForeground(7, pref.getColorPreprocessor());
+    setListForeground(8, pref.getColorOther());
+    setListForeground(9, pref.getColorLineNumbers());
+    setListForeground(10, pref.getColorSelection());
+
+    ui->foreList->setCurrentRow(0);
+
+    setListBackground(0, pref.getPaperCon());
+    setListBackground(1, pref.getPaperPub());
+    setListBackground(2, pref.getPaperPri());
+    setListBackground(3, pref.getPaperObj());
+    setListBackground(4, pref.getPaperDat());
+    setListBackground(5, pref.getPaperVar());
+    setListBackground(6, pref.getPaperLineNumbers());
+    setListBackground(7, pref.getPaperCurrentLine());
+    setListBackground(8, pref.getPaperSelection());
+
+    ui->backList->setCurrentRow(0);
+
+    ui->editorSample->setLineNumbers(true);
+    ui->editorSample->setCurLineMarker(true);
+
+    ui->editorSample->loadFile(":/Files/sample.spin");
+
+    ui->blockHighlight->setChecked(pref.getZebra());
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -161,7 +194,6 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setPortName(ui->portName->currentText());
     pref.setEncoding(ui->encoding->currentText());
 
-
     for (int i =0; i < ui->shortcuts->topLevelItemCount(); i++) {
         QTreeWidgetItem *item = ui->shortcuts->topLevelItem(i);
         QString name = item->text(0);
@@ -170,6 +202,27 @@ void PreferencesDialog::on_buttonBox_accepted()
     }
 
     emit shortcutsChanged();
+
+    pref.setColorCondition(ui->foreList->item(0)->foreground().color());
+    pref.setColorComment(ui->foreList->item(1)->foreground().color());
+    pref.setColorReserved(ui->foreList->item(2)->foreground().color());
+    pref.setColorIdentifier(ui->foreList->item(3)->foreground().color());
+    pref.setColorNumber(ui->foreList->item(6)->foreground().color());
+    pref.setColorType(ui->foreList->item(5)->foreground().color());
+    pref.setColorString(ui->foreList->item(6)->foreground().color());
+    pref.setColorPreprocessor(ui->foreList->item(7)->foreground().color());
+    pref.setColorOther(ui->foreList->item(8)->foreground().color());
+    pref.setColorLineNumbers(ui->foreList->item(9)->foreground().color());
+
+    pref.setPaperCon(ui->backList->item(0)->backgroundColor());
+    pref.setPaperPub(ui->backList->item(1)->backgroundColor());
+    pref.setPaperPri(ui->backList->item(2)->backgroundColor());
+    pref.setPaperObj(ui->backList->item(3)->backgroundColor());
+    pref.setPaperDat(ui->backList->item(4)->backgroundColor());
+    pref.setPaperVar(ui->backList->item(5)->backgroundColor());
+    pref.setPaperLineNumbers(ui->backList->item(6)->backgroundColor());
+    pref.setPaperCurrentLine(ui->backList->item(7)->backgroundColor());
+    pref.setPaperSelection(ui->backList->item(8)->backgroundColor());
 
 }
 
@@ -200,7 +253,7 @@ void PZST::PreferencesDialog::on_searchPaths_currentRowChanged(int currentRow)
     }
 }
 
-void PZST::PreferencesDialog::on_moveUp_clicked()
+void PreferencesDialog::on_moveUp_clicked()
 {
     int idx = ui->searchPaths->currentRow();
     QString text = ui->searchPaths->item(idx)->text();
@@ -210,7 +263,7 @@ void PZST::PreferencesDialog::on_moveUp_clicked()
     ui->searchPaths->setCurrentRow(idx - 1);
 }
 
-void PZST::PreferencesDialog::on_moveDown_clicked()
+void PreferencesDialog::on_moveDown_clicked()
 {
     int idx = ui->searchPaths->currentRow();
     QString text = ui->searchPaths->item(idx)->text();
@@ -221,7 +274,7 @@ void PZST::PreferencesDialog::on_moveDown_clicked()
 }
 
 
-void PZST::PreferencesDialog::on_pageSelector_itemSelectionChanged()
+void PreferencesDialog::on_pageSelector_itemSelectionChanged()
 {
     int n = ui->pageSelector->currentIndex().row();
     if (ui->pageSelector->currentIndex().parent().isValid()) {
@@ -249,13 +302,16 @@ void PZST::PreferencesDialog::on_pageSelector_itemSelectionChanged()
     case 202:
         page = 4;
         break;
+    case 203:
+        page = 5;
+        break;
     }
     ui->pages->setCurrentIndex(page);
 }
 
 
 
-void PZST::PreferencesDialog::on_shortcuts_itemSelectionChanged()
+void PreferencesDialog::on_shortcuts_itemSelectionChanged()
 {
     ui->first->setEnabled(true);
     ui->second->setEnabled(true);
@@ -277,7 +333,7 @@ void PZST::PreferencesDialog::on_shortcuts_itemSelectionChanged()
 }
 
 
-void PZST::PreferencesDialog::on_clear_clicked()
+void PreferencesDialog::on_clear_clicked()
 {
     QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(3).split("\n");
     if (ui->first->hasFocus()) {
@@ -289,7 +345,7 @@ void PZST::PreferencesDialog::on_clear_clicked()
     }
 }
 
-void PZST::PreferencesDialog::on_revert_clicked()
+void PreferencesDialog::on_revert_clicked()
 {
     QStringList shortcuts = ui->shortcuts->selectedItems()[0]->text(3).split("\n");
     if (ui->first->hasFocus()) {
@@ -312,15 +368,83 @@ void PreferencesDialog::setShortcut(int n, QString s)
     ui->shortcuts->selectedItems()[0]->setText(2, shortcuts.join("\n").trimmed());
 }
 
-void PZST::PreferencesDialog::on_first_textChanged(QString txt)
+void PreferencesDialog::on_first_textChanged(QString txt)
 {
     setShortcut(0, txt);
 }
-void PZST::PreferencesDialog::on_second_textChanged(QString txt)
+void PreferencesDialog::on_second_textChanged(QString txt)
 {
     setShortcut(1, txt);
 }
-void PZST::PreferencesDialog::on_third_textChanged(QString txt)
+void PreferencesDialog::on_third_textChanged(QString txt)
 {
     setShortcut(2, txt);
+}
+
+void PreferencesDialog::on_foreList_currentRowChanged(int currentRow)
+{
+    QColor c = ui->foreList->item(currentRow)->foreground().color();
+    ui->foreSample->setStyleSheet(QString("background-color:%1").arg(c.name()));
+    ui->foreSample->setEnabled(true);
+}
+
+void PreferencesDialog::on_backList_currentRowChanged(int currentRow)
+{
+    QColor c = ui->backList->item(currentRow)->backgroundColor();
+    ui->backSample->setStyleSheet(QString("background-color:%1").arg(c.name()));
+    ui->backSample->setEnabled(true);
+    setListBackground(-1, c);
+}
+
+void PreferencesDialog::on_foreSample_clicked()
+{
+    QColorDialog dlg(ui->foreList->currentItem()->foreground().color(), this);
+    if (dlg.exec() == QDialog::Accepted) {
+        setListForeground(ui->foreList->currentRow(), dlg.selectedColor());
+        ui->foreSample->setStyleSheet(QString("background-color:%1").arg(dlg.currentColor().name()));
+        int row = ui->foreList->currentRow();
+        if (row < 9) {
+            ui->editorSample->setHighlightColor(row + 1, dlg.currentColor());
+        } else if (row == 9) {
+            ui->editorSample->setNumbersForeground(dlg.currentColor());
+        } else if (row == 9) {
+            ui->editorSample->setSelectionForegroundColor(dlg.currentColor());
+        }
+    }
+}
+
+void PreferencesDialog::on_backSample_clicked()
+{
+    QColorDialog dlg(ui->backList->currentItem()->backgroundColor(), this);
+    if (dlg.exec() == QDialog::Accepted) {
+        setListBackground(ui->backList->currentRow(), dlg.selectedColor());
+        ui->backSample->setStyleSheet(QString("background-color:%1").arg(dlg.currentColor().name()));
+        int row = ui->backList->currentRow();
+        if (row < 6) {
+            ui->editorSample->setHighlightBackground(row, dlg.currentColor());
+        } else if (row == 6) {
+            ui->editorSample->setNumbersBackground(dlg.currentColor());
+        } else if (row == 7) {
+            ui->editorSample->setCurLineBackground(dlg.currentColor());
+        } else if (row == 7) {
+            ui->editorSample->setSelectionBackgroundColor(dlg.currentColor());
+        }
+    }
+}
+
+void PreferencesDialog::setListBackground(int index, const QColor &color)
+{
+    if (index >= 0 && index < ui->backList->count()) {
+        ui->backList->item(index)->setBackgroundColor(color);
+        int avg = (color.red() + color.green() + color.blue()) / 3;
+        ui->backList->item(index)->setForeground(avg > 127 ? Qt::black : Qt::white);
+    }
+    for (int i = 0; i < ui->foreList->count(); i++) {
+        ui->foreList->item(i)->setBackground(color);
+    }
+}
+
+void PreferencesDialog::setListForeground(int index, const QColor &color)
+{
+    ui->foreList->item(index)->setForeground(color);
 }

@@ -52,12 +52,13 @@ void SpinEditor::initialize()
     updateCaption();
     setContextMenuPolicy(Qt::CustomContextMenu);
     markerDefine(Background, 0);
-    setMarkerBackgroundColor(QColor(240,240,240), 0);
+
     readPreferences();
     registerIcons();
     addSearchable(this);
     setAutoCompletionSource(AcsAPIs);
     setAutoCompletionShowSingle(true);
+    setSelectionToEol(true);
 }
 
 
@@ -171,28 +172,37 @@ void SpinEditor::readPreferences()
     setTabIndents(pref.getTabsToSpaces());
     setIndentationsUseTabs(!pref.getTabsToSpaces());
     setIndentationGuides(pref.getTabsVisible());
-    if (pref.getLineNumbers()) {
-        setMarginType(1, QsciScintilla::NumberMargin);
-        setMarginWidth(1, "999999");
-        setMarginLineNumbers(1, true);
-    } else {
-        setMarginWidth(1, 0);
-        setMarginWidth(1, "0");
-        setMarginLineNumbers(1, false);
-    }
-    if (pref.getCurLineMarker()) {
-        connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
-        int l, c;
-        getCursorPosition(&l, &c);
-        cursorPositionChanged(l, c);
-    } else {
-        markerDeleteAll(0);
-        disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
-    }
+    setZebra(pref.getZebra());
+    setLineNumbers(pref.getLineNumbers());
+    setCurLineMarker(pref.getCurLineMarker());
     readKeys();
-    SpinLexer *l = qobject_cast<SpinLexer*>(lexer());
-    l->setZebra(pref.getZebra());
+
+    setHighlightColor(SpinCodeLexer::CG_COMMENT,    pref.getColorComment());
+    setHighlightColor(SpinCodeLexer::CG_CONDITION,  pref.getColorCondition());
+    setHighlightColor(SpinCodeLexer::CG_IDENTIFIER, pref.getColorIdentifier());
+    setHighlightColor(SpinCodeLexer::CG_NUMBER,     pref.getColorNumber());
+    setHighlightColor(SpinCodeLexer::CG_OTHER,      pref.getColorOther());
+    setHighlightColor(SpinCodeLexer::CG_PREPRO,     pref.getColorPreprocessor());
+    setHighlightColor(SpinCodeLexer::CG_RESERVED,   pref.getColorReserved());
+    setHighlightColor(SpinCodeLexer::CG_STRING,     pref.getColorString());
+    setHighlightColor(SpinCodeLexer::CG_TYPE,       pref.getColorType());
+
+    setHighlightBackground(SpinCodeLexer::PUB, pref.getPaperPub());
+    setHighlightBackground(SpinCodeLexer::PRI, pref.getPaperPri());
+    setHighlightBackground(SpinCodeLexer::CON, pref.getPaperCon());
+    setHighlightBackground(SpinCodeLexer::VAR, pref.getPaperVar());
+    setHighlightBackground(SpinCodeLexer::OBJ, pref.getPaperObj());
+    setHighlightBackground(SpinCodeLexer::DAT, pref.getPaperDat());
+
+    setCurLineBackground(pref.getPaperCurrentLine());
+    setNumbersBackground(pref.getPaperLineNumbers());
+    setNumbersForeground(pref.getColorLineNumbers());
+
+    setSelectionBackgroundColor(pref.getPaperSelection());
+    setSelectionForegroundColor(pref.getColorSelection());
+
 }
+
 
 void SpinEditor::readKeys()
 {
@@ -542,15 +552,7 @@ void SpinEditor::preferencesChanged(QString section, QString name, QVariant valu
             if (p.getLineNumbers()) setMarginWidth(1, "999999");
         }
         if (name == "LineNumbers") {
-            if (value.toBool()) {
-                setMarginType(1, QsciScintilla::NumberMargin);
-                setMarginLineNumbers(1, true);
-                setMarginWidth(1, "999999");
-            } else {
-                setMarginWidth(1, 0);
-                setMarginWidth(1, "0");
-                setMarginLineNumbers(1, false);
-            }
+            setLineNumbers(value.toBool());
         }
         if (name == "TabSize") {
             setTabWidth(value.toInt());
@@ -563,20 +565,16 @@ void SpinEditor::preferencesChanged(QString section, QString name, QVariant valu
             setIndentationGuides(value.toBool());
         }
         if (name == "CurLineMarker") {
-            if (value.toBool()) {
-                connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
-                int l, c;
-                getCursorPosition(&l, &c);
-                cursorPositionChanged(l, c);
-            } else {
-                markerDeleteAll(0);
-                disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
-            }
+            setCurLineMarker(value.toBool());
+        }
+        if (name.startsWith("Color")) {
+            applyColorChange(name.mid(5, 100), value.value<QColor>());
+        }
+        if (name.startsWith("Paper")) {
+            applyPaperChange(name.mid(5, 100), value.value<QColor>());
         }
         if (name == "Zebra") {
-            SpinLexer *l = qobject_cast<SpinLexer*>(lexer());
-            l->setZebra(value.toBool());
-            l->styleText(0, text().toUtf8().size());
+            setZebra(value.toBool());
         }
     }
 }
@@ -688,4 +686,120 @@ void SpinEditor::handlePreModified(int pos, int mtype, const char *text, int len
     if (mtype & (SC_MOD_BEFOREINSERT | SC_MOD_BEFOREDELETE)) {
         SpinSourceFactory::instance()->getParser(fileName)->invalidate();
     }
+}
+
+void SpinEditor::setHighlightBackground(int token, const QColor &c)
+{
+    if (token >= 0 && token <= 5) {
+        SpinLexer *lex = qobject_cast<SpinLexer*>(lexer());
+        for (int zebra = 0; zebra < 2; zebra++) {
+            for (int i = 1; i <= SpinCodeLexer::CG_OTHER; i++) {
+                int style = i;
+                style += token << 4;
+                style += zebra << 7;
+                if (style > 31) style += 8;
+                lex->setPaper(zebra ? c.darker(105) : c, style);
+            }
+        }
+    }
+}
+
+void SpinEditor::setHighlightColor(int colorGroup, const QColor &c)
+{
+    if (colorGroup >= 1 && colorGroup <= 9) {
+        SpinLexer *lex = qobject_cast<SpinLexer*>(lexer());
+        for (int zebra = 0; zebra < 2; zebra++) {
+            for (int i = 0; i <= 7; i++) {
+                int style = colorGroup;
+                style += i << 4;
+                style += zebra << 7;
+                if (style > 31) style += 8;
+                lex->setColor(c, style);
+            }
+        }
+    }
+}
+
+void SpinEditor::setNumbersBackground(const QColor &c)
+{
+    SpinLexer *lex = qobject_cast<SpinLexer*>(lexer());
+    lex->setPaper(c, 33);
+    lex->styleText(0, text().toUtf8().size()-1);
+}
+
+void SpinEditor::setNumbersForeground(const QColor &c)
+{
+    SpinLexer *lex = qobject_cast<SpinLexer*>(lexer());
+    lex->setColor(c, 33);
+    lex->styleText(0, text().toUtf8().size()-1);
+}
+
+void SpinEditor::setZebra(bool value)
+{
+    SpinLexer *lex = qobject_cast<SpinLexer*>(lexer());
+    lex->setZebra(value);
+    lex->styleText(0, text().toUtf8().size()-1);
+}
+
+#define APPLY_COLOR(c, cg) if(id == #c) setHighlightColor(SpinCodeLexer::cg, color)
+
+void SpinEditor::applyColorChange(QString id, QColor color)
+{
+    Preferences pref;
+    APPLY_COLOR(Condition, CG_CONDITION);
+    APPLY_COLOR(Comment, CG_COMMENT);
+    APPLY_COLOR(Reserved, CG_RESERVED);
+    APPLY_COLOR(Identifier, CG_IDENTIFIER);
+    APPLY_COLOR(Number, CG_NUMBER);
+    APPLY_COLOR(Type, CG_TYPE);
+    APPLY_COLOR(String, CG_STRING);
+    APPLY_COLOR(Preprocessor, CG_PREPRO);
+    APPLY_COLOR(Other, CG_OTHER);
+    if (id == "LineNumbers") setNumbersForeground(color);
+    if (id == "Selection") setSelectionForegroundColor(color);
+}
+
+void SpinEditor::applyPaperChange(QString id, QColor color)
+{
+    if (id == "Con") setHighlightBackground(SpinCodeLexer::CON, color);
+    else if (id == "Pub") setHighlightBackground(SpinCodeLexer::PUB, color);
+    else if (id == "Pri") setHighlightBackground(SpinCodeLexer::PRI, color);
+    else if (id == "Var") setHighlightBackground(SpinCodeLexer::VAR, color);
+    else if (id == "Dat") setHighlightBackground(SpinCodeLexer::DAT, color);
+    else if (id == "Obj") setHighlightBackground(SpinCodeLexer::OBJ, color);
+    else if (id == "LineNumbers") setNumbersBackground(color);
+    else if (id == "CurrentLine") setCurLineBackground(color);
+    else if (id == "Selection") setSelectionBackgroundColor(color);
+}
+
+void SpinEditor::setLineNumbers(bool on)
+{
+    if (on) {
+        setMarginType(1, QsciScintilla::NumberMargin);
+        setMarginLineNumbers(1, true);
+        setMarginWidth(1, "999999");
+    } else {
+        setMarginWidth(1, 0);
+        setMarginWidth(1, "0");
+        setMarginLineNumbers(1, false);
+    }
+
+}
+
+void SpinEditor::setCurLineMarker(bool on)
+{
+    if (on) {
+        connect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+        int l, c;
+        getCursorPosition(&l, &c);
+        cursorPositionChanged(l, c);
+    } else {
+        markerDeleteAll(0);
+        disconnect(this, SIGNAL(cursorPositionChanged(int,int)), this, SLOT(cursorPositionChanged(int,int)));
+    }
+}
+
+void SpinEditor::setCurLineBackground(const QColor &c)
+{
+    setMarkerBackgroundColor(c, 0);
 }

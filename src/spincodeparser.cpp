@@ -18,7 +18,7 @@ static inline int tokenToColorGroup(int token)
     case SpinCodeLexer::IDENTIFIER:
         return SpinCodeLexer::CG_IDENTIFIER;
     case SpinCodeLexer::NUMBER:
-        return SpinCodeLexer::CG_IDENTIFIER;
+        return SpinCodeLexer::CG_NUMBER;
     case SpinCodeLexer::COMMENT:
         return SpinCodeLexer::CG_COMMENT;
 
@@ -76,8 +76,8 @@ void SpinCodeParser::parseCode(QString code)
         }
 
         int style = tokenToColorGroup(token);
-        style += background * 10;
-        style += zebra * 60;
+        style += background << 4;
+        style += zebra << 7;
         if (style > 31) style += 8;
         highlighting.append(textNext - start, style, token);
         processToken(token, start, textNext - start);
