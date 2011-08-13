@@ -407,7 +407,7 @@ void PreferencesDialog::on_foreSample_clicked()
             ui->editorSample->setHighlightColor(row + 1, dlg.currentColor());
         } else if (row == 9) {
             ui->editorSample->setNumbersForeground(dlg.currentColor());
-        } else if (row == 9) {
+        } else if (row == 10) {
             ui->editorSample->setSelectionForegroundColor(dlg.currentColor());
         }
     }
@@ -426,7 +426,7 @@ void PreferencesDialog::on_backSample_clicked()
             ui->editorSample->setNumbersBackground(dlg.currentColor());
         } else if (row == 7) {
             ui->editorSample->setCurLineBackground(dlg.currentColor());
-        } else if (row == 7) {
+        } else if (row == 8) {
             ui->editorSample->setSelectionBackgroundColor(dlg.currentColor());
         }
     }
