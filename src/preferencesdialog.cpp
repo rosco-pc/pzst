@@ -47,6 +47,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->genWarnings->setChecked(pref.getWarnings());
     ui->genInfo->setChecked(pref.getInfo());
 
+    ui->defines->setText(pref.getDefines());
+
     QStringList commands = Shortcuts::allNames();
     ui->shortcuts->clear();
     foreach (QString command, commands) {
@@ -190,6 +192,7 @@ void PreferencesDialog::on_buttonBox_accepted()
     pref.setNonParallaxExt(ui->nonParallaxExt->isChecked());
     pref.setWarnings(ui->genWarnings->isChecked());
     pref.setInfo(ui->genInfo->isChecked());
+    pref.setDefines(ui->defines->text());
 
     pref.setPortName(ui->portName->currentText());
     pref.setEncoding(ui->encoding->currentText());

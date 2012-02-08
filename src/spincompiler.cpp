@@ -105,6 +105,9 @@ void SpinCompiler::run()
     QFileInfo info(srcFileName);
     baseName = QDir::toNativeSeparators(tmpName + info.completeBaseName());
 
+    QStringList defines = pref.getDefines().split(QRegExp("\\s+"));
+    args << defines;
+
     if (pref.getInfo()) args << "-w2";
     else if (pref.getWarnings()) args << "-w1";
     else args << "-w0";
@@ -131,6 +134,7 @@ void SpinCompiler::run()
     args << topFile;
     bstc = runCompiler(tmpName, args);
     if (!bstc) return;
+
     while (bstc->bytesAvailable()) bstcOutput.append(bstc->readLine());
     parseOutput();
     qSort(errors);
