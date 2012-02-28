@@ -786,6 +786,7 @@ void MainWindow::doProgramming(int command, QByteArray code)
     if (!command)  showStatusMessage("");
     Preferences pref;
     ESerialPortProxy* p = ESerialPortManager::obtain(pref.getPortName());
+    bool close = !p->isOpen();
     p->grab();
     if (p->open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
         p->setBaudRate(ESerialPort::B_115200 );
@@ -821,7 +822,8 @@ void MainWindow::doProgramming(int command, QByteArray code)
     } else {
         showStatusMessage(tr("Unable to open port %1").arg(p->getDeviceName()), 2);
     }
-    p->close();
+    if (close)
+        p->close();
     delete p;
 }
 void MainWindow::compile()

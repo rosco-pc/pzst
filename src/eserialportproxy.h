@@ -25,6 +25,7 @@ public:
     void setDtr(bool v);
     void grab();
     void release();
+    bool isOpen();
 private:
     ESerialPort *getPort() {return port;}
     void restoreState();

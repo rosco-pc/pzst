@@ -98,4 +98,9 @@ void ESerialPortProxy::restoreState()
     setBaudRate(rate);
 }
 
+bool ESerialPortProxy::isOpen()
+{
+    return port->isOpen();
+}
+
 };
