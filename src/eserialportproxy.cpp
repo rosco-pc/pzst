@@ -24,6 +24,7 @@ void ESerialPortProxy::grab()
 void ESerialPortProxy::release()
 {
     if (!isOwned) return;
+    ESerialPortManager::release(this);
 }
 
 bool ESerialPortProxy::open(QIODevice::OpenMode mode)
