@@ -1,7 +1,7 @@
 #ifndef PROPELLERLOADER_H
 #define PROPELLERLOADER_H
 
-#include "eserialport.h"
+#include "eserialportproxy.h"
 
 #include <QIODevice>
 #include <QProgressBar>
@@ -16,7 +16,7 @@ namespace PZST {
         Q_OBJECT
     public:
         PropellerLoader();
-        PropellerLoader(ESerialPort *device, QProgressBar* progress = 0, QLabel *label = 0);
+        PropellerLoader(ESerialPortProxy *device, QProgressBar* progress = 0, QLabel *label = 0);
 
         enum LoaderResult {
             LoaderOK = 0,
@@ -37,7 +37,7 @@ namespace PZST {
         virtual void run();
 
     private:
-        ESerialPort *device;
+        ESerialPortProxy *device;
         uint8_t LFSR;
         int command;
         QByteArray data;

@@ -90,6 +90,7 @@ bool ESerialPort::open(OpenMode mode)
         while (t.elapsed() < 60) {};
     }
     QIODevice::open(mode);
+    setDtr(false);
     return true;
 }
 

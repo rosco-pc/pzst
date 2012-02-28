@@ -94,6 +94,7 @@ bool ESerialPort::open(OpenMode mode)
         return false;
     }
     QIODevice::open(mode);
+    setDtr(false);
     return true;
 }
 

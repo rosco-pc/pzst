@@ -15,6 +15,7 @@ typedef int ESP_HANDLE;
 namespace PZST {
     class ESerialPort : public QIODevice
     {
+        friend class ESerialPortManager;
         Q_OBJECT
 
     public:
@@ -52,8 +53,6 @@ namespace PZST {
             B_4000000,
         };
 
-        ESerialPort();
-        ESerialPort(QObject *parent);
         virtual ~ESerialPort();
 
         static QStringList enumeratePorts();
@@ -77,6 +76,8 @@ namespace PZST {
         void setDtr(bool v);
 
     private:
+        ESerialPort();
+        ESerialPort(QObject *parent);
         void initialize();
         bool nativeSetBaudRate(BaudRate rate);
         int nativeBaudRate(BaudRate rate);

@@ -26,7 +26,9 @@ SOURCES += mainwindow.cpp \
     searchable.cpp \
     shortcutedit.cpp \
     shortcuts.cpp \
-    groupactiondialog.cpp
+    groupactiondialog.cpp \
+    eserialportmanager.cpp \
+    eserialportproxy.cpp
 HEADERS += mainwindow.h \
     spineditor.h \
     spinlexer.h \
@@ -50,7 +52,9 @@ HEADERS += mainwindow.h \
     searchable.h \
     shortcutedit.h \
     shortcuts.h \
-    groupactiondialog.h
+    groupactiondialog.h \
+    eserialportmanager.h \
+    eserialportproxy.h
 FORMS += aboutdialog.ui \
     preferencesdialog.ui \
     finddialog.ui \

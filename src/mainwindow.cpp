@@ -23,7 +23,7 @@
 #include "mainwindow.h"
 #include "spineditor.h"
 #include "spinlexer.h"
-#include "eserialport.h"
+#include "eserialportmanager.h"
 #include "propellerloader.h"
 #include "spincompiler.h"
 #include "erroritem.h"
@@ -784,17 +784,17 @@ void MainWindow::enableUI(bool v)
 void MainWindow::doProgramming(int command, QByteArray code)
 {
     if (!command)  showStatusMessage("");
-    ESerialPort p;
     Preferences pref;
-    p.setDeviceName(pref.getPortName());
-    if (p.open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
-        p.setBaudRate(ESerialPort::B_115200 );
+    ESerialPortProxy* p = ESerialPortManager::obtain(pref.getPortName());
+    p->grab();
+    if (p->open(QIODevice::ReadWrite | QIODevice::Unbuffered)) {
+        p->setBaudRate(ESerialPort::B_115200 );
         if (command) {
             uploadProgress->setValue(0);
             uploadProgress->show();
             uploadMessage->show();
         }
-        PropellerLoader l(&p, uploadProgress, uploadMessage);
+        PropellerLoader l(p, uploadProgress, uploadMessage);
         l.updateFirmware(command, code);
         while (l.isRunning()) {
             QApplication::processEvents();
@@ -807,9 +807,9 @@ void MainWindow::doProgramming(int command, QByteArray code)
         PropellerLoader::LoaderResult result = l.getResult();
         if (!command) {
             if (result == PropellerLoader::LoaderOK) {
-                showStatusMessage(tr("Propeller detected on port %1").arg(p.getDeviceName()));
+                showStatusMessage(tr("Propeller detected on port %1").arg(p->getDeviceName()));
             } else {
-                showStatusMessage(tr("Propeller not found on port %1").arg(p.getDeviceName()), 2);
+                showStatusMessage(tr("Propeller not found on port %1").arg(p->getDeviceName()), 2);
             }
         } else {
             if (result == PropellerLoader::LoaderOK) {
@@ -819,9 +819,10 @@ void MainWindow::doProgramming(int command, QByteArray code)
             }
         }
     } else {
-        showStatusMessage(tr("Unable to open port %1").arg(p.getDeviceName()), 2);
+        showStatusMessage(tr("Unable to open port %1").arg(p->getDeviceName()), 2);
     }
-    p.close();
+    p->close();
+    delete p;
 }
 void MainWindow::compile()
 {

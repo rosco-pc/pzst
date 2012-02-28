@@ -8,7 +8,7 @@ PropellerLoader::PropellerLoader() : QThread(), device(NULL), progress(NULL)
 
 }
 
-PropellerLoader::PropellerLoader(ESerialPort *device, QProgressBar *progress, QLabel *label)
+PropellerLoader::PropellerLoader(ESerialPortProxy *device, QProgressBar *progress, QLabel *label)
     : QThread()
 {
     this->device = device;
