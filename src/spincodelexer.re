@@ -68,7 +68,7 @@ int SpinCodeLexer::scan(char *start_, char *end_, char** next_)
         ["] ([^"\x00])* ["] {RET(STRING);}
         (["] ([^"\x00])*)/"\x00" {RET(STRING);}
 
-        '#' ("ifdef"|"ifndef"|"endif"|"define"|"undef")/[^a-zA-Z0-9_] {RET(PREPRO);}
+        '#' ("ifdef"|"ifndef"|"endif"|"define"|"undef"|"else")/[^a-zA-Z0-9_] {RET(PREPRO);}
 
 
 	[\n] {RET(NL);}
